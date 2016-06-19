@@ -13,7 +13,7 @@ import java.util.*;
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSession;
 
 @Repository
-public class BaseDao<T, PK> {
+public class BaseDao<T> {
 	private static Session session;
 	private static Transaction transaction;
 
@@ -383,7 +383,7 @@ public class BaseDao<T, PK> {
 	 * @param andRule  and条件的map
 	 * @return 封装好的Criteria
 	 */
-	public Criteria makeCriteriaByRule(Criteria criteria, Map<String, Object> likeRule, Map<String, Object> orRule, Map<String, Object> andRule) {
+	private Criteria makeCriteriaByRule(Criteria criteria, Map<String, Object> likeRule, Map<String, Object> orRule, Map<String, Object> andRule) {
 		if (likeRule == null) {
 			likeRule = new HashMap<>();
 		}

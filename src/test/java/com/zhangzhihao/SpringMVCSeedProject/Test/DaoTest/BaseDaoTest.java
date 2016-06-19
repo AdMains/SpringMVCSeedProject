@@ -32,10 +32,10 @@ import static org.junit.Assert.assertNotNull;
 public class BaseDaoTest {
 
 	@Autowired
-	private BaseDao<User, String> userDao;
+	private BaseDao<User> userDao;
 
 	@Autowired
-	private BaseDao<Teacher, Integer> teacherDao;
+	private BaseDao<Teacher> teacherDao;
 
 	@Test
 	public void addTest() {
