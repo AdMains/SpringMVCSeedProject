@@ -1,3 +1,4 @@
+/*
 package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
 
 
@@ -39,4 +40,11 @@ public class AccountDaoTest {
 		User admin = accountDao.select("admin");
 		Assert.assertEquals("admin",admin.getUserName());
 	}
+
+	@Test
+	public void test(){
+		com.zhangzhihao.SpringMVCSeedProject.Dao.AccountDaoTest ddd=new com.zhangzhihao.SpringMVCSeedProject.Dao.AccountDaoTest();
+		ddd.getList();
+	}
 }
+*/

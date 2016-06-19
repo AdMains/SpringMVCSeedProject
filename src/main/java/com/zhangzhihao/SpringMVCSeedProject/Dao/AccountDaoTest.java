@@ -4,15 +4,19 @@ package com.zhangzhihao.SpringMVCSeedProject.Dao;
 
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import com.zhangzhihao.SpringMVCSeedProject.generic.GenericDao;
+import org.hibernate.Session;
+import org.junit.Test;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
-import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSession;
+import java.util.List;
 
 
 @Repository
-public class AccountDao
-        extends BaseDao
+public class AccountDaoTest
+        extends HibernateDaoSupport
         implements GenericDao<User,String>  {
+
     */
 /**
      * 插入对象
@@ -22,26 +26,8 @@ public class AccountDao
 
     @Override
     public int insert(User user) {
-        int flag=-1;
-        try {
-            session = getSession();
-            transaction = session.beginTransaction();
 
-            session.save(user);
-
-            transaction.commit();
-            flag=1;
-        }catch (Exception ex){
-            if(transaction!=null){
-                transaction.rollback();
-            }
-            System.out.println(ex);
-        }finally {
-            if(session!=null){
-                session.close();
-            }
-        }
-        return flag;
+        return 0;
     }
 
     */
@@ -78,10 +64,12 @@ public class AccountDao
 
     @Override
     public User select(String id) {
-        session = getSession();
-        User user = session.get(User.class, id);
-        session.close();
-        return user;
+        return null;
+    }
+
+    public List<User> getList(){
+        Session se=this.getSessionFactory().openSession();
+        return (List<User>) getHibernateTemplate().find("from User");
     }
 }
 */

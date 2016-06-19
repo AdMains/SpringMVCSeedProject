@@ -1,9 +1,10 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- Page-Title -->
 <div class="row">
     <div class="col-sm-12">
         <h4 class="pull-left page-title">Welcome !</h4>
         <ol class="breadcrumb pull-right">
-            <li><a href="#">Moltran</a></li>
+            <li><a href="#">首页</a></li>
             <li class="active">Dashboard</li>
         </ol>
     </div>

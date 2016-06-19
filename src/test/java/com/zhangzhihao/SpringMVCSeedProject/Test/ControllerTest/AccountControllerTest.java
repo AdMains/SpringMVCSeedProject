@@ -1,3 +1,4 @@
+/*
 package com.zhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
 
@@ -60,10 +61,12 @@ public class AccountControllerTest {
                 .andExpect(status().isOk());
     }
 
-    /**
+    */
+/**
      * 登录成功测试
      * @throws Exception
-     */
+     *//*
+
     @Test
     public void testLoginSuccess() throws Exception{
         MockHttpSession session=new MockHttpSession();
@@ -76,10 +79,12 @@ public class AccountControllerTest {
                 .andExpect(view().name("redirect:/MustLogin"));
     }
 
-    /**
+    */
+/**
      * 登录失败测试
      * @throws Exception
-     */
+     *//*
+
     @Test
     public void testLoginFalse() throws Exception{
         MockHttpSession session=new MockHttpSession();
@@ -95,3 +100,4 @@ public class AccountControllerTest {
                 .andExpect(view().name("/Account/Login"));
     }
 }
+*/

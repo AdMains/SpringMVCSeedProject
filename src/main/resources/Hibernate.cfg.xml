@@ -7,7 +7,9 @@
 
         <!-- 1. 数据库连接配置 -->
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://10.16.155.241:8081/SpringMVCSeedProject?serverTimezone=UTC</property>
+        <property name="hibernate.connection.url">
+            jdbc:mysql://10.16.155.241:8081/SpringMVCSeedProject?serverTimezone=UTC
+        </property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">root</property>
         <!--
@@ -34,7 +36,7 @@
         <!-- 删除对象后, 使其 OID 置为 null -->
         <property name="use_identifier_rollback">true</property>
 
-         <!--配置 C3P0 数据源 生产环境打开-->
+        <!--配置 C3P0 数据源 生产环境打开-->
         <!--<property name="hibernate.c3p0.max_size">10</property>
         <property name="hibernate.c3p0.min_size">5</property>
         <property name="c3p0.acquire_increment">2</property>
@@ -57,7 +59,8 @@
         <property name="cache.use_second_level_cache">true</property>
 
         <!--配置hibernate二级缓存使用的产品-->
-        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
+        </property>
 
         <!--在 hibernate 配置文件中声明开启查询缓存-->
         <property name="cache.use_query_cache">true</property>

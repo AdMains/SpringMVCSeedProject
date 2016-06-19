@@ -1,3 +1,4 @@
+/*
 package com.zhangzhihao.SpringMVCSeedProject.Controller;
 
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
@@ -18,19 +19,23 @@ public class AccountController {
 
 //    @Autowired
 //    HttpSession session;
-    /**
+    */
+/**
      * 转到登录界面
      * @return
-     */
+     *//*
+
     @RequestMapping(value = "/Login",method = RequestMethod.GET)
     public String LoginPage(){
         return "Account/Login";
     }
 
-    /**
+    */
+/**
      * 接收用户登录传参，判断是否登陆成功
      * @return
-     */
+     *//*
+
     @RequestMapping(value = "/Login",method = RequestMethod.POST)
     public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password,HttpSession session){
         String userName=UserName.trim();
@@ -44,3 +49,4 @@ public class AccountController {
         }
     }
 }
+*/

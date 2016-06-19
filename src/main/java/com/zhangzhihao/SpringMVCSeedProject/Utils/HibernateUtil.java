@@ -1,6 +1,7 @@
 package com.zhangzhihao.SpringMVCSeedProject.Utils;
 
 
+import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -14,14 +15,14 @@ public class HibernateUtil {
 
 	private static SessionFactory buildSessionFactory() {
 		try {
-			Configuration configuration = new Configuration();
-			configuration.configure("Hibernate.cfg.xml");
-			//在下面添加映射，不要写在配置文件中
-			configuration.addAnnotatedClass(User.class);
+			Configuration configuration = new Configuration()
+					.configure("Hibernate.cfg.xml")
+					.addAnnotatedClass(User.class)
+					.addAnnotatedClass(Teacher.class);
+
 			StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
 			return configuration.buildSessionFactory(ssrb.build());
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed !" + ex);
 			throw new ExceptionInInitializerError(ex);
 		}
