@@ -1,21 +1,28 @@
 package com.zhangzhihao.SpringMVCSeedProject.Dao;
 
 
+import com.zhangzhihao.SpringMVCSeedProject.Model.PageResults;
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.query.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSession;
 
-@Repository
+
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseDao<T> {
 	private static Session session;
 	private static Transaction transaction;
+
+	//	@Autowired
+	Class<T> modelClass;
+
 
 	/**
 	 * 保存对象
@@ -149,17 +156,49 @@ public class BaseDao<T> {
 	}
 
 	/**
+	 * 批量删除对象
+	 *
+	 * @param modelList 需要删除的对象的集合
+	 * @return 是否删除成功
+	 */
+	public boolean deleteAll(List<T> modelList) {
+		boolean flag = false;
+		try {
+			session = getSession();
+			transaction = session.beginTransaction();
+
+			for (T model : modelList) {
+				session.delete(model);
+			}
+
+			transaction.commit();
+			flag = true;
+		} catch (Exception ex) {
+			flag = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			throw ex;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return flag;
+	}
+
+	/**
 	 * 按照Integer id删除对象
 	 *
 	 * @param id 需要删除的对象的id
 	 * @return 是否删除成功
 	 */
-	public boolean deleteByIntegerId(Class<T> clazz, Integer id) {
+	public boolean deleteByIntegerId(Integer id) {
 		boolean flag = false;
 		try {
 			session = getSession();
 			transaction = session.beginTransaction();
-			T t = (T) session.get(clazz, id);
+			T t = (T) session.get(modelClass, id);
 			session.delete(t);
 			transaction.commit();
 			flag = true;
@@ -183,12 +222,12 @@ public class BaseDao<T> {
 	 * @param id 需要删除的对象的id
 	 * @return 是否删除成功
 	 */
-	public boolean deleteByStringId(Class<T> clazz, String id) {
+	public boolean deleteByStringId(String id) {
 		boolean flag = false;
 		try {
 			session = getSession();
 			transaction = session.beginTransaction();
-			T t = (T) session.get(clazz, id);
+			T t = (T) session.get(modelClass, id);
 			session.delete(t);
 			transaction.commit();
 			flag = true;
@@ -273,11 +312,11 @@ public class BaseDao<T> {
 	 * @param id 主键(Integer)
 	 * @return model
 	 */
-	public T selectByIntegerId(Class<T> clazz, int id) {
+	public T selectByIntegerId(int id) {
 		T model = null;
 		try {
 			session = getSession();
-			model = (T) session.get(clazz, id);
+			model = (T) session.get(modelClass, id);
 		} catch (Exception ex) {
 			model = null;
 			throw ex;
@@ -296,11 +335,11 @@ public class BaseDao<T> {
 	 * @return model
 	 */
 	@Deprecated
-	public T selectByStringId(Class<T> clazz, String id) {
+	public T selectByStringId(String id) {
 		T model = null;
 		try {
 			session = getSession();
-			Query q = session.createQuery("from " + clazz.getName() + " where id = :id");
+			Query q = session.createQuery("from " + modelClass.getName() + " where id = :id");
 			q.setParameter("id", id);
 			T result = (T) q.uniqueResult();
 			model = result;
@@ -318,14 +357,13 @@ public class BaseDao<T> {
 	/**
 	 * 获得全部
 	 *
-	 * @param clazz 获得列表的对象类型
 	 * @return List
 	 */
-	public List<T> findAll(Class<T> clazz) {
+	public List<T> findAll() {
 		List<T> ListModel = null;
 		try {
 			session = getSession();
-			Criteria criteria = session.createCriteria(clazz);
+			Criteria criteria = session.createCriteria(modelClass);
 			ListModel = criteria.list();
 		} catch (Exception ex) {
 			ListModel = null;
@@ -341,15 +379,14 @@ public class BaseDao<T> {
 	/**
 	 * 模糊查询
 	 *
-	 * @param clazz    要查询类的类型
 	 * @param likeRule 将查询条件拼接为map
 	 * @return 查询结果
 	 */
-	public List<T> findByLike(Class<T> clazz, Map<String, Object> likeRule) {
+	public List<T> findByLike(Map<String, Object> likeRule) {
 		List<T> ListModel = null;
 		try {
 			session = getSession();
-			Criteria criteria = session.createCriteria(clazz);
+			Criteria criteria = session.createCriteria(modelClass);
 			if (likeRule == null) {
 				likeRule = new HashMap<>();
 			}
@@ -379,16 +416,12 @@ public class BaseDao<T> {
 	 *
 	 * @param criteria Criteria
 	 * @param likeRule like条件的map
-	 * @param orRule   or条件的map
 	 * @param andRule  and条件的map
 	 * @return 封装好的Criteria
 	 */
-	private Criteria makeCriteriaByRule(Criteria criteria, Map<String, Object> likeRule, Map<String, Object> orRule, Map<String, Object> andRule) {
+	private Criteria makeCriteriaByRule(Criteria criteria, Map<String, Object> likeRule, Map<String, Object> andRule) {
 		if (likeRule == null) {
 			likeRule = new HashMap<>();
-		}
-		if (orRule == null) {
-			orRule = new HashMap<>();
 		}
 		if (andRule == null) {
 			andRule = new HashMap<>();
@@ -399,15 +432,6 @@ public class BaseDao<T> {
 			while (iterator.hasNext()) {
 				Map.Entry<String, Object> next = iterator.next();
 				criteria.add(Restrictions.like(next.getKey(), next.getValue()));
-			}
-		}
-		if (!orRule.isEmpty()) {
-			Set<Map.Entry<String, Object>> entrySet = orRule.entrySet();
-			Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<String, Object> next = iterator.next();
-				//criteria1.add(Restrictions.or(Restrictions.eq("className","一年一班"),Restrictions.eq("className","一年二班")));
-				criteria.add(Restrictions.or(Restrictions.eq(next.getKey(), next.getValue())));
 			}
 		}
 		if (!andRule.isEmpty()) {
@@ -424,18 +448,16 @@ public class BaseDao<T> {
 	/**
 	 * 多条件查询
 	 *
-	 * @param clazz    要查询的类型
 	 * @param likeRule like条件的map
-	 * @param orRule   or条件的map
 	 * @param andRule  and条件的map
 	 * @return 查询结果
 	 */
-	public List<T> multiRuleQuery(Class<T> clazz, Map<String, Object> likeRule, Map<String, Object> orRule, Map<String, Object> andRule) {
+	public List<T> multiRuleQuery(Map<String, Object> likeRule,  Map<String, Object> andRule) {
 		List<T> ListModel = null;
 		try {
 			session = getSession();
-			Criteria criteria = session.createCriteria(clazz);
-			criteria = makeCriteriaByRule(criteria, likeRule, orRule, andRule);
+			Criteria criteria = session.createCriteria(modelClass);
+			criteria = makeCriteriaByRule(criteria, likeRule, andRule);
 			ListModel = criteria.list();
 		} catch (Exception ex) {
 			ListModel = null;
@@ -452,16 +474,15 @@ public class BaseDao<T> {
 	/**
 	 * 分页查询
 	 *
-	 * @param clazz      要查询的类型
 	 * @param pageNumber 页码
 	 * @param pageSize   每页数量
 	 * @return 查询结果
 	 */
-	public List<T> getListByPage(Class<T> clazz, Integer pageNumber, Integer pageSize) {
+	public List<T> getListByPage(Integer pageNumber, Integer pageSize) {
 		List<T> ListModel = null;
 		try {
 			session = getSession();
-			Criteria criteria = session.createCriteria(clazz);
+			Criteria criteria = session.createCriteria(modelClass);
 			criteria.setFirstResult((pageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
 			ListModel = criteria.list();
@@ -480,22 +501,31 @@ public class BaseDao<T> {
 	/**
 	 * 按条件分页
 	 *
-	 * @param clazz      要查询的类型
-	 * @param pageNumber 页码
-	 * @param pageSize   每页数量
+	 * @param currentPageNumber 页码
+	 * @param pageSize   每页数量l
 	 * @param likeRule   like条件的map
-	 * @param orRule     or条件的map
 	 * @param andRule    and条件的map
 	 * @return 查询结果
 	 */
-	public List<T> getListByPageAndRule(Class<T> clazz, Integer pageNumber, Integer pageSize, Map<String, Object> likeRule, Map<String, Object> orRule, Map<String, Object> andRule) {
+	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Map<String, Object> likeRule,  Map<String, Object> andRule) {
+		if (currentPageNumber <= 0 || currentPageNumber <= 0) {
+			return null;
+		}
 		List<T> ListModel = null;
+		int totalCount = 0;
+		int pageCount=0;
 		try {
 			session = getSession();
-			Criteria criteria = session.createCriteria(clazz);
-			criteria.setFirstResult((pageNumber - 1) * pageSize);
+			Criteria criteria = session.createCriteria(modelClass);
+			criteria = makeCriteriaByRule(criteria, likeRule, andRule);
+			totalCount = criteria.list().size();
+			pageCount=totalCount % pageSize == 0 ? totalCount / pageSize
+					: totalCount / pageSize + 1;
+			if (currentPageNumber > pageCount) {
+				currentPageNumber = 1;
+			}
+			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
-			criteria = makeCriteriaByRule(criteria, likeRule, orRule, andRule);
 			ListModel = criteria.list();
 		} catch (Exception ex) {
 			ListModel = null;
@@ -505,9 +535,49 @@ public class BaseDao<T> {
 				session.close();
 			}
 		}
-		return ListModel;
+		PageResults<T> pageResults = new PageResults<T>(currentPageNumber-1,currentPageNumber,pageSize,totalCount,pageCount,ListModel);
+		return pageResults;
 	}
 
 
+	/**
+	 * 执行Sql语句
+	 *
+	 * @param sqlString sql
+	 * @param values    不定参数数组
+	 * @return 受影响的行数
+	 */
+	public int executeSql(String sqlString, Object... values) {
+		session = getSession();
+		Transaction transaction = null;
+		int result = 0;
+		try {
+			transaction = session.beginTransaction();
+			SQLQuery sqlQuery = session.createSQLQuery(sqlString);
+			if (values != null) {
+				for (int i = 0; i < values.length; i++) {
+					sqlQuery.setParameter(i, values[i]);
+				}
+			}
+			result = sqlQuery.executeUpdate();
+			transaction.commit();
+		} catch (Exception ex) {
+			result = 0;
+			transaction.rollback();
+			throw ex;
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+
+	/**
+	 * refresh 刷新实体状态
+	 *
+	 * @param t 实体
+	 */
+	public void refresh(T t) {
+		getSession().refresh(t);
+	}
 }
 
