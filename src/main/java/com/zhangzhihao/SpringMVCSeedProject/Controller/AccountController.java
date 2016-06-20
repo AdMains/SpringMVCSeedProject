@@ -1,8 +1,7 @@
-/*
 package com.zhangzhihao.SpringMVCSeedProject.Controller;
 
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
-import com.zhangzhihao.SpringMVCSeedProject.Service.AccountService;
+import com.zhangzhihao.SpringMVCSeedProject.Service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,31 +14,29 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/Account")
 public class AccountController {
     @Autowired
-    AccountService accountService;
+    BaseService<User> userService;
 
-//    @Autowired
-//    HttpSession session;
-    */
-/**
-     * 转到登录界面
-     * @return
-     *//*
 
+	/**
+	 * 转向登录界面
+	 * @return 登录界面
+	 */
     @RequestMapping(value = "/Login",method = RequestMethod.GET)
     public String LoginPage(){
         return "Account/Login";
     }
 
-    */
-/**
-     * 接收用户登录传参，判断是否登陆成功
-     * @return
-     *//*
-
+	/**
+	 * 接收用户登录传参，判断是否登陆成功
+	 * @param UserName
+	 * @param Password
+	 * @param session
+	 * @return
+	 */
     @RequestMapping(value = "/Login",method = RequestMethod.POST)
     public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password,HttpSession session){
         String userName=UserName.trim();
-        User LoginUser = accountService.select(userName);
+        User LoginUser = userService.selectByStringId(userName);
         if(LoginUser.getPassWord().equals(Password.trim())){
             session.setAttribute("User",LoginUser);
             return "redirect:/MustLogin";
@@ -49,4 +46,3 @@ public class AccountController {
         }
     }
 }
-*/

@@ -27,6 +27,10 @@ public class BaseDao<T> {
 		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
+	public BaseDao(Class<T> clazz){
+		modelClass=clazz;
+	}
+
 	/**
 	 * 保存对象
 	 *
