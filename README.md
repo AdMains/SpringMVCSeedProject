@@ -1,4 +1,4 @@
-# SpringMVCSeedProject
+# SpringMVCSeedProject [![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject.svg?branch=master)](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject)
     Seed Project For SpringMVC
 
 # 这是一个典型的Gradle项目 ：
