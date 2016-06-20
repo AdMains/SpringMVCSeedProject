@@ -2,11 +2,11 @@ package com.zhangzhihao.SpringMVCSeedProject.Service;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Model.PageResults;
+import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
+import org.hibernate.criterion.Criterion;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.Map;
 
 
 public class BaseService<T> {
@@ -15,7 +15,7 @@ public class BaseService<T> {
 
 	public BaseService() {
 		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		baseDao=new BaseDao<T>(modelClass);
+		baseDao = new BaseDao<T>(modelClass);
 	}
 
 	/**
@@ -140,52 +140,30 @@ public class BaseService<T> {
 		return baseDao.findAll();
 	}
 
-	/**
-	 * 模糊查询
-	 *
-	 * @param likeRule 将查询条件拼接为map
-	 * @return 查询结果
-	 */
-	public List<T> findByLike(Map<String, Object> likeRule) {
-		return baseDao.findByLike(likeRule);
-	}
-
-
-	/**
-	 * 多条件查询
-	 *
-	 * @param likeRule like条件的map
-	 * @param andRule  and条件的map
-	 * @return 查询结果
-	 */
-	public List<T> multiRuleQuery(Map<String, Object> likeRule, Map<String, Object> andRule) {
-		return baseDao.multiRuleQuery(likeRule,andRule);
-	}
-
 
 	/**
 	 * 分页查询
 	 *
 	 * @param currentPageNumber 页码
-	 * @param pageSize   每页数量
+	 * @param pageSize          每页数量
 	 * @return 查询结果
 	 */
 	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
-		return baseDao.getListByPage(currentPageNumber,pageSize);
+		return baseDao.getListByPage(currentPageNumber, pageSize);
 	}
 
 
 	/**
-	 * 按条件分页
+	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
 	 *
 	 * @param currentPageNumber 页码
-	 * @param pageSize          每页数量l
-	 * @param likeRule          like条件的map
-	 * @param andRule           and条件的map
+	 * @param pageSize          每页数量
+	 * @param criterions        Criterion条件
 	 * @return 查询结果
 	 */
-	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Map<String, Object> likeRule, Map<String, Object> andRule) {
-		return baseDao.getListByPageAndRule(currentPageNumber,pageSize,likeRule,andRule);
+	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Criterion... criterions) {
+
+		return baseDao.getListByPageAndRule(currentPageNumber, pageSize, criterions);
 	}
 
 
@@ -198,7 +176,7 @@ public class BaseService<T> {
 	 */
 	@Deprecated
 	public int executeSql(String sqlString, Object... values) {
-		return baseDao.executeSql(sqlString,values);
+		return baseDao.executeSql(sqlString, values);
 	}
 
 	/**

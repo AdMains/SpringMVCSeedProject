@@ -13,50 +13,50 @@ import javax.persistence.Table;
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
-    @Id
-    private String userName;
-    private String passWord;
-    private AuthorityType authorityType;
+	@Id
+	private String userName;
+	private String passWord;
+	private AuthorityType authorityType;
 
-    public User() {
-    }
+	public User() {
+	}
 
-    public User(String userName, String passWord, AuthorityType authorityType) {
-        this.userName = userName;
-        this.passWord = passWord;
-        this.authorityType = authorityType;
-    }
+	public User(String userName, String passWord, AuthorityType authorityType) {
+		this.userName = userName;
+		this.passWord = passWord;
+		this.authorityType = authorityType;
+	}
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userName='" + userName + '\'' +
-                ", passWord='" + passWord + '\'' +
-                ", authorityType=" + authorityType +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "User{" +
+				"userName='" + userName + '\'' +
+				", passWord='" + passWord + '\'' +
+				", authorityType=" + authorityType +
+				'}';
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public String getUserName() {
+		return userName;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public String getPassWord() {
-        return passWord;
-    }
+	public String getPassWord() {
+		return passWord;
+	}
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
-    }
+	public void setPassWord(String passWord) {
+		this.passWord = passWord;
+	}
 
-    public AuthorityType getAuthorityType() {
-        return authorityType;
-    }
+	public AuthorityType getAuthorityType() {
+		return authorityType;
+	}
 
-    public void setAuthorityType(AuthorityType authorityType) {
-        this.authorityType = authorityType;
-    }
+	public void setAuthorityType(AuthorityType authorityType) {
+		this.authorityType = authorityType;
+	}
 }

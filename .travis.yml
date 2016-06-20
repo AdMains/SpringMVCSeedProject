@@ -16,3 +16,11 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 after_success:
+notifications:
+  email:
+    - 877040127@qq.com
+    - 1655172161@qq.com
+    - 1519035296@qq.com
+    - 2608659188@qq.com
+    - 1072841098@qq.com
+    - 2984373391@qq.com

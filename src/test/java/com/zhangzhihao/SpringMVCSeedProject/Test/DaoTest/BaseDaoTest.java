@@ -3,9 +3,10 @@ package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
 
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
 import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Model.PageResults;
+import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
+import org.hibernate.criterion.Restrictions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -133,32 +136,6 @@ public class BaseDaoTest {
 		}
 	}
 
-	@Test
-	public void findByLikeTest() {
-		Map<String, Object> rule = new HashMap<>();
-		rule.put("passWord", "BaseDao");
-		rule.put("authorityType", AuthorityType.College_Level_Admin);
-		List<User> userList = userDao.findByLike(rule);
-		if (!userList.isEmpty()) {
-			userList.forEach(System.out::println);
-			assertNotNull(userList);
-		}
-	}
-
-	@Test
-	public void multiRuleQueryTest() {
-		Map<String, Object> likerule = new HashMap<>();
-		likerule.put("passWord", "BaseDao");
-
-
-		Map<String, Object> andrule = new HashMap<>();
-		andrule.put("authorityType", AuthorityType.Admin);
-		List<User> userList = userDao.multiRuleQuery(likerule, andrule);
-		if (!userList.isEmpty()) {
-			userList.forEach(System.out::println);
-			assertNotNull(userList);
-		}
-	}
 
 	@Test
 	public void getListByPageTest() {
@@ -169,18 +146,32 @@ public class BaseDaoTest {
 		}
 	}
 
+
 	@Test
 	public void getListByPageAndRuleTest() {
-		Map<String, Object> likerule = new HashMap<>();
-		likerule.put("passWord", "BaseDao");
-
-
-		Map<String, Object> andrule = new HashMap<>();
-		andrule.put("authorityType", AuthorityType.Admin);
-
-		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2, likerule, andrule);
+		/*PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2
+				, Restrictions.like("passWord", "BaseDao")
+				, Restrictions.or(Restrictions.eq("userName", "admin"), Restrictions.eq("authorityType", AuthorityType.Admin))
+		);*/
+		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2
+				, Restrictions.like("passWord", "BaseDao"));
 		List<User> results = listByPageAndRule.getResults();
-		System.out.println(results.toString());
+		System.out.println(listByPageAndRule);
+		if (!results.isEmpty()) {
+			results.forEach(System.out::println);
+			assertNotNull(results);
+		}
+	}
+
+
+	@Test
+	public void getListByPageAndRuleTest2() {
+		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(2, 2
+				, Restrictions.like("name", "BaseDao")
+				, Restrictions.or(Restrictions.eq("passWord", "admin"), Restrictions.eq("name", "name"))
+		);
+		List<Teacher> results = listByPageAndRule.getResults();
+		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
 			assertNotNull(results);
@@ -195,11 +186,4 @@ public class BaseDaoTest {
 		assertEquals(1, i);
 	}
 
-	@Test
-	public void test() {
-		System.out.println(5 / 10);
-		System.out.println(50 / 10);
-		System.out.println(5 / 3);
-		System.out.println(2 / 3);
-	}
 }

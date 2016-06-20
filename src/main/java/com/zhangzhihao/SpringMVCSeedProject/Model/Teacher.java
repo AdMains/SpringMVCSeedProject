@@ -1,5 +1,7 @@
 package com.zhangzhihao.SpringMVCSeedProject.Model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Teacher")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Teacher {
 	@Id
 	@GeneratedValue(generator = "generator")

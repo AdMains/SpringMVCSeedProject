@@ -1,24 +1,24 @@
 package com.zhangzhihao.SpringMVCSeedProject.Dao;
 
 
-import com.zhangzhihao.SpringMVCSeedProject.Model.PageResults;
+import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.query.Query;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.*;
+import java.util.List;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSession;
 
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseDao<T> {
-	private  Session session;
-	private  Transaction transaction;
+	private Session session;
+	private Transaction transaction;
 
 
 	private Class<T> modelClass;
@@ -27,8 +27,8 @@ public class BaseDao<T> {
 		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 
-	public BaseDao(Class<T> clazz){
-		modelClass=clazz;
+	public BaseDao(Class<T> clazz) {
+		modelClass = clazz;
 	}
 
 	/**
@@ -383,106 +383,12 @@ public class BaseDao<T> {
 		return ListModel;
 	}
 
-	/**
-	 * 模糊查询
-	 *
-	 * @param likeRule 将查询条件拼接为map
-	 * @return 查询结果
-	 */
-	public List<T> findByLike(Map<String, Object> likeRule) {
-		List<T> ListModel = null;
-		try {
-			session = getSession();
-			Criteria criteria = session.createCriteria(modelClass);
-			if (likeRule == null) {
-				likeRule = new HashMap<>();
-			}
-			if (!likeRule.isEmpty()) {
-				Set<Map.Entry<String, Object>> entrySet = likeRule.entrySet();
-				Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
-				while (iterator.hasNext()) {
-					Map.Entry<String, Object> next = iterator.next();
-					criteria.add(Restrictions.like(next.getKey(), next.getValue()));
-				}
-			}
-			ListModel = criteria.list();
-		} catch (Exception ex) {
-			ListModel = null;
-			throw ex;
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
-		return ListModel;
-	}
-
-
-	/**
-	 * 处理多条件查询的封装
-	 *
-	 * @param criteria Criteria
-	 * @param likeRule like条件的map
-	 * @param andRule  and条件的map
-	 * @return 封装好的Criteria
-	 */
-	private Criteria makeCriteriaByRule(Criteria criteria, Map<String, Object> likeRule, Map<String, Object> andRule) {
-		if (likeRule == null) {
-			likeRule = new HashMap<>();
-		}
-		if (andRule == null) {
-			andRule = new HashMap<>();
-		}
-		if (!likeRule.isEmpty()) {
-			Set<Map.Entry<String, Object>> entrySet = likeRule.entrySet();
-			Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<String, Object> next = iterator.next();
-				criteria.add(Restrictions.like(next.getKey(), next.getValue()));
-			}
-		}
-		if (!andRule.isEmpty()) {
-			Set<Map.Entry<String, Object>> entrySet = andRule.entrySet();
-			Iterator<Map.Entry<String, Object>> iterator = entrySet.iterator();
-			while (iterator.hasNext()) {
-				Map.Entry<String, Object> next = iterator.next();
-				criteria.add(Restrictions.eq(next.getKey(), next.getValue()));
-			}
-		}
-		return criteria;
-	}
-
-	/**
-	 * 多条件查询
-	 *
-	 * @param likeRule like条件的map
-	 * @param andRule  and条件的map
-	 * @return 查询结果
-	 */
-	public List<T> multiRuleQuery(Map<String, Object> likeRule, Map<String, Object> andRule) {
-		List<T> ListModel = null;
-		try {
-			session = getSession();
-			Criteria criteria = session.createCriteria(modelClass);
-			criteria = makeCriteriaByRule(criteria, likeRule, andRule);
-			ListModel = criteria.list();
-		} catch (Exception ex) {
-			ListModel = null;
-			throw ex;
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
-		return ListModel;
-	}
-
 
 	/**
 	 * 分页查询
 	 *
 	 * @param currentPageNumber 页码
-	 * @param pageSize   每页数量
+	 * @param pageSize          每页数量
 	 * @return 查询结果
 	 */
 	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
@@ -509,30 +415,41 @@ public class BaseDao<T> {
 
 
 	/**
-	 * 按条件分页
+	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
 	 *
 	 * @param currentPageNumber 页码
-	 * @param pageSize          每页数量l
-	 * @param likeRule          like条件的map
-	 * @param andRule           and条件的map
+	 * @param pageSize          每页数量
+	 * @param criterions        Criterion条件
 	 * @return 查询结果
 	 */
-	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Map<String, Object> likeRule, Map<String, Object> andRule) {
-		if (currentPageNumber <= 0 || pageSize <= 0) {
-			return null;
+	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Criterion... criterions) {
+		if (currentPageNumber <= 0) {
+			currentPageNumber = 1;
 		}
+		if (pageSize <= 0) {
+			pageSize = 10;
+		}
+		Criteria criteria = getSession().createCriteria(modelClass);
 		List<T> ListModel = null;
 		int totalCount = 0;
 		int pageCount = 0;
 		try {
-			session = getSession();
-			Criteria criteria = session.createCriteria(modelClass);
-			criteria = makeCriteriaByRule(criteria, likeRule, andRule);
+			for (int i = 0; i < criterions.length; i++) {
+				criteria.add(criterions[i]);
+			}
+			/*criteria.setProjection(Projections.rowCount());
+			long uniqueResult = 0;
+			try {
+				uniqueResult = (long) criteria.uniqueResult();
+			} catch (Exception ex) {
+				uniqueResult = 0;
+			}
+			totalCount = (int) uniqueResult;*/
 			totalCount = criteria.list().size();
 			pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 					: totalCount / pageSize + 1;
-			if (currentPageNumber > pageCount) {
-				currentPageNumber = 1;
+			if (currentPageNumber > pageCount && pageCount != 0) {
+				currentPageNumber = pageCount;
 			}
 			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
@@ -540,15 +457,14 @@ public class BaseDao<T> {
 		} catch (Exception ex) {
 			ListModel = null;
 			throw ex;
-		} finally {
-			if (session != null) {
-				session.close();
-			}
 		}
-		PageResults<T> pageResults = new PageResults<T>(currentPageNumber - 1, currentPageNumber, pageSize, totalCount, pageCount, ListModel);
+		PageResults<T> pageResults = new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, ListModel);
 		return pageResults;
 	}
 
+	/*public int getResultCount(Criterion... criterions){
+		Criteria criteria = getSession().createCriteria(modelClass);
+	}*/
 
 	/**
 	 * 执行Sql语句

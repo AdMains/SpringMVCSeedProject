@@ -1,4 +1,4 @@
-package com.zhangzhihao.SpringMVCSeedProject.Model;
+package com.zhangzhihao.SpringMVCSeedProject.Utils;
 
 
 import java.util.List;
@@ -25,12 +25,12 @@ public class PageResults<T> {
 	@Override
 	public String toString() {
 		return "PageResults{" +
-				"nextPage=" + nextPage +
-				", currentPage=" + currentPage +
-				", pageSize=" + pageSize +
-				", totalCount=" + totalCount +
-				", pageCount=" + pageCount +
-				", results=" + results +
+				"nextPage=" + getNextPage() +
+				", currentPage=" + getCurrentPage() +
+				", pageSize=" + getPageSize() +
+				", totalCount=" + getTotalCount() +
+				", pageCount=" + getPageCount() +
+				", results=" + getResults() +
 				'}';
 	}
 
@@ -58,7 +58,12 @@ public class PageResults<T> {
 		if (nextPage <= 0) {
 			return 1;
 		} else {
-			return nextPage > pageCount ? pageCount : nextPage;
+			if (nextPage > pageCount && pageCount != 0) {
+				nextPage = pageCount;
+			} else if (nextPage > pageCount && pageCount == 0) {
+				nextPage = 1;
+			}
+			return nextPage;
 		}
 	}
 
