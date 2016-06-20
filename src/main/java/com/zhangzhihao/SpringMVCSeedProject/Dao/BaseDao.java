@@ -7,9 +7,9 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.query.Query;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.*;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSession;
@@ -20,9 +20,12 @@ public class BaseDao<T> {
 	private static Session session;
 	private static Transaction transaction;
 
-	//	@Autowired
-	Class<T> modelClass;
 
+	private Class<T> modelClass;
+
+	public BaseDao() {
+		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}
 
 	/**
 	 * 保存对象
@@ -452,7 +455,7 @@ public class BaseDao<T> {
 	 * @param andRule  and条件的map
 	 * @return 查询结果
 	 */
-	public List<T> multiRuleQuery(Map<String, Object> likeRule,  Map<String, Object> andRule) {
+	public List<T> multiRuleQuery(Map<String, Object> likeRule, Map<String, Object> andRule) {
 		List<T> ListModel = null;
 		try {
 			session = getSession();
@@ -502,24 +505,24 @@ public class BaseDao<T> {
 	 * 按条件分页
 	 *
 	 * @param currentPageNumber 页码
-	 * @param pageSize   每页数量l
-	 * @param likeRule   like条件的map
-	 * @param andRule    and条件的map
+	 * @param pageSize          每页数量l
+	 * @param likeRule          like条件的map
+	 * @param andRule           and条件的map
 	 * @return 查询结果
 	 */
-	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Map<String, Object> likeRule,  Map<String, Object> andRule) {
+	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Map<String, Object> likeRule, Map<String, Object> andRule) {
 		if (currentPageNumber <= 0 || currentPageNumber <= 0) {
 			return null;
 		}
 		List<T> ListModel = null;
 		int totalCount = 0;
-		int pageCount=0;
+		int pageCount = 0;
 		try {
 			session = getSession();
 			Criteria criteria = session.createCriteria(modelClass);
 			criteria = makeCriteriaByRule(criteria, likeRule, andRule);
 			totalCount = criteria.list().size();
-			pageCount=totalCount % pageSize == 0 ? totalCount / pageSize
+			pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 					: totalCount / pageSize + 1;
 			if (currentPageNumber > pageCount) {
 				currentPageNumber = 1;
@@ -535,7 +538,7 @@ public class BaseDao<T> {
 				session.close();
 			}
 		}
-		PageResults<T> pageResults = new PageResults<T>(currentPageNumber-1,currentPageNumber,pageSize,totalCount,pageCount,ListModel);
+		PageResults<T> pageResults = new PageResults<T>(currentPageNumber - 1, currentPageNumber, pageSize, totalCount, pageCount, ListModel);
 		return pageResults;
 	}
 

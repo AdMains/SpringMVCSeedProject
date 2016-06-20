@@ -2,8 +2,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.TeacherDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.UserDao;
+import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
 import com.zhangzhihao.SpringMVCSeedProject.Model.PageResults;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
@@ -30,13 +29,10 @@ import static org.junit.Assert.*;
 public class BaseDaoTest {
 
 	@Autowired
-	private UserDao userDao;
+	private BaseDao<User> userDao;
 
 	@Autowired
-	private TeacherDao teacherDao;
-
-	/*@Autowired
-	private BaseDao<Teacher> teacherDao;*/
+	private BaseDao<Teacher> teacherDao;
 
 	@Test
 	public void addTest() {
@@ -157,7 +153,7 @@ public class BaseDaoTest {
 
 		Map<String, Object> andrule = new HashMap<>();
 		andrule.put("authorityType", AuthorityType.Admin);
-		List<User> userList = userDao.multiRuleQuery(likerule,andrule);
+		List<User> userList = userDao.multiRuleQuery(likerule, andrule);
 		if (!userList.isEmpty()) {
 			userList.forEach(System.out::println);
 			assertNotNull(userList);
@@ -182,7 +178,7 @@ public class BaseDaoTest {
 		Map<String, Object> andrule = new HashMap<>();
 		andrule.put("authorityType", AuthorityType.Admin);
 
-		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2,likerule, andrule);
+		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2, likerule, andrule);
 		List<User> results = listByPageAndRule.getResults();
 		System.out.println(results.toString());
 		if (!results.isEmpty()) {
@@ -200,10 +196,10 @@ public class BaseDaoTest {
 	}
 
 	@Test
-	public void test(){
-		System.out.println(5/10);
-		System.out.println(50/10);
-		System.out.println(5/3);
-		System.out.println(2/3);
+	public void test() {
+		System.out.println(5 / 10);
+		System.out.println(50 / 10);
+		System.out.println(5 / 3);
+		System.out.println(2 / 3);
 	}
 }

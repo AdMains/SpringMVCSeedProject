@@ -6,7 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class TeacherDao extends BaseDao<Teacher> {
-	public TeacherDao(){
-		this.modelClass=Teacher.class;
-	}
 }
