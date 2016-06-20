@@ -166,12 +166,12 @@ public class BaseService<T> {
 	/**
 	 * 分页查询
 	 *
-	 * @param pageNumber 页码
+	 * @param currentPageNumber 页码
 	 * @param pageSize   每页数量
 	 * @return 查询结果
 	 */
-	public List<T> getListByPage(Integer pageNumber, Integer pageSize) {
-		return baseDao.getListByPage(pageNumber,pageSize);
+	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
+		return baseDao.getListByPage(currentPageNumber,pageSize);
 	}
 
 

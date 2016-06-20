@@ -17,8 +17,8 @@ import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSessio
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseDao<T> {
-	private static Session session;
-	private static Transaction transaction;
+	private  Session session;
+	private  Transaction transaction;
 
 
 	private Class<T> modelClass;
@@ -481,16 +481,19 @@ public class BaseDao<T> {
 	/**
 	 * 分页查询
 	 *
-	 * @param pageNumber 页码
+	 * @param currentPageNumber 页码
 	 * @param pageSize   每页数量
 	 * @return 查询结果
 	 */
-	public List<T> getListByPage(Integer pageNumber, Integer pageSize) {
+	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
+		if (currentPageNumber <= 0 || pageSize <= 0) {
+			return null;
+		}
 		List<T> ListModel = null;
 		try {
 			session = getSession();
 			Criteria criteria = session.createCriteria(modelClass);
-			criteria.setFirstResult((pageNumber - 1) * pageSize);
+			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
 			ListModel = criteria.list();
 		} catch (Exception ex) {
@@ -515,7 +518,7 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Map<String, Object> likeRule, Map<String, Object> andRule) {
-		if (currentPageNumber <= 0 || currentPageNumber <= 0) {
+		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
 		List<T> ListModel = null;
@@ -570,6 +573,7 @@ public class BaseDao<T> {
 			transaction.commit();
 		} catch (Exception ex) {
 			result = 0;
+			assert transaction != null;
 			transaction.rollback();
 			throw ex;
 		} finally {
