@@ -89,11 +89,11 @@ public class BaseDaoTest {
 
 	@Test
 	public void updateTest() {
-		User user = userDao.selectByStringId("admin");
+		User user = userDao.selectById("userName", "admin");
 		if (user == null) {
 			userDao.add(new User("admin", "admin", AuthorityType.Admin));
 		}
-		user = userDao.selectByStringId("admin");
+		user = userDao.selectById("userName", "admin");
 		user.setAuthorityType(AuthorityType.School_Level_Admin);
 		boolean result = userDao.update(user);
 		assertEquals(result, true);
@@ -101,7 +101,7 @@ public class BaseDaoTest {
 
 	@Test
 	public void addOrUpdateTest() {
-		User user = userDao.selectByStringId("admin");
+		User user = userDao.selectById("userName", "admin");
 		if (user == null) {
 			user = new User("admin", "admin", AuthorityType.Admin);
 			userDao.add(user);
@@ -124,7 +124,9 @@ public class BaseDaoTest {
 	public void selectByStringIdTest() {
 		String username = UUID.randomUUID().toString();
 		User admin = new User(username, "password", AuthorityType.Admin);
-		assertEquals(admin.getUserName(), username);
+		userDao.add(admin);
+		User byId = userDao.selectById("userName", username);
+		assertEquals(byId.getUserName(), username);
 	}
 
 	@Test
@@ -136,7 +138,6 @@ public class BaseDaoTest {
 		}
 	}
 
-
 	@Test
 	public void getListByPageTest() {
 		List<User> listByPage = userDao.getListByPage(2, 2);
@@ -145,7 +146,6 @@ public class BaseDaoTest {
 			assertNotNull(listByPage);
 		}
 	}
-
 
 	@Test
 	public void getListByPageAndRuleTest() {
@@ -163,6 +163,11 @@ public class BaseDaoTest {
 		}
 	}
 
+	@Test
+	public void getCountByRuleTest() {
+		int countByRule = userDao.getCountByRule(Restrictions.like("passWord", "BaseDao"));
+		System.out.println(countByRule);
+	}
 
 	@Test
 	public void getListByPageAndRuleTest2() {

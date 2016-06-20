@@ -8,7 +8,12 @@ import org.hibernate.criterion.Criterion;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-
+/**
+ * BaseService作为所有Service的基类，需要使用的话，需要先编写一个继承自此类的类，然后BaseService<User> userService
+ *
+ * @param <T> 实体类型
+ */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseService<T> {
 	private BaseDao<T> baseDao;
 	private Class<T> modelClass;
@@ -123,12 +128,12 @@ public class BaseService<T> {
 	/**
 	 * 通过String主键, 查询对象
 	 *
-	 * @param id 主键(Integer)
+	 * @param IdProperityName 实体id的属性名（UserId）
+	 * @param idValue         实体id的值（6666）
 	 * @return model
 	 */
-	@Deprecated
-	public T selectByStringId(String id) {
-		return baseDao.selectByStringId(id);
+	public T selectById(String IdProperityName, Object idValue) {
+		return baseDao.selectById(IdProperityName, idValue);
 	}
 
 	/**
@@ -166,6 +171,16 @@ public class BaseService<T> {
 		return baseDao.getListByPageAndRule(currentPageNumber, pageSize, criterions);
 	}
 
+	/**
+	 * 获得符合对应条件的数量 利用Count(*)实现
+	 *
+	 * @param criterions 条件
+	 * @return 数量
+	 */
+	public int getCountByRule(Criterion... criterions) {
+
+		return baseDao.getCountByRule(criterions);
+	}
 
 	/**
 	 * 执行Sql语句

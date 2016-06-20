@@ -7,14 +7,19 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.query.Query;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.HibernateUtil.getSession;
 
-
+/**
+ * 只需要一个BaseDao就可以，需要访问数据库的地方，比如BaseService<T>只需要private BaseDao<T> baseDao即可
+ *
+ * @param <T> 实体类型
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseDao<T> {
 	private Session session;
@@ -338,18 +343,17 @@ public class BaseDao<T> {
 	/**
 	 * 通过String主键, 查询对象
 	 *
-	 * @param id 主键(Integer)
+	 * @param IdProperityName 实体id的属性名（UserId）
+	 * @param idValue         实体id的值（6666）
 	 * @return model
 	 */
-	@Deprecated
-	public T selectByStringId(String id) {
+	public T selectById(String IdProperityName, Object idValue) {
 		T model = null;
 		try {
 			session = getSession();
-			Query q = session.createQuery("from " + modelClass.getName() + " where id = :id");
-			q.setParameter("id", id);
-			T result = (T) q.uniqueResult();
-			model = result;
+			Criteria criteria = session.createCriteria(modelClass);
+			criteria.add(Restrictions.eq(IdProperityName, idValue));
+			model = (T) criteria.uniqueResult();
 		} catch (Exception ex) {
 			model = null;
 			throw ex;
@@ -437,15 +441,8 @@ public class BaseDao<T> {
 			for (int i = 0; i < criterions.length; i++) {
 				criteria.add(criterions[i]);
 			}
-			/*criteria.setProjection(Projections.rowCount());
-			long uniqueResult = 0;
-			try {
-				uniqueResult = (long) criteria.uniqueResult();
-			} catch (Exception ex) {
-				uniqueResult = 0;
-			}
-			totalCount = (int) uniqueResult;*/
-			totalCount = criteria.list().size();
+			totalCount = getCountByRule(criterions);
+//			totalCount = criteria.list().size(); 性能底下
 			pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 					: totalCount / pageSize + 1;
 			if (currentPageNumber > pageCount && pageCount != 0) {
@@ -462,9 +459,28 @@ public class BaseDao<T> {
 		return pageResults;
 	}
 
-	/*public int getResultCount(Criterion... criterions){
+
+	/**
+	 * 获得符合对应条件的数量 利用Count(*)实现
+	 *
+	 * @param criterions 条件
+	 * @return 数量
+	 */
+	public int getCountByRule(Criterion... criterions) {
 		Criteria criteria = getSession().createCriteria(modelClass);
-	}*/
+		for (int i = 0; i < criterions.length; i++) {
+			criteria.add(criterions[i]);
+		}
+		criteria.setProjection(Projections.rowCount());
+		long uniqueResult = 0;
+		try {
+			uniqueResult = (long) criteria.uniqueResult();
+		} catch (Exception ex) {
+			uniqueResult = 0;
+		}
+		return (int) uniqueResult;
+	}
+
 
 	/**
 	 * 执行Sql语句
