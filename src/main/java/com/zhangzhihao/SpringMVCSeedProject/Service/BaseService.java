@@ -126,7 +126,7 @@ public class BaseService<T> {
 	}
 
 	/**
-	 * 通过String主键, 查询对象
+	 * 通过主键, 查询对象，需要提供实体类主键的属性名
 	 *
 	 * @param IdProperityName 实体id的属性名（UserId）
 	 * @param idValue         实体id的值（6666）

@@ -341,7 +341,7 @@ public class BaseDao<T> {
 	}
 
 	/**
-	 * 通过String主键, 查询对象
+	 * 通过主键, 查询对象，需要提供实体类主键的属性名
 	 *
 	 * @param IdProperityName 实体id的属性名（UserId）
 	 * @param idValue         实体id的值（6666）
@@ -433,7 +433,8 @@ public class BaseDao<T> {
 		if (pageSize <= 0) {
 			pageSize = 10;
 		}
-		Criteria criteria = getSession().createCriteria(modelClass);
+		session = getSession();
+		Criteria criteria = session.createCriteria(modelClass);
 		List<T> ListModel = null;
 		int totalCount = 0;
 		int pageCount = 0;
@@ -442,7 +443,6 @@ public class BaseDao<T> {
 				criteria.add(criterions[i]);
 			}
 			totalCount = getCountByRule(criterions);
-//			totalCount = criteria.list().size(); 性能底下
 			pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 					: totalCount / pageSize + 1;
 			if (currentPageNumber > pageCount && pageCount != 0) {
@@ -454,6 +454,10 @@ public class BaseDao<T> {
 		} catch (Exception ex) {
 			ListModel = null;
 			throw ex;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 		PageResults<T> pageResults = new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, ListModel);
 		return pageResults;
@@ -467,7 +471,8 @@ public class BaseDao<T> {
 	 * @return 数量
 	 */
 	public int getCountByRule(Criterion... criterions) {
-		Criteria criteria = getSession().createCriteria(modelClass);
+		session = getSession();
+		Criteria criteria = session.createCriteria(modelClass);
 		for (int i = 0; i < criterions.length; i++) {
 			criteria.add(criterions[i]);
 		}
@@ -477,6 +482,10 @@ public class BaseDao<T> {
 			uniqueResult = (long) criteria.uniqueResult();
 		} catch (Exception ex) {
 			uniqueResult = 0;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 		return (int) uniqueResult;
 	}
@@ -509,7 +518,9 @@ public class BaseDao<T> {
 			transaction.rollback();
 			throw ex;
 		} finally {
-			session.close();
+			if (session != null) {
+				session.close();
+			}
 		}
 		return result;
 	}
@@ -520,7 +531,16 @@ public class BaseDao<T> {
 	 * @param t 实体
 	 */
 	public void refresh(T t) {
-		getSession().refresh(t);
+		session = getSession();
+		try {
+			session.refresh(t);
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
 	}
 }
 
