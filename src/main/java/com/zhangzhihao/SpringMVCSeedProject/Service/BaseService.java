@@ -4,7 +4,12 @@ package com.zhangzhihao.SpringMVCSeedProject.Service;
 import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -15,12 +20,13 @@ import java.util.List;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BaseService<T> {
+	@Autowired
 	private BaseDao<T> baseDao;
 	private Class<T> modelClass;
 
 	public BaseService() {
 		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		baseDao = new BaseDao<T>(modelClass);
+		baseDao.setModelClass(modelClass);
 	}
 
 	/**
@@ -29,28 +35,28 @@ public class BaseService<T> {
 	 * @param model 需要添加的对象
 	 * @return 是否添加成功
 	 */
-	public Boolean add(T model) {
-		return baseDao.add(model);
+	public Boolean save(T model) {
+		return baseDao.save(model);
 	}
 
 	/**
 	 * 添加并且返回Integer类型的ID
 	 *
 	 * @param model 需要添加的对象
-	 * @return Integer类型的ID, 返回-1表示失败
+	 * @return Integer类型的ID
 	 */
-	public Integer addAndGetIntegerID(T model) {
-		return baseDao.addAndGetIntegerID(model);
+	public Integer saveAndGetIntegerID(T model) {
+		return baseDao.saveAndGetIntegerID(model);
 	}
 
 	/**
 	 * 添加并且返回String类型的ID
 	 *
 	 * @param model 需要添加的对象
-	 * @return String类型的ID, 返回NULL表示失败
+	 * @return String类型的ID
 	 */
-	public String addAndGetStringID(T model) {
-		return baseDao.addAndGetStringID(model);
+	public String saveAndGetStringID(T model) {
+		return baseDao.saveAndGetStringID(model);
 	}
 
 
@@ -58,50 +64,41 @@ public class BaseService<T> {
 	 * 删除对象
 	 *
 	 * @param model 需要删除的对象
-	 * @return 是否删除成功
+	 * 失败会抛异常
 	 */
-	public boolean delete(T model) {
-		return baseDao.delete(model);
+	public void  delete(T model) {
+		baseDao.delete(model);
 	}
 
 	/**
 	 * 批量删除对象
 	 *
 	 * @param modelList 需要删除的对象的集合
-	 * @return 是否删除成功
+	 * 失败会抛异常
 	 */
-	public boolean deleteAll(List<T> modelList) {
-		return baseDao.deleteAll(modelList);
+	public void deleteAll(List<T> modelList) {
+		baseDao.deleteAll(modelList);
 	}
 
 	/**
-	 * 按照Integer id删除对象
+	 * 按照id删除对象
 	 *
 	 * @param id 需要删除的对象的id
-	 * @return 是否删除成功
+	 * 失败抛出异常
 	 */
-	public boolean deleteByIntegerId(Integer id) {
-		return baseDao.deleteByIntegerId(id);
+	public void deleteById(Serializable id) {
+		baseDao.deleteById(id);
 	}
 
-	/**
-	 * 按照String id删除对象
-	 *
-	 * @param id 需要删除的对象的id
-	 * @return 是否删除成功
-	 */
-	public boolean deleteByStringId(String id) {
-		return baseDao.deleteByStringId(id);
-	}
 
 	/**
 	 * 更新对象
 	 *
 	 * @param model 需要更新的对象
-	 * @return 是否更新成功
+	 * 失败会抛出异常
 	 */
-	public boolean update(T model) {
-		return baseDao.update(model);
+	public void update(T model) {
+		baseDao.update(model);
 	}
 
 
@@ -109,31 +106,20 @@ public class BaseService<T> {
 	 * 添加或者更新
 	 *
 	 * @param model 需要更新或添加的对象
-	 * @return 是否成功
+	 * 失败会抛出异常
 	 */
-	public boolean addOrUpdate(T model) {
-		return baseDao.addOrUpdate(model);
+	public void addOrUpdate(T model) {
+		baseDao.saveOrUpdate(model);
 	}
 
 	/**
-	 * 通过Integer主键, 查询对象
+	 * 通过主键, 查询对象
 	 *
-	 * @param id 主键(Integer)
+	 * @param id 主键(Serializable)
 	 * @return model
 	 */
-	public T selectByIntegerId(int id) {
-		return baseDao.selectByIntegerId(id);
-	}
-
-	/**
-	 * 通过主键, 查询对象，需要提供实体类主键的属性名
-	 *
-	 * @param IdProperityName 实体id的属性名（UserId）
-	 * @param idValue         实体id的值（6666）
-	 * @return model
-	 */
-	public T selectById(String IdProperityName, Object idValue) {
-		return baseDao.selectById(IdProperityName, idValue);
+	public T getById(Serializable id) {
+		return baseDao.getById(id);
 	}
 
 	/**
@@ -142,7 +128,7 @@ public class BaseService<T> {
 	 * @return List
 	 */
 	public List<T> findAll() {
-		return baseDao.findAll();
+		return  baseDao.findAll();
 	}
 
 
@@ -154,7 +140,7 @@ public class BaseService<T> {
 	 * @return 查询结果
 	 */
 	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
-		return baseDao.getListByPage(currentPageNumber, pageSize);
+		return baseDao.getListByPage(currentPageNumber,pageSize);
 	}
 
 
@@ -163,24 +149,28 @@ public class BaseService<T> {
 	 *
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
-	 * @param criterions        Criterion条件
+	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
+	 * @param orders            查询后记录的排序条件,由Order对象生成
+	 * @param projections       分组和聚合查询条件
 	 * @return 查询结果
 	 */
-	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, Criterion... criterions) {
-
-		return baseDao.getListByPageAndRule(currentPageNumber, pageSize, criterions);
+	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
+	                                           final Projection[] projections) {
+		return baseDao.getListByPageAndRule(currentPageNumber,pageSize,criterions,orders,projections);
 	}
+
 
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param criterions 条件
+	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @return 数量
 	 */
-	public int getCountByRule(Criterion... criterions) {
-
+	@Transactional(readOnly = true)
+	public int getCountByRule(final Criterion[] criterions) {
 		return baseDao.getCountByRule(criterions);
 	}
+
 
 	/**
 	 * 执行Sql语句
@@ -189,9 +179,8 @@ public class BaseService<T> {
 	 * @param values    不定参数数组
 	 * @return 受影响的行数
 	 */
-	@Deprecated
 	public int executeSql(String sqlString, Object... values) {
-		return baseDao.executeSql(sqlString, values);
+		return baseDao.executeSql(sqlString,values);
 	}
 
 	/**

@@ -6,6 +6,9 @@ import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,94 +41,91 @@ public class BaseDaoTest {
 	private BaseDao<Teacher> teacherDao;
 
 	@Test
-	public void addTest() {
-		Boolean result = userDao.add(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
+	public void saveTest() {
+		Boolean result = userDao.save(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
+		Boolean add = teacherDao.save(new Teacher("name", "BaseDao"));
+		System.out.println(add);
 		assertEquals(true, result);
 	}
 
 	@Test
-	public void addAndGetStringIDTest() {
+	public void saveAndGetStringIDTest() {
 		String uuid = UUID.randomUUID().toString();
-		String id = userDao.addAndGetStringID(new User(uuid, "BaseDao", AuthorityType.Admin));
+		String id = userDao.saveAndGetStringID(new User(uuid, "BaseDao", AuthorityType.Admin));
 		assertEquals(uuid, id);
 	}
 
 	@Test
 	public void addAndGetIntegerIDTest() {
 		String uuid = UUID.randomUUID().toString();
-		int id = teacherDao.addAndGetIntegerID(new Teacher(uuid, "password"));
+		int id = teacherDao.saveAndGetIntegerID(new Teacher(uuid, "password"));
 		System.out.println(id);
 		Assert.assertNotNull(id);
 	}
 
 	@Test
 	public void deleteTest() {
-		Integer integerID = teacherDao.addAndGetIntegerID(new Teacher("name", "pwd"));
-		Teacher teacher = teacherDao.selectByIntegerId(integerID);
-		boolean result = teacherDao.delete(teacher);
-		assertEquals(true, result);
+		Integer integerID = teacherDao.saveAndGetIntegerID(new Teacher("name", "pwd"));
+		Teacher teacher = teacherDao.getById(integerID);
+		teacherDao.delete(teacher);//不抛异常就是成功了
 	}
 
 	@Test
 	public void deleteAllTest() {
 		List<User> all = userDao.findAll();
-		boolean b = userDao.deleteAll(all);
-		assertTrue(b);
+		userDao.deleteAll(all);//不抛异常就是成功了
 	}
 
 	@Test
 	public void deleteByIntegerIdTest() {
-		Integer integerID = teacherDao.addAndGetIntegerID(new Teacher("name", "pwd"));
-		boolean result = teacherDao.deleteByIntegerId(integerID);
-		assertEquals(result, true);
+		Integer integerID = teacherDao.saveAndGetIntegerID(new Teacher("name", "pwd"));
+		teacherDao.deleteById(integerID);//不抛异常就是成功了
 	}
 
 	@Test
 	public void deleteByStringIdTest() {
-		String stringId = userDao.addAndGetStringID(new User(UUID.randomUUID().toString(), "test", AuthorityType.Admin));
-		boolean result = userDao.deleteByStringId(stringId);
-		assertEquals(result, true);
+		String stringId = userDao.saveAndGetStringID(new User(UUID.randomUUID().toString(), "test", AuthorityType.Admin));
+		userDao.deleteById(stringId);//不抛异常就是成功了
 	}
 
 	@Test
 	public void updateTest() {
-		User user = userDao.selectById("userName", "admin");
+		User user = userDao.getById("admin");
 		if (user == null) {
-			userDao.add(new User("admin", "admin", AuthorityType.Admin));
+			userDao.save(new User("admin", "admin", AuthorityType.Admin));
 		}
-		user = userDao.selectById("userName", "admin");
+		user = userDao.getById( "admin");
 		user.setAuthorityType(AuthorityType.School_Level_Admin);
-		boolean result = userDao.update(user);
-		assertEquals(result, true);
+		userDao.update(user);//不抛异常就是成功了
 	}
 
 	@Test
-	public void addOrUpdateTest() {
-		User user = userDao.selectById("userName", "admin");
+	public void saveOrUpdateTest() {
+		User user = userDao.getById("admin");
 		if (user == null) {
 			user = new User("admin", "admin", AuthorityType.Admin);
-			userDao.add(user);
+			userDao.save(user);
 		}
 		user.setAuthorityType(AuthorityType.Admin);
-		userDao.addOrUpdate(user);
+		userDao.saveOrUpdate(user);
 
-		Boolean result = userDao.add(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
+		Boolean result = userDao.save(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
 		assertEquals(true, result);
 	}
 
 	@Test
-	public void selectByIntegerIdTest() {
+	public void getByIntegerIdTest() {
 		Teacher teacher = new Teacher("name", "password");
-		final int resultId = teacherDao.addAndGetIntegerID(teacher);
+		final int resultId = teacherDao.saveAndGetIntegerID(teacher);
 		assertEquals(teacher.getId(), resultId);
 	}
 
 	@Test
-	public void selectByStringIdTest() {
+	public void getByStringIdTest() {
 		String username = UUID.randomUUID().toString();
 		User admin = new User(username, "password", AuthorityType.Admin);
-		userDao.add(admin);
-		User byId = userDao.selectById("userName", username);
+		userDao.save(admin);
+		User byId = userDao.getById(username);
 		assertEquals(byId.getUserName(), username);
 	}
 
@@ -149,12 +149,8 @@ public class BaseDaoTest {
 
 	@Test
 	public void getListByPageAndRuleTest() {
-		/*PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2
-				, Restrictions.like("passWord", "BaseDao")
-				, Restrictions.or(Restrictions.eq("userName", "admin"), Restrictions.eq("authorityType", AuthorityType.Admin))
-		);*/
 		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(2, 2
-				, Restrictions.like("passWord", "BaseDao"));
+				,new Criterion[]{Restrictions.like("passWord", "BaseDao")},new Order[]{},new Projection[]{});
 		List<User> results = listByPageAndRule.getResults();
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
@@ -165,16 +161,15 @@ public class BaseDaoTest {
 
 	@Test
 	public void getCountByRuleTest() {
-		int countByRule = userDao.getCountByRule(Restrictions.like("passWord", "BaseDao"));
+		int countByRule = userDao.getCountByRule(new Criterion[]{Restrictions.like("passWord", "BaseDao")});
 		System.out.println(countByRule);
 	}
 
 	@Test
 	public void getListByPageAndRuleTest2() {
 		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(2, 2
-				, Restrictions.like("name", "BaseDao")
-				, Restrictions.or(Restrictions.eq("passWord", "admin"), Restrictions.eq("name", "name"))
-		);
+				, new Criterion[]{Restrictions.like("passWord", "BaseDao")}
+				, new Order[]{},new Projection[]{});
 		List<Teacher> results = listByPageAndRule.getResults();
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
