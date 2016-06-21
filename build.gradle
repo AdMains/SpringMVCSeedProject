@@ -31,7 +31,6 @@ dependencies {
             "org.springframework:spring-core:${springVersion}",
             "org.springframework:spring-instrument:${springVersion}",
             "org.springframework:spring-orm:${springVersion}",
-            "org.springframework:spring-aop:${springVersion}",
 
             // MySQL
             "mysql:mysql-connector-java:6.0.2",

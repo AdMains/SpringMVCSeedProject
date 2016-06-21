@@ -12,6 +12,22 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <!--下面是javaConfig的配置-->
+    <!--<context-param>
+        <param-name>contextClass</param-name>
+        <param-value>
+            org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+        </param-value>
+    </context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>com.zhangzhihao.SpringMVCSeedProject.Config.SpringConfig</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>-->
+
+
     <!--<listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>-->
@@ -42,6 +58,17 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath*:SpringMVC.xml</param-value>
         </init-param>
+        <!--下面是javaConfig的配置-->
+        <!--<init-param>
+            <param-name>contextClass</param-name>
+            <param-value>
+                org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>com.zhangzhihao.SpringMVCSeedProject.Config.WebConfig</param-value>
+        </init-param>-->
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -64,10 +91,6 @@
         <error-code>500</error-code>
         <location>/500.jsp</location>
     </error-page>-->
-    <!--<error-page>-->
-        <!--<exception-type>org.apache.shiro.authz.AuthorizationException</exception-type>-->
-        <!--<location>/</location>-->
-    <!--</error-page>-->
 
 
     <!--支持特殊字体文件-->
