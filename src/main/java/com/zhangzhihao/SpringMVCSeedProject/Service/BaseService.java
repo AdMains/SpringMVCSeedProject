@@ -14,7 +14,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
- * BaseService作为所有Service的基类，需要使用的话，需要先编写一个继承自此类的类，然后BaseService<User> userService
+ * BaseService作为所有Service的基类，需要使用的话，需要先编写一个继承自此类的类
  *
  * @param <T> 实体类型
  */
@@ -26,7 +26,6 @@ class BaseService<T> {
 
 	public BaseService() {
 		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		System.out.println(modelClass);
 	}
 
 	/**
@@ -83,12 +82,11 @@ class BaseService<T> {
 	/**
 	 * 按照id删除对象
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param id         需要删除的对象的id
 	 *                   失败抛出异常
 	 */
-	public void deleteById(Class<T> modelClass, Serializable id) {
-		baseDao.delete(this.getById(modelClass, id));
+	public void deleteById(Serializable id) {
+		baseDao.delete(this.getById(id));
 	}
 
 	/**
@@ -115,23 +113,21 @@ class BaseService<T> {
 	/**
 	 * 通过主键, 查询对象
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param id         主键(Serializable)
 	 * @return model
 	 */
 	@Transactional(readOnly = true)
-	public T getById(Class<T> modelClass, Serializable id) {
+	public T getById(Serializable id) {
 		return baseDao.getById(modelClass, id);
 	}
 
 	/**
 	 * 获得全部
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @return List
 	 */
 	@Transactional(readOnly = true)
-	public List<T> loadAll(Class<T> modelClass) {
+	public List<T> loadAll() {
 		return baseDao.loadAll(modelClass);
 	}
 
@@ -139,13 +135,12 @@ class BaseService<T> {
 	/**
 	 * 分页查询
 	 *
-	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public List<T> getListByPage(Class<T> modelClass, Integer currentPageNumber, Integer pageSize) {
+	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
 		return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
 	}
 
@@ -153,7 +148,6 @@ class BaseService<T> {
 	/**
 	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
 	 *
-	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
@@ -162,7 +156,7 @@ class BaseService<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public PageResults<T> getListByPageAndRule(Class<T> modelClass, Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
+	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
 	                                           final Projection[] projections) {
 		return baseDao.getListByPageAndRule(modelClass, currentPageNumber, pageSize, criterions, orders, projections);
 	}
@@ -171,12 +165,11 @@ class BaseService<T> {
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByRule(Class<T> modelClass, final Criterion[] criterions) {
+	public int getCountByRule(final Criterion[] criterions) {
 		return baseDao.getCountByRule(modelClass, criterions);
 	}
 
