@@ -37,7 +37,7 @@ public class BaseDao<T> {
 	 * @param model 需要添加的对象
 	 * @return 是否添加成功
 	 */
-	public Boolean save(T model) {
+	public Boolean save(final T model) {
 		Serializable save = hibernateTemplate.save(model);
 		if (save != null) {
 			return true;
@@ -52,7 +52,7 @@ public class BaseDao<T> {
 	 * @param model 需要添加的对象
 	 * @return Integer类型的ID
 	 */
-	public Integer saveAndGetIntegerID(T model) {
+	public Integer saveAndGetIntegerID(final T model) {
 		return (Integer) hibernateTemplate.save(model);
 	}
 
@@ -62,7 +62,7 @@ public class BaseDao<T> {
 	 * @param model 需要添加的对象
 	 * @return String类型的ID
 	 */
-	public String saveAndGetStringID(T model) {
+	public String saveAndGetStringID(final T model) {
 		return (String) hibernateTemplate.save(model);
 	}
 
@@ -73,7 +73,7 @@ public class BaseDao<T> {
 	 * @param model 需要删除的对象
 	 *              失败会抛异常
 	 */
-	public void delete(T model) {
+	public void delete(final T model) {
 		hibernateTemplate.delete(model);
 	}
 
@@ -83,7 +83,7 @@ public class BaseDao<T> {
 	 * @param modelList 需要删除的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void deleteAll(List<T> modelList) {
+	public void deleteAll(final List<T> modelList) {
 		modelList.stream().forEach(hibernateTemplate::delete);
 	}
 
@@ -94,7 +94,7 @@ public class BaseDao<T> {
 	 * @param id         需要删除的对象的id
 	 *                   失败抛出异常
 	 */
-	public void deleteById(Class<T> modelClass, Serializable id) {
+	public void deleteById(final Class<T> modelClass, Serializable id) {
 		hibernateTemplate.delete(this.getById(modelClass, id));
 	}
 
@@ -104,7 +104,7 @@ public class BaseDao<T> {
 	 * @param model 需要更新的对象
 	 *              失败会抛出异常
 	 */
-	public void update(T model) {
+	public void update(final T model) {
 		hibernateTemplate.update(model);
 	}
 
@@ -115,7 +115,7 @@ public class BaseDao<T> {
 	 * @param model 需要更新或添加的对象
 	 *              失败会抛出异常
 	 */
-	public void saveOrUpdate(T model) {
+	public void saveOrUpdate(final T model) {
 		hibernateTemplate.saveOrUpdate(model);
 	}
 
@@ -127,7 +127,7 @@ public class BaseDao<T> {
 	 * @return model
 	 */
 	@Transactional(readOnly = true)
-	public T getById(Class<T> modelClass, Serializable id) {
+	public T getById(Class<T> modelClass, final Serializable id) {
 		return hibernateTemplate.get(modelClass, id);
 	}
 
@@ -152,7 +152,7 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public List<T> getListByPage(Class<T> modelClass, Integer currentPageNumber, Integer pageSize) {
+	public List<T> getListByPage(Class<T> modelClass,final  Integer currentPageNumber,final  Integer pageSize) {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
