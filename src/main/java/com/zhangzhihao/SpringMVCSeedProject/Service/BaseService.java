@@ -19,14 +19,14 @@ import java.util.List;
  * @param <T> 实体类型
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class BaseService<T> {
+class BaseService<T> {
 	@Autowired
 	private BaseDao<T> baseDao;
 	private Class<T> modelClass;
 
 	public BaseService() {
 		modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		baseDao.setModelClass(modelClass);
+		System.out.println(modelClass);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class BaseService<T> {
 	 * @return Integer类型的ID
 	 */
 	public Integer saveAndGetIntegerID(T model) {
-		return baseDao.saveAndGetIntegerID(model);
+		return (Integer) baseDao.saveAndGetIntegerID(model);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class BaseService<T> {
 	 * @return String类型的ID
 	 */
 	public String saveAndGetStringID(T model) {
-		return baseDao.saveAndGetStringID(model);
+		return (String) baseDao.saveAndGetStringID(model);
 	}
 
 
@@ -64,9 +64,9 @@ public class BaseService<T> {
 	 * 删除对象
 	 *
 	 * @param model 需要删除的对象
-	 * 失败会抛异常
+	 *              失败会抛异常
 	 */
-	public void  delete(T model) {
+	public void delete(T model) {
 		baseDao.delete(model);
 	}
 
@@ -74,28 +74,28 @@ public class BaseService<T> {
 	 * 批量删除对象
 	 *
 	 * @param modelList 需要删除的对象的集合
-	 * 失败会抛异常
+	 *                  失败会抛异常
 	 */
 	public void deleteAll(List<T> modelList) {
-		baseDao.deleteAll(modelList);
+		modelList.stream().forEach(baseDao::delete);
 	}
 
 	/**
 	 * 按照id删除对象
 	 *
-	 * @param id 需要删除的对象的id
-	 * 失败抛出异常
+	 * @param modelClass 类型，比如User.class
+	 * @param id         需要删除的对象的id
+	 *                   失败抛出异常
 	 */
-	public void deleteById(Serializable id) {
-		baseDao.deleteById(id);
+	public void deleteById(Class<T> modelClass, Serializable id) {
+		baseDao.delete(this.getById(modelClass, id));
 	}
-
 
 	/**
 	 * 更新对象
 	 *
 	 * @param model 需要更新的对象
-	 * 失败会抛出异常
+	 *              失败会抛出异常
 	 */
 	public void update(T model) {
 		baseDao.update(model);
@@ -106,47 +106,54 @@ public class BaseService<T> {
 	 * 添加或者更新
 	 *
 	 * @param model 需要更新或添加的对象
-	 * 失败会抛出异常
+	 *              失败会抛出异常
 	 */
-	public void addOrUpdate(T model) {
+	public void saveOrUpdate(T model) {
 		baseDao.saveOrUpdate(model);
 	}
 
 	/**
 	 * 通过主键, 查询对象
 	 *
-	 * @param id 主键(Serializable)
+	 * @param modelClass 类型，比如User.class
+	 * @param id         主键(Serializable)
 	 * @return model
 	 */
-	public T getById(Serializable id) {
-		return baseDao.getById(id);
+	@Transactional(readOnly = true)
+	public T getById(Class<T> modelClass, Serializable id) {
+		return baseDao.getById(modelClass, id);
 	}
 
 	/**
 	 * 获得全部
 	 *
+	 * @param modelClass 类型，比如User.class
 	 * @return List
 	 */
-	public List<T> findAll() {
-		return  baseDao.findAll();
+	@Transactional(readOnly = true)
+	public List<T> loadAll(Class<T> modelClass) {
+		return baseDao.loadAll(modelClass);
 	}
 
 
 	/**
 	 * 分页查询
 	 *
+	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @return 查询结果
 	 */
-	public List<T> getListByPage(Integer currentPageNumber, Integer pageSize) {
-		return baseDao.getListByPage(currentPageNumber,pageSize);
+	@Transactional(readOnly = true)
+	public List<T> getListByPage(Class<T> modelClass, Integer currentPageNumber, Integer pageSize) {
+		return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
 	}
 
 
 	/**
 	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
 	 *
+	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
@@ -154,21 +161,23 @@ public class BaseService<T> {
 	 * @param projections       分组和聚合查询条件
 	 * @return 查询结果
 	 */
-	public PageResults<T> getListByPageAndRule(Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
+	@Transactional(readOnly = true)
+	public PageResults<T> getListByPageAndRule(Class<T> modelClass, Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
 	                                           final Projection[] projections) {
-		return baseDao.getListByPageAndRule(currentPageNumber,pageSize,criterions,orders,projections);
+		return baseDao.getListByPageAndRule(modelClass, currentPageNumber, pageSize, criterions, orders, projections);
 	}
 
 
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
+	 * @param modelClass 类型，比如User.class
 	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByRule(final Criterion[] criterions) {
-		return baseDao.getCountByRule(criterions);
+	public int getCountByRule(Class<T> modelClass, final Criterion[] criterions) {
+		return baseDao.getCountByRule(modelClass, criterions);
 	}
 
 
@@ -180,7 +189,7 @@ public class BaseService<T> {
 	 * @return 受影响的行数
 	 */
 	public int executeSql(String sqlString, Object... values) {
-		return baseDao.executeSql(sqlString,values);
+		return baseDao.executeSql(sqlString, values);
 	}
 
 	/**
