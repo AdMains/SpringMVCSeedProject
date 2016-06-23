@@ -169,8 +169,8 @@ public class BaseDaoTest {
 	@Test
 	public void getListByPageAndRuleTest2() {
 		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 2, 2
-				, new Criterion[]{Restrictions.like("passWord", "BaseDao")}
-				, new Order[]{}, new Projection[]{});
+				, new Criterion[]{Restrictions.like("passWord", "password")}
+				, new Order[]{Order.asc("name")}, new Projection[]{});
 		List<Teacher> results = listByPageAndRule.getResults();
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {

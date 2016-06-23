@@ -5,6 +5,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
 	*/
 /**
 	 * Specify {@link Configuration @Configuration}
@@ -15,10 +16,10 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	 * if creation and registration of a root context is not desired
 	 *//*
 
+
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-//		return new Class<?>[]{RootConfig.class};
-		return new Class<?>[]{SpringConfig.class};
+		return new Class<?>[]{RootConfig.class};
 	}
 
 	*/
@@ -32,6 +33,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	 * {@code null} if all configuration is specified through root config classes.
 	 *//*
 
+
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		return new Class<?>[]{WebConfig.class};
@@ -43,9 +45,9 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	 * for example {@code "/"}, {@code "/app"}, etc.
 	 *//*
 
+
 	@Override
 	protected String[] getServletMappings() {
 		return new String[]{"/"};
 	}
-}
-*/
+}*/

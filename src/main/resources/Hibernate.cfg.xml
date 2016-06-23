@@ -60,7 +60,7 @@
         <property name="cache.use_second_level_cache">true</property>
 
         <!--配置hibernate二级缓存使用的产品-->
-        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.SingletonEhCacheRegionFactory
         </property>
 
         <!--在 hibernate 配置文件中声明开启查询缓存-->
