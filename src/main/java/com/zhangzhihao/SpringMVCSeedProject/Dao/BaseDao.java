@@ -171,7 +171,9 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public List<T> getListByPage(Class<T> modelClass, @NotNull final Integer currentPageNumber, @NotNull final Integer pageSize) {
+	public List<T> getListByPage(Class<T> modelClass,
+	                             @NotNull final Integer currentPageNumber,
+	                             @NotNull final Integer pageSize) {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
@@ -190,7 +192,10 @@ public class BaseDao<T> {
 	 * @param projections 分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
 	 */
-	private Criteria makeCriteria(final Class<T> modelClass, @NotNull final Criterion[] criterions, @NotNull final Order[] orders, @NotNull final Projection[] projections) {
+	private Criteria makeCriteria(final Class<T> modelClass,
+	                              @NotNull final Criterion[] criterions,
+	                              @NotNull final Order[] orders,
+	                              @NotNull final Projection[] projections) {
 		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
 		//添加条件
 		for (int i = 0; i < criterions.length; i++) {
@@ -208,7 +213,7 @@ public class BaseDao<T> {
 	}
 
 	/**
-	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
+	 * 按条件分页,Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
 	 *
 	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
@@ -219,7 +224,11 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public PageResults<T> getListByPageAndRule(Class<T> modelClass, @NotNull Integer currentPageNumber, @NotNull Integer pageSize, @NotNull final Criterion[] criterions, @NotNull final Order[] orders,
+	public PageResults<T> getListByPageAndRule(Class<T> modelClass,
+	                                           @NotNull Integer currentPageNumber,
+	                                           @NotNull Integer pageSize,
+	                                           @NotNull final Criterion[] criterions,
+	                                           @NotNull final Order[] orders,
 	                                           @NotNull final Projection[] projections) {
 		Criteria criteria = makeCriteria(modelClass, criterions, orders, projections);
 		//参数验证
@@ -270,7 +279,9 @@ public class BaseDao<T> {
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public List getStatisticsByRule(Class<T> modelClass, @NotNull final Criterion[] criterions, @NotNull final Projection[] projections) {
+	public List getStatisticsByRule(Class<T> modelClass,
+	                                @NotNull final Criterion[] criterions,
+	                                @NotNull final Projection[] projections) {
 		Criteria criteria = makeCriteria(modelClass, criterions, new Order[]{}, projections);
 		return criteria.list();
 	}
@@ -297,10 +308,10 @@ public class BaseDao<T> {
 	/**
 	 * refresh 刷新实体状态
 	 *
-	 * @param t 实体
+	 * @param model 实体
 	 */
-	public void refresh(@NotNull T t) {
-		hibernateTemplate.refresh(t);
+	public void refresh(@NotNull T model) {
+		hibernateTemplate.refresh(model);
 	}
 }
 
