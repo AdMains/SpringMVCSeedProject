@@ -7,10 +7,7 @@ import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,6 +168,37 @@ public class BaseDaoTest extends BaseTest {
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
 			assertNotNull(results);
+		}
+	}
+
+	@Test
+	public void getListByPageAndRuleTest3() {
+		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 1, 2
+				, new Criterion[]{}
+				, new Order[]{Order.asc("name")}, new Projection[]{Projections.projectionList()
+						.add(Property.forName("passWord").as("passWord"))
+						.add(Property.forName("name").as("name"))
+				});
+		List<Teacher> results = listByPageAndRule.getResults();
+		System.out.println(listByPageAndRule);
+		if (!results.isEmpty()) {
+			results.forEach(System.out::println);
+			assertNotNull(results);
+		}
+	}
+
+	@Test
+	public void getStatisticsByRuleTest(){
+		List result = teacherDao.getStatisticsByRule(Teacher.class, new Criterion[]{}, new Projection[]{Projections.projectionList()
+				.add(Projections.groupProperty("passWord"))
+				.add(Projections.count("id"))
+		});
+		for (Object item : result ){
+			Object[] objects = (Object[]) item;
+			for (int i = 0; i < objects.length; i++) {
+				System.out.print(objects[i]+"           ");
+			}
+			System.out.println();
 		}
 	}
 

@@ -5,7 +5,11 @@ import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.*;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -39,11 +43,7 @@ public class BaseDao<T> {
 	 */
 	public Boolean save(final T model) {
 		Serializable save = hibernateTemplate.save(model);
-		if (save != null) {
-			return true;
-		} else {
-			return false;
-		}
+		return save != null;
 	}
 
 	/**
@@ -66,6 +66,15 @@ public class BaseDao<T> {
 		return (String) hibernateTemplate.save(model);
 	}
 
+	/**
+	 * 批量保存对象
+	 *
+	 * @param modelList 需要增加的对象的集合
+	 *                  失败会抛异常
+	 */
+	public void saveAll(final List<T> modelList) {
+		modelList.stream().forEach(hibernateTemplate::save);
+	}
 
 	/**
 	 * 删除对象
@@ -108,6 +117,15 @@ public class BaseDao<T> {
 		hibernateTemplate.update(model);
 	}
 
+	/**
+	 * 批量更新对象
+	 *
+	 * @param modelList 需要更新的对象
+	 *                  失败会抛出异常
+	 */
+	public void updateAll(final List<T> modelList) {
+		modelList.stream().forEach(hibernateTemplate::update);
+	}
 
 	/**
 	 * 添加或者更新
@@ -171,7 +189,7 @@ public class BaseDao<T> {
 	 * @param pageSize          每页数量
 	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @param orders            查询后记录的排序条件,由Order对象生成
-	 * @param projections       分组和聚合查询条件
+	 * @param projections       分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
@@ -210,7 +228,8 @@ public class BaseDao<T> {
 			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
 		}
-		return new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, criteria.list());
+		List<T> list = criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass)).list();
+		return new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
 	}
 
 
@@ -238,6 +257,32 @@ public class BaseDao<T> {
 			uniqueResult = 0;
 		}
 		return (int) uniqueResult;
+	}
+
+	/**
+	 * 获得统计结果
+	 *
+	 * @param modelClass 类型，比如User.class
+	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
+	 * @param projections       分组和聚合查询条件
+	 * @return 数量
+	 */
+	@Transactional(readOnly = true)
+	public List getStatisticsByRule(Class<T> modelClass, final Criterion[] criterions,final Projection[] projections) {
+		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
+		//添加条件
+		if (criterions != null && criterions.length > 0) {
+			for (int i = 0; i < criterions.length; i++) {
+				criteria.add(criterions[i]);
+			}
+		}
+		//添加分组统计
+		if (projections != null && projections.length > 0) {
+			for (int i = 0; i < projections.length; i++) {
+				criteria.setProjection(projections[i]);
+			}
+		}
+		return criteria.list();
 	}
 
 
