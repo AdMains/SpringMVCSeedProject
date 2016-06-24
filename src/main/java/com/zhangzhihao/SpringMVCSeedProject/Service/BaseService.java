@@ -92,11 +92,10 @@ class BaseService<T> {
 	/**
 	 * 按照id删除对象
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param id         需要删除的对象的id
 	 *                   失败抛出异常
 	 */
-	public void deleteById(final Class<T> modelClass, @NotNull Serializable id) {
+	public void deleteById( @NotNull Serializable id) {
 		baseDao.deleteById(modelClass,id);
 	}
 
@@ -133,21 +132,19 @@ class BaseService<T> {
 	/**
 	 * 通过主键, 查询对象
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param id         主键(Serializable)
 	 * @return model
 	 */
-	public T getById(Class<T> modelClass, @NotNull final Serializable id) {
+	public T getById( @NotNull final Serializable id) {
 		return baseDao.getById(modelClass,id);
 	}
 
 	/**
 	 * 获得全部
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @return List
 	 */
-	public List<T> loadAll(Class<T> modelClass) {
+	public List<T> loadAll() {
 		return baseDao.loadAll(modelClass);
 	}
 
@@ -155,13 +152,11 @@ class BaseService<T> {
 	/**
 	 * 分页查询
 	 *
-	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @return 查询结果
 	 */
-	public List<T> getListByPage(Class<T> modelClass,
-	                             @NotNull final Integer currentPageNumber,
+	public List<T> getListByPage(@NotNull final Integer currentPageNumber,
 	                             @NotNull final Integer pageSize) {
 		return baseDao.getListByPage(modelClass,currentPageNumber,pageSize);
 	}
@@ -169,7 +164,6 @@ class BaseService<T> {
 	/**
 	 * 按条件分页,Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
 	 *
-	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
@@ -177,8 +171,7 @@ class BaseService<T> {
 	 * @param projections       分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
 	 */
-	public PageResults<T> getListByPageAndRule(Class<T> modelClass,
-	                                           @NotNull Integer currentPageNumber,
+	public PageResults<T> getListByPageAndRule(@NotNull Integer currentPageNumber,
 	                                           @NotNull Integer pageSize,
 	                                           @NotNull final Criterion[] criterions,
 	                                           @NotNull final Order[] orders,
@@ -190,24 +183,21 @@ class BaseService<T> {
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @return 数量
 	 */
-	public int getCountByRule(Class<T> modelClass, @NotNull final Criterion[] criterions) {
+	public int getCountByRule( @NotNull final Criterion[] criterions) {
 		return baseDao.getCountByRule(modelClass,criterions);
 	}
 
 	/**
 	 * 获得统计结果
 	 *
-	 * @param modelClass  类型，比如User.class
 	 * @param criterions  查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @param projections 分组和聚合查询条件
 	 * @return 数量
 	 */
-	public List getStatisticsByRule(Class<T> modelClass,
-	                                @NotNull final Criterion[] criterions,
+	public List getStatisticsByRule(@NotNull final Criterion[] criterions,
 	                                @NotNull final Projection[] projections) {
 		return baseDao.getStatisticsByRule(modelClass,criterions,projections);
 	}
