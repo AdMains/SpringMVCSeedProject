@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 //		DependencyInjectionTestExecutionListener.class,
 //		DirtiesContextTestExecutionListener.class
 //})
+@SuppressWarnings({"unchecked"})
 public class BaseDaoTest extends BaseTest {
 
 	@Autowired
@@ -143,8 +144,38 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getListByPageAndRuleTest() {
 		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(User.class, 2, 2
-				, new Criterion[]{Restrictions.like("passWord", "BaseDao")}, new Order[]{}, new Projection[]{});
+				, new Criterion[]{Restrictions.like("passWord", "BaseDao")}, null, null);
 		List<User> results = listByPageAndRule.getResults();
+		System.out.println(listByPageAndRule);
+		if (!results.isEmpty()) {
+			results.forEach(System.out::println);
+			assertNotNull(results);
+		}
+	}
+
+
+	@Test
+	public void getListByPageAndRuleTest2() {
+		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 2, 2
+				, new Criterion[]{Restrictions.like("passWord", "password")}
+				, new Order[]{Order.asc("name")}, null);
+		List<Teacher> results = listByPageAndRule.getResults();
+		System.out.println(listByPageAndRule);
+		if (!results.isEmpty()) {
+			results.forEach(System.out::println);
+			assertNotNull(results);
+		}
+	}
+
+	@Test
+	public void getListByPageAndRuleTest3() {
+		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 1, 2
+				, null
+				, new Order[]{Order.asc("name")}, new Projection[]{Projections.projectionList()
+						.add(Property.forName("passWord").as("passWord"))
+						.add(Property.forName("name").as("name"))
+				});
+		List<Teacher> results = listByPageAndRule.getResults();
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
@@ -159,44 +190,20 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void getListByPageAndRuleTest2() {
-		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 2, 2
-				, new Criterion[]{Restrictions.like("passWord", "password")}
-				, new Order[]{Order.asc("name")}, new Projection[]{});
-		List<Teacher> results = listByPageAndRule.getResults();
-		System.out.println(listByPageAndRule);
-		if (!results.isEmpty()) {
-			results.forEach(System.out::println);
-			assertNotNull(results);
-		}
-	}
-
-	@Test
-	public void getListByPageAndRuleTest3() {
-		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 1, 2
-				, new Criterion[]{}
-				, new Order[]{Order.asc("name")}, new Projection[]{Projections.projectionList()
-						.add(Property.forName("passWord").as("passWord"))
-						.add(Property.forName("name").as("name"))
-				});
-		List<Teacher> results = listByPageAndRule.getResults();
-		System.out.println(listByPageAndRule);
-		if (!results.isEmpty()) {
-			results.forEach(System.out::println);
-			assertNotNull(results);
-		}
-	}
-
-	@Test
-	public void getStatisticsByRuleTest(){
+	public void getStatisticsByRuleTest() {
+		/*List result = teacherDao.getStatisticsByRule(Teacher.class, null, new Projection[]{Projections.projectionList()
+				.add(Projections.groupProperty("passWord"))
+				.add(Projections.count("id"))
+		});
+		result.stream().forEach(System.out::println);*/
 		List result = teacherDao.getStatisticsByRule(Teacher.class, new Criterion[]{}, new Projection[]{Projections.projectionList()
 				.add(Projections.groupProperty("passWord"))
 				.add(Projections.count("id"))
 		});
-		for (Object item : result ){
+		for (Object item : result) {
 			Object[] objects = (Object[]) item;
 			for (int i = 0; i < objects.length; i++) {
-				System.out.print(objects[i]+"           ");
+				System.out.print(objects[i] + "           ");
 			}
 			System.out.println();
 		}

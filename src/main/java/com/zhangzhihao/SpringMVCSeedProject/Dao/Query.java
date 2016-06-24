@@ -9,8 +9,7 @@ import java.util.*;
 
 /**
  * Query基类<br>
- *
- * @describe：封装JPA CriteriaBuilder查询条件
+ * 封装JPA CriteriaBuilder查询条件
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes", "null", "hiding"})
 public class Query implements Serializable {

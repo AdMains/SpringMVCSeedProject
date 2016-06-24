@@ -180,21 +180,16 @@ public class BaseDao<T> {
 		return criteria.list();
 	}
 
-
 	/**
-	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
+	 * 根据传来的参数生成 Criteria,是几个查询方法的封装
 	 *
 	 * @param modelClass        类型，比如User.class
-	 * @param currentPageNumber 页码
-	 * @param pageSize          每页数量
 	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @param orders            查询后记录的排序条件,由Order对象生成
 	 * @param projections       分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
 	 */
-	@Transactional(readOnly = true)
-	public PageResults<T> getListByPageAndRule(Class<T> modelClass, Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
-	                                           final Projection[] projections) {
+	private Criteria makeCriteria(final Class<T> modelClass,final Criterion[] criterions, final Order[] orders,final Projection[] projections){
 		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
 		//添加条件
 		if (criterions != null && criterions.length > 0) {
@@ -213,8 +208,26 @@ public class BaseDao<T> {
 			for (int i = 0; i < projections.length; i++) {
 				criteria.setProjection(projections[i]);
 			}
+			criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass));
 		}
+		return criteria;
+	}
 
+	/**
+	 * 按条件分页,条件以可变参形式传入，类型为Criterion [URL]http://zzk.cnblogs.com/s?t=b&w=Criteria
+	 *
+	 * @param modelClass        类型，比如User.class
+	 * @param currentPageNumber 页码
+	 * @param pageSize          每页数量
+	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
+	 * @param orders            查询后记录的排序条件,由Order对象生成
+	 * @param projections       分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
+	 * @return 查询结果
+	 */
+	@Transactional(readOnly = true)
+	public PageResults<T> getListByPageAndRule(Class<T> modelClass, Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
+	                                           final Projection[] projections) {
+		Criteria criteria = makeCriteria(modelClass, criterions, orders, projections);
 		//参数验证
 		int totalCount = getCountByRule(modelClass, criterions);
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
@@ -222,13 +235,12 @@ public class BaseDao<T> {
 		if (currentPageNumber > pageCount && pageCount != 0) {
 			currentPageNumber = pageCount;
 		}
-
 		//查看是否要分页
 		if (currentPageNumber >= 0 && pageSize >= 0) {
 			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
 		}
-		List<T> list = criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass)).list();
+		List<T> list = criteria.list();
 		return new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
 	}
 
@@ -242,14 +254,7 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public int getCountByRule(Class<T> modelClass, final Criterion[] criterions) {
-		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
-		//添加条件
-		if (criterions != null && criterions.length > 0) {
-			for (int i = 0; i < criterions.length; i++) {
-				criteria.add(criterions[i]);
-			}
-		}
-		criteria.setProjection(Projections.rowCount());
+		Criteria criteria = makeCriteria(modelClass, criterions, null, new Projection[]{Projections.rowCount()});
 		long uniqueResult = 0;
 		try {
 			uniqueResult = (long) criteria.uniqueResult();
@@ -269,6 +274,11 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public List getStatisticsByRule(Class<T> modelClass, final Criterion[] criterions,final Projection[] projections) {
+		/*Criteria criteria = makeCriteria(modelClass, criterions, null, projections);
+		if(projections!=null||projections.length>=0){
+			criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass));
+		}
+		return criteria.list();*/
 		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
 		//添加条件
 		if (criterions != null && criterions.length > 0) {
