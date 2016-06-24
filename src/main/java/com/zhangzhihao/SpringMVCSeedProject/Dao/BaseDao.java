@@ -170,7 +170,7 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public List<T> getListByPage(Class<T> modelClass,final  Integer currentPageNumber,final  Integer pageSize) {
+	public List<T> getListByPage(Class<T> modelClass, final Integer currentPageNumber, final Integer pageSize) {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
@@ -183,13 +183,13 @@ public class BaseDao<T> {
 	/**
 	 * 根据传来的参数生成 Criteria,是几个查询方法的封装
 	 *
-	 * @param modelClass        类型，比如User.class
-	 * @param criterions        查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
-	 * @param orders            查询后记录的排序条件,由Order对象生成
-	 * @param projections       分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
+	 * @param modelClass  类型，比如User.class
+	 * @param criterions  查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
+	 * @param orders      查询后记录的排序条件,由Order对象生成
+	 * @param projections 分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
 	 */
-	private Criteria makeCriteria(final Class<T> modelClass,final Criterion[] criterions, final Order[] orders,final Projection[] projections){
+	private Criteria makeCriteria(final Class<T> modelClass, final Criterion[] criterions, final Order[] orders, final Projection[] projections) {
 		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
 		//添加条件
 		if (criterions != null && criterions.length > 0) {
@@ -208,7 +208,6 @@ public class BaseDao<T> {
 			for (int i = 0; i < projections.length; i++) {
 				criteria.setProjection(projections[i]);
 			}
-			criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass));
 		}
 		return criteria;
 	}
@@ -240,6 +239,9 @@ public class BaseDao<T> {
 			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
 		}
+		if (projections != null && projections.length > 0) {
+			criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass));
+		}
 		List<T> list = criteria.list();
 		return new PageResults<T>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
 	}
@@ -267,31 +269,14 @@ public class BaseDao<T> {
 	/**
 	 * 获得统计结果
 	 *
-	 * @param modelClass 类型，比如User.class
-	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
-	 * @param projections       分组和聚合查询条件
+	 * @param modelClass  类型，比如User.class
+	 * @param criterions  查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
+	 * @param projections 分组和聚合查询条件
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public List getStatisticsByRule(Class<T> modelClass, final Criterion[] criterions,final Projection[] projections) {
-		/*Criteria criteria = makeCriteria(modelClass, criterions, null, projections);
-		if(projections!=null||projections.length>=0){
-			criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass));
-		}
-		return criteria.list();*/
-		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
-		//添加条件
-		if (criterions != null && criterions.length > 0) {
-			for (int i = 0; i < criterions.length; i++) {
-				criteria.add(criterions[i]);
-			}
-		}
-		//添加分组统计
-		if (projections != null && projections.length > 0) {
-			for (int i = 0; i < projections.length; i++) {
-				criteria.setProjection(projections[i]);
-			}
-		}
+	public List getStatisticsByRule(Class<T> modelClass, final Criterion[] criterions, final Projection[] projections) {
+		Criteria criteria = makeCriteria(modelClass, criterions, null, projections);
 		return criteria.list();
 	}
 

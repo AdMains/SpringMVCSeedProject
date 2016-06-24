@@ -191,12 +191,7 @@ public class BaseDaoTest extends BaseTest {
 
 	@Test
 	public void getStatisticsByRuleTest() {
-		/*List result = teacherDao.getStatisticsByRule(Teacher.class, null, new Projection[]{Projections.projectionList()
-				.add(Projections.groupProperty("passWord"))
-				.add(Projections.count("id"))
-		});
-		result.stream().forEach(System.out::println);*/
-		List result = teacherDao.getStatisticsByRule(Teacher.class, new Criterion[]{}, new Projection[]{Projections.projectionList()
+		List result = teacherDao.getStatisticsByRule(Teacher.class, null, new Projection[]{Projections.projectionList()
 				.add(Projections.groupProperty("passWord"))
 				.add(Projections.count("id"))
 		});
