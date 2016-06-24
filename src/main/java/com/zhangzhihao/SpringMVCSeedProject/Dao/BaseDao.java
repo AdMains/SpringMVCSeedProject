@@ -10,6 +10,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -41,7 +42,7 @@ public class BaseDao<T> {
 	 * @param model 需要添加的对象
 	 * @return 是否添加成功
 	 */
-	public Boolean save(final T model) {
+	public Boolean save(@NotNull final T model) {
 		Serializable save = hibernateTemplate.save(model);
 		return save != null;
 	}
@@ -52,7 +53,7 @@ public class BaseDao<T> {
 	 * @param model 需要添加的对象
 	 * @return Integer类型的ID
 	 */
-	public Integer saveAndGetIntegerID(final T model) {
+	public Integer saveAndGetIntegerID(@NotNull final T model) {
 		return (Integer) hibernateTemplate.save(model);
 	}
 
@@ -62,7 +63,7 @@ public class BaseDao<T> {
 	 * @param model 需要添加的对象
 	 * @return String类型的ID
 	 */
-	public String saveAndGetStringID(final T model) {
+	public String saveAndGetStringID(@NotNull final T model) {
 		return (String) hibernateTemplate.save(model);
 	}
 
@@ -72,7 +73,7 @@ public class BaseDao<T> {
 	 * @param modelList 需要增加的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void saveAll(final List<T> modelList) {
+	public void saveAll(@NotNull final List<T> modelList) {
 		modelList.stream().forEach(hibernateTemplate::save);
 	}
 
@@ -82,7 +83,7 @@ public class BaseDao<T> {
 	 * @param model 需要删除的对象
 	 *              失败会抛异常
 	 */
-	public void delete(final T model) {
+	public void delete(@NotNull final T model) {
 		hibernateTemplate.delete(model);
 	}
 
@@ -92,7 +93,7 @@ public class BaseDao<T> {
 	 * @param modelList 需要删除的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void deleteAll(final List<T> modelList) {
+	public void deleteAll(@NotNull final List<T> modelList) {
 		modelList.stream().forEach(hibernateTemplate::delete);
 	}
 
@@ -103,7 +104,7 @@ public class BaseDao<T> {
 	 * @param id         需要删除的对象的id
 	 *                   失败抛出异常
 	 */
-	public void deleteById(final Class<T> modelClass, Serializable id) {
+	public void deleteById(final Class<T> modelClass, @NotNull Serializable id) {
 		hibernateTemplate.delete(this.getById(modelClass, id));
 	}
 
@@ -113,7 +114,7 @@ public class BaseDao<T> {
 	 * @param model 需要更新的对象
 	 *              失败会抛出异常
 	 */
-	public void update(final T model) {
+	public void update(@NotNull final T model) {
 		hibernateTemplate.update(model);
 	}
 
@@ -123,7 +124,7 @@ public class BaseDao<T> {
 	 * @param modelList 需要更新的对象
 	 *                  失败会抛出异常
 	 */
-	public void updateAll(final List<T> modelList) {
+	public void updateAll(@NotNull final List<T> modelList) {
 		modelList.stream().forEach(hibernateTemplate::update);
 	}
 
@@ -133,7 +134,7 @@ public class BaseDao<T> {
 	 * @param model 需要更新或添加的对象
 	 *              失败会抛出异常
 	 */
-	public void saveOrUpdate(final T model) {
+	public void saveOrUpdate(@NotNull final T model) {
 		hibernateTemplate.saveOrUpdate(model);
 	}
 
@@ -145,7 +146,7 @@ public class BaseDao<T> {
 	 * @return model
 	 */
 	@Transactional(readOnly = true)
-	public T getById(Class<T> modelClass, final Serializable id) {
+	public T getById(Class<T> modelClass, @NotNull final Serializable id) {
 		return hibernateTemplate.get(modelClass, id);
 	}
 
@@ -170,7 +171,7 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public List<T> getListByPage(Class<T> modelClass, final Integer currentPageNumber, final Integer pageSize) {
+	public List<T> getListByPage(Class<T> modelClass, @NotNull final Integer currentPageNumber, @NotNull final Integer pageSize) {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
@@ -189,25 +190,19 @@ public class BaseDao<T> {
 	 * @param projections 分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
 	 */
-	private Criteria makeCriteria(final Class<T> modelClass, final Criterion[] criterions, final Order[] orders, final Projection[] projections) {
+	private Criteria makeCriteria(final Class<T> modelClass, @NotNull final Criterion[] criterions, @NotNull final Order[] orders, @NotNull final Projection[] projections) {
 		Criteria criteria = hibernateTemplate.getSessionFactory().getCurrentSession().createCriteria(modelClass);
 		//添加条件
-		if (criterions != null && criterions.length > 0) {
-			for (int i = 0; i < criterions.length; i++) {
-				criteria.add(criterions[i]);
-			}
+		for (int i = 0; i < criterions.length; i++) {
+			criteria.add(criterions[i]);
 		}
 		//添加排序
-		if (orders != null && orders.length > 0) {
-			for (int i = 0; i < orders.length; i++) {
-				criteria.addOrder(orders[i]);
-			}
+		for (int i = 0; i < orders.length; i++) {
+			criteria.addOrder(orders[i]);
 		}
 		//添加分组统计
-		if (projections != null && projections.length > 0) {
-			for (int i = 0; i < projections.length; i++) {
-				criteria.setProjection(projections[i]);
-			}
+		for (int i = 0; i < projections.length; i++) {
+			criteria.setProjection(projections[i]);
 		}
 		return criteria;
 	}
@@ -224,8 +219,8 @@ public class BaseDao<T> {
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public PageResults<T> getListByPageAndRule(Class<T> modelClass, Integer currentPageNumber, Integer pageSize, final Criterion[] criterions, final Order[] orders,
-	                                           final Projection[] projections) {
+	public PageResults<T> getListByPageAndRule(Class<T> modelClass, @NotNull Integer currentPageNumber, @NotNull Integer pageSize, @NotNull final Criterion[] criterions, @NotNull final Order[] orders,
+	                                           @NotNull final Projection[] projections) {
 		Criteria criteria = makeCriteria(modelClass, criterions, orders, projections);
 		//参数验证
 		int totalCount = getCountByRule(modelClass, criterions);
@@ -239,7 +234,7 @@ public class BaseDao<T> {
 			criteria.setFirstResult((currentPageNumber - 1) * pageSize);
 			criteria.setMaxResults(pageSize);
 		}
-		if (projections != null && projections.length > 0) {
+		if (projections.length > 0) {
 			criteria.setResultTransformer(new AliasToBeanResultTransformer(modelClass));
 		}
 		List<T> list = criteria.list();
@@ -255,8 +250,8 @@ public class BaseDao<T> {
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByRule(Class<T> modelClass, final Criterion[] criterions) {
-		Criteria criteria = makeCriteria(modelClass, criterions, null, new Projection[]{Projections.rowCount()});
+	public int getCountByRule(Class<T> modelClass, @NotNull final Criterion[] criterions) {
+		Criteria criteria = makeCriteria(modelClass, criterions, new Order[]{}, new Projection[]{Projections.rowCount()});
 		long uniqueResult = 0;
 		try {
 			uniqueResult = (long) criteria.uniqueResult();
@@ -275,8 +270,8 @@ public class BaseDao<T> {
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public List getStatisticsByRule(Class<T> modelClass, final Criterion[] criterions, final Projection[] projections) {
-		Criteria criteria = makeCriteria(modelClass, criterions, null, projections);
+	public List getStatisticsByRule(Class<T> modelClass, @NotNull final Criterion[] criterions, @NotNull final Projection[] projections) {
+		Criteria criteria = makeCriteria(modelClass, criterions, new Order[]{}, projections);
 		return criteria.list();
 	}
 
@@ -288,7 +283,7 @@ public class BaseDao<T> {
 	 * @param values    不定参数数组
 	 * @return 受影响的行数
 	 */
-	public int executeSql(String sqlString, Object... values) {
+	public int executeSql(@NotNull String sqlString, @NotNull Object... values) {
 		Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sqlString);
 		if (values != null) {
@@ -304,7 +299,7 @@ public class BaseDao<T> {
 	 *
 	 * @param t 实体
 	 */
-	public void refresh(T t) {
+	public void refresh(@NotNull T t) {
 		hibernateTemplate.refresh(t);
 	}
 }

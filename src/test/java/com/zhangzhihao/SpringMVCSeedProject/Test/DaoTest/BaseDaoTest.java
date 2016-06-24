@@ -19,12 +19,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:Spring.xml")
-//@TestExecutionListeners({
-//		DependencyInjectionTestExecutionListener.class,
-//		DirtiesContextTestExecutionListener.class
-//})
+
 @SuppressWarnings({"unchecked"})
 public class BaseDaoTest extends BaseTest {
 
@@ -55,6 +50,11 @@ public class BaseDaoTest extends BaseTest {
 		int id = teacherDao.saveAndGetIntegerID(new Teacher(uuid, "password"));
 		System.out.println(id);
 		Assert.assertNotNull(id);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void saveAllTest() {
+		userDao.saveAll(null);
 	}
 
 	@Test
@@ -144,7 +144,7 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getListByPageAndRuleTest() {
 		PageResults<User> listByPageAndRule = userDao.getListByPageAndRule(User.class, 2, 2
-				, new Criterion[]{Restrictions.like("passWord", "BaseDao")}, null, null);
+				, new Criterion[]{Restrictions.like("passWord", "BaseDao")}, new Order[]{}, new Projection[]{});
 		List<User> results = listByPageAndRule.getResults();
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
@@ -158,7 +158,8 @@ public class BaseDaoTest extends BaseTest {
 	public void getListByPageAndRuleTest2() {
 		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 2, 2
 				, new Criterion[]{Restrictions.like("passWord", "password")}
-				, new Order[]{Order.asc("name")}, null);
+				, new Order[]{Order.asc("name")}
+				, new Projection[]{});
 		List<Teacher> results = listByPageAndRule.getResults();
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
@@ -170,7 +171,7 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getListByPageAndRuleTest3() {
 		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 1, 2
-				, null
+				, new Criterion[]{}
 				, new Order[]{Order.asc("name")}, new Projection[]{Projections.projectionList()
 						.add(Property.forName("passWord").as("passWord"))
 						.add(Property.forName("name").as("name"))
@@ -191,7 +192,7 @@ public class BaseDaoTest extends BaseTest {
 
 	@Test
 	public void getStatisticsByRuleTest() {
-		List result = teacherDao.getStatisticsByRule(Teacher.class, null, new Projection[]{Projections.projectionList()
+		List result = teacherDao.getStatisticsByRule(Teacher.class, new Criterion[]{}, new Projection[]{Projections.projectionList()
 				.add(Projections.groupProperty("passWord"))
 				.add(Projections.count("id"))
 		});
