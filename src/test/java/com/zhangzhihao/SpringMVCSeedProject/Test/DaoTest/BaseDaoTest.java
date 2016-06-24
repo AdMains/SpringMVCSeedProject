@@ -5,6 +5,7 @@ import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
 import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
+import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -12,13 +13,7 @@ import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Restrictions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
 import java.util.List;
 import java.util.Random;
@@ -27,13 +22,13 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:Spring.xml")
-@TestExecutionListeners({
-		DependencyInjectionTestExecutionListener.class,
-		DirtiesContextTestExecutionListener.class
-})
-public class BaseDaoTest {
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration("classpath:Spring.xml")
+//@TestExecutionListeners({
+//		DependencyInjectionTestExecutionListener.class,
+//		DirtiesContextTestExecutionListener.class
+//})
+public class BaseDaoTest extends BaseTest {
 
 	@Autowired
 	private BaseDao<User> userDao;
