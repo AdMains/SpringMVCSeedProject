@@ -34,7 +34,7 @@ class BaseService<T> {
 	 * @param model 需要添加的对象
 	 * @return 是否添加成功
 	 */
-	public Boolean save(T model) {
+	public Boolean save(@NotNull T model) {
 		return baseDao.save(model);
 	}
 
@@ -44,7 +44,7 @@ class BaseService<T> {
 	 * @param model 需要添加的对象
 	 * @return Integer类型的ID
 	 */
-	public Integer saveAndGetIntegerID(T model) {
+	public Integer saveAndGetIntegerID(@NotNull T model) {
 		return (Integer) baseDao.saveAndGetIntegerID(model);
 	}
 
@@ -54,7 +54,7 @@ class BaseService<T> {
 	 * @param model 需要添加的对象
 	 * @return String类型的ID
 	 */
-	public String saveAndGetStringID(T model) {
+	public String saveAndGetStringID(@NotNull T model) {
 		return (String) baseDao.saveAndGetStringID(model);
 	}
 
@@ -92,11 +92,11 @@ class BaseService<T> {
 	/**
 	 * 按照id删除对象
 	 *
-	 * @param id         需要删除的对象的id
-	 *                   失败抛出异常
+	 * @param id 需要删除的对象的id
+	 *           失败抛出异常
 	 */
-	public void deleteById( @NotNull Serializable id) {
-		baseDao.deleteById(modelClass,id);
+	public void deleteById(@NotNull Serializable id) {
+		baseDao.deleteById(modelClass, id);
 	}
 
 	/**
@@ -132,11 +132,11 @@ class BaseService<T> {
 	/**
 	 * 通过主键, 查询对象
 	 *
-	 * @param id         主键(Serializable)
+	 * @param id 主键(Serializable)
 	 * @return model
 	 */
-	public T getById( @NotNull final Serializable id) {
-		return baseDao.getById(modelClass,id);
+	public T getById(@NotNull final Serializable id) {
+		return baseDao.getById(modelClass, id);
 	}
 
 	/**
@@ -158,7 +158,7 @@ class BaseService<T> {
 	 */
 	public List<T> getListByPage(@NotNull final Integer currentPageNumber,
 	                             @NotNull final Integer pageSize) {
-		return baseDao.getListByPage(modelClass,currentPageNumber,pageSize);
+		return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
 	}
 
 	/**
@@ -176,7 +176,7 @@ class BaseService<T> {
 	                                           @NotNull final Criterion[] criterions,
 	                                           @NotNull final Order[] orders,
 	                                           @NotNull final Projection[] projections) {
-		return baseDao.getListByPageAndRule(modelClass,currentPageNumber,pageSize,criterions,orders,projections);
+		return baseDao.getListByPageAndRule(modelClass, currentPageNumber, pageSize, criterions, orders, projections);
 	}
 
 
@@ -186,8 +186,8 @@ class BaseService<T> {
 	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @return 数量
 	 */
-	public int getCountByRule( @NotNull final Criterion[] criterions) {
-		return baseDao.getCountByRule(modelClass,criterions);
+	public int getCountByRule(@NotNull final Criterion[] criterions) {
+		return baseDao.getCountByRule(modelClass, criterions);
 	}
 
 	/**
@@ -199,7 +199,7 @@ class BaseService<T> {
 	 */
 	public List getStatisticsByRule(@NotNull final Criterion[] criterions,
 	                                @NotNull final Projection[] projections) {
-		return baseDao.getStatisticsByRule(modelClass,criterions,projections);
+		return baseDao.getStatisticsByRule(modelClass, criterions, projections);
 	}
 
 
@@ -211,7 +211,7 @@ class BaseService<T> {
 	 * @return 受影响的行数
 	 */
 	public int executeSql(@NotNull String sqlString, @NotNull Object... values) {
-		return baseDao.executeSql(sqlString,values);
+		return baseDao.executeSql(sqlString, values);
 	}
 
 	/**

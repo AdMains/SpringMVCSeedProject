@@ -8,14 +8,18 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
 	@Id
+	@NotNull
 	private String userName;
+	@NotNull
 	private String passWord;
+	@NotNull
 	private AuthorityType authorityType;
 
 	public User() {

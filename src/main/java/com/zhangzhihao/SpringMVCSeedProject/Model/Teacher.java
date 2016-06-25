@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Teacher")
@@ -16,8 +17,11 @@ public class Teacher {
 	@Id
 	@GeneratedValue(generator = "generator")
 	@GenericGenerator(name = "generator", strategy = "increment")
+	@NotNull
 	private int id;
+	@NotNull
 	private String name;
+	@NotNull
 	private String passWord;
 
 	public Teacher(String name, String passWord) {

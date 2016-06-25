@@ -297,10 +297,8 @@ public class BaseDao<T> {
 	public int executeSql(@NotNull String sqlString, @NotNull Object... values) {
 		Session session = hibernateTemplate.getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session.createSQLQuery(sqlString);
-		if (values != null) {
-			for (int i = 0; i < values.length; i++) {
-				sqlQuery.setParameter(i, values[i]);
-			}
+		for (int i = 0; i < values.length; i++) {
+			sqlQuery.setParameter(i, values[i]);
 		}
 		return sqlQuery.executeUpdate();
 	}
