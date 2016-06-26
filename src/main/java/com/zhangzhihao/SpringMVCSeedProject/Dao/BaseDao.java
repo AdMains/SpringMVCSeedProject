@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @param <T> 实体类型
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"deprecation", "unchecked"})
 @Transactional(timeout = 1)
 @Repository
 @Primary
@@ -151,7 +151,6 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public T getById(Class<T> modelClass, @NotNull final Serializable id) {
-		T t = hibernateTemplate.get(modelClass, id);
 		return hibernateTemplate.get(modelClass, id);
 	}
 

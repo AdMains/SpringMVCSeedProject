@@ -12,7 +12,7 @@
     <!--  
     	指定一个目录：当 EHCache 把数据写到硬盘上时, 将把数据写到这个目录下.
     -->     
-    <diskStore path="/ehcacheTempDirectory"/>
+    <diskStore path="java.io.tmpdir"/>
 
 
     <!--Default Cache configuration. These will applied to caches programmatically created through
