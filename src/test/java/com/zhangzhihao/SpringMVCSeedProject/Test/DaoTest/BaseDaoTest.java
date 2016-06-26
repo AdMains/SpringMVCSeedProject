@@ -29,6 +29,14 @@ public class BaseDaoTest extends BaseTest {
 	@Autowired
 	private BaseDao<Teacher> teacherDao;
 
+	/**
+	 * 测试@NotNull 注解
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void saveAllTest() {
+		userDao.saveAll(null);
+	}
+
 	@Test
 	public void saveTest() {
 		Boolean result = userDao.save(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
@@ -50,11 +58,6 @@ public class BaseDaoTest extends BaseTest {
 		int id = teacherDao.saveAndGetIntegerID(new Teacher(uuid, "password"));
 		System.out.println(id);
 		Assert.assertNotNull(id);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void saveAllTest() {
-		userDao.saveAll(null);
 	}
 
 	@Test
@@ -128,8 +131,8 @@ public class BaseDaoTest extends BaseTest {
 		List<User> userList = userDao.loadAll(User.class);
 		if (userList.size() > 0) {
 			userList.stream().forEach(System.out::println);
-			assertNotNull(userList);
 		}
+		assertNotNull(userList);
 	}
 
 	@Test
@@ -137,8 +140,8 @@ public class BaseDaoTest extends BaseTest {
 		List<User> listByPage = userDao.getListByPage(User.class, 2, 2);
 		if (listByPage.size() > 0) {
 			listByPage.stream().forEach(System.out::println);
-			assertNotNull(listByPage);
 		}
+		assertNotNull(listByPage);
 	}
 
 	@Test
@@ -149,8 +152,8 @@ public class BaseDaoTest extends BaseTest {
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
-			assertNotNull(results);
 		}
+		assertNotNull(results);
 	}
 
 
@@ -164,8 +167,8 @@ public class BaseDaoTest extends BaseTest {
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
-			assertNotNull(results);
 		}
+		assertNotNull(results);
 	}
 
 	@Test
@@ -180,8 +183,8 @@ public class BaseDaoTest extends BaseTest {
 		System.out.println(listByPageAndRule);
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
-			assertNotNull(results);
 		}
+		assertNotNull(results);
 	}
 
 	@Test

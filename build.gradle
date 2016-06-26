@@ -6,9 +6,10 @@ apply plugin: "war"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-def SpringVersion = "4.3.1.BUILD-SNAPSHOT"
+def SpringVersion = "4.3.0.RELEASE"
 def SpringBootVersion = "1.3.5.RELEASE"
 def HibernateVersion = "5.2.0.Final"
+def ShiroVersion="1.2.5"
 
 
 repositories {
@@ -70,9 +71,15 @@ dependencies {
 
             //jUnit
             "junit:junit:4.12",
+
             //@NotNull
             "org.jetbrains:annotations:15.0",
 
+            //shiro
+            //"org.apache.shiro:shiro-core:${ShiroVersion}",
+            //"org.apache.shiro:shiro-spring:${ShiroVersion}",
+            //"org.apache.shiro:shiro-web:${ShiroVersion}",
+            //"org.apache.shiro:shiro-ehcache:${ShiroVersion}",
 
     )
     testCompile(
