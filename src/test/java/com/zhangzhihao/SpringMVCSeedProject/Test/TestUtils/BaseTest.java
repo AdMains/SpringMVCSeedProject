@@ -13,15 +13,16 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = { "classpath:Spring.xml","classpath:SpringMVC.xml" })
+@ContextConfiguration(locations = {"classpath:Spring.xml", "classpath:SpringMVC.xml"})
 @TestExecutionListeners({
 		DependencyInjectionTestExecutionListener.class,
 		DirtiesContextTestExecutionListener.class
 })
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
-	protected   MockMvc mockMvc;
+	protected MockMvc mockMvc;
+
 	@Test
-	public void NullTest(){
+	public void NullTest() {
 
 	}
 }
