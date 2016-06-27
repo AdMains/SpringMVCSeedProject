@@ -12,7 +12,7 @@ public class TeacherService extends BaseService<Teacher> {
 	 * @param model 需要添加的对象
 	 * @return 实体
 	 */
-	public Teacher saveAndGetTeacher(@NotNull final Teacher model) {
+	public Teacher saveAndGetTeacher(@NotNull final Teacher model) throws Exception {
 		model.setId(this.saveAndGetIntegerID(model));
 		return model;
 	}

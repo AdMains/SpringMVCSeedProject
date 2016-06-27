@@ -12,7 +12,12 @@ public class UserServiceTest extends BaseTest {
 
 	@Test
 	public void getByIdTest() {
-		User admin = service.getById("admin");
+		User admin = null;
+		try {
+			admin = service.getById("admin");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println(admin);
 	}
 }

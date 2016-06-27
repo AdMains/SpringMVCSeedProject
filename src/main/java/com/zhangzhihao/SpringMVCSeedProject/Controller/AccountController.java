@@ -38,7 +38,13 @@ public class AccountController {
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password, HttpSession session) {
 		String userName = UserName.trim();
-		User LoginUser = userService.getById(userName);
+		User LoginUser = null;
+		try {
+			LoginUser = userService.getById(userName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		assert LoginUser != null;
 		if (LoginUser.getPassWord().equals(Password.trim())) {
 			session.setAttribute("User", LoginUser);
 			return "redirect:/MustLogin";

@@ -33,8 +33,9 @@ class BaseService<T> {
 	 *
 	 * @param model 需要添加的对象
 	 * @return 是否添加成功
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public Boolean save(@NotNull T model) {
+	public Boolean save(@NotNull T model) throws Exception {
 		return baseDao.save(model);
 	}
 
@@ -43,9 +44,10 @@ class BaseService<T> {
 	 *
 	 * @param model 需要添加的对象
 	 * @return Integer类型的ID
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public Integer saveAndGetIntegerID(@NotNull T model) {
-		return (Integer) baseDao.saveAndGetIntegerID(model);
+	public Integer saveAndGetIntegerID(@NotNull T model) throws Exception {
+		return baseDao.saveAndGetIntegerID(model);
 	}
 
 	/**
@@ -53,9 +55,10 @@ class BaseService<T> {
 	 *
 	 * @param model 需要添加的对象
 	 * @return String类型的ID
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public String saveAndGetStringID(@NotNull T model) {
-		return (String) baseDao.saveAndGetStringID(model);
+	public String saveAndGetStringID(@NotNull T model) throws Exception {
+		return baseDao.saveAndGetStringID(model);
 	}
 
 
@@ -63,9 +66,9 @@ class BaseService<T> {
 	 * 批量保存对象
 	 *
 	 * @param modelList 需要增加的对象的集合
-	 *                  失败会抛异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void saveAll(@NotNull final List<T> modelList) {
+	public void saveAll(@NotNull final List<T> modelList) throws Exception {
 		baseDao.saveAll(modelList);
 	}
 
@@ -73,9 +76,9 @@ class BaseService<T> {
 	 * 删除对象
 	 *
 	 * @param model 需要删除的对象
-	 *              失败会抛异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void delete(@NotNull final T model) {
+	public void delete(@NotNull final T model) throws Exception {
 		baseDao.delete(model);
 	}
 
@@ -83,9 +86,9 @@ class BaseService<T> {
 	 * 批量删除对象
 	 *
 	 * @param modelList 需要删除的对象的集合
-	 *                  失败会抛异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void deleteAll(@NotNull final List<T> modelList) {
+	public void deleteAll(@NotNull final List<T> modelList) throws Exception {
 		baseDao.deleteAll(modelList);
 	}
 
@@ -93,9 +96,9 @@ class BaseService<T> {
 	 * 按照id删除对象
 	 *
 	 * @param id 需要删除的对象的id
-	 *           失败抛出异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void deleteById(@NotNull Serializable id) {
+	public void deleteById(@NotNull Serializable id) throws Exception {
 		baseDao.deleteById(modelClass, id);
 	}
 
@@ -103,9 +106,9 @@ class BaseService<T> {
 	 * 更新对象
 	 *
 	 * @param model 需要更新的对象
-	 *              失败会抛出异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void update(@NotNull final T model) {
+	public void update(@NotNull final T model) throws Exception {
 		baseDao.update(model);
 	}
 
@@ -113,9 +116,9 @@ class BaseService<T> {
 	 * 批量更新对象
 	 *
 	 * @param modelList 需要更新的对象
-	 *                  失败会抛出异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void updateAll(@NotNull final List<T> modelList) {
+	public void updateAll(@NotNull final List<T> modelList) throws Exception {
 		baseDao.updateAll(modelList);
 	}
 
@@ -123,9 +126,9 @@ class BaseService<T> {
 	 * 添加或者更新
 	 *
 	 * @param model 需要更新或添加的对象
-	 *              失败会抛出异常
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void saveOrUpdate(@NotNull final T model) {
+	public void saveOrUpdate(@NotNull final T model) throws Exception {
 		baseDao.saveOrUpdate(model);
 	}
 
@@ -134,8 +137,9 @@ class BaseService<T> {
 	 *
 	 * @param id 主键(Serializable)
 	 * @return model
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public T getById(@NotNull final Serializable id) {
+	public T getById(@NotNull final Serializable id) throws Exception {
 		return baseDao.getById(modelClass, id);
 	}
 
@@ -143,8 +147,9 @@ class BaseService<T> {
 	 * 获得全部
 	 *
 	 * @return List
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public List<T> loadAll() {
+	public List<T> loadAll() throws Exception {
 		return baseDao.loadAll(modelClass);
 	}
 
@@ -155,9 +160,11 @@ class BaseService<T> {
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @return 查询结果
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
 	public List<T> getListByPage(@NotNull final Integer currentPageNumber,
-	                             @NotNull final Integer pageSize) {
+	                             @NotNull final Integer pageSize)
+			throws Exception {
 		return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
 	}
 
@@ -170,12 +177,14 @@ class BaseService<T> {
 	 * @param orders            查询后记录的排序条件,由Order对象生成
 	 * @param projections       分组和聚合查询条件,这里的条件只能是 Projections.projectionList().add(Property.forName("passWord").as("passWord"))，详情参看测试用例
 	 * @return 查询结果
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
 	public PageResults<T> getListByPageAndRule(@NotNull Integer currentPageNumber,
 	                                           @NotNull Integer pageSize,
 	                                           @NotNull final Criterion[] criterions,
 	                                           @NotNull final Order[] orders,
-	                                           @NotNull final Projection[] projections) {
+	                                           @NotNull final Projection[] projections)
+			throws Exception {
 		return baseDao.getListByPageAndRule(modelClass, currentPageNumber, pageSize, criterions, orders, projections);
 	}
 
@@ -185,8 +194,9 @@ class BaseService<T> {
 	 *
 	 * @param criterions 查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @return 数量
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public int getCountByRule(@NotNull final Criterion[] criterions) {
+	public int getCountByRule(@NotNull final Criterion[] criterions) throws Exception {
 		return baseDao.getCountByRule(modelClass, criterions);
 	}
 
@@ -196,9 +206,11 @@ class BaseService<T> {
 	 * @param criterions  查询条件数组，由Restrictions对象生成，如Restrictions.like("name","%x%")等;
 	 * @param projections 分组和聚合查询条件
 	 * @return 数量
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
 	public List getStatisticsByRule(@NotNull final Criterion[] criterions,
-	                                @NotNull final Projection[] projections) {
+	                                @NotNull final Projection[] projections)
+			throws Exception {
 		return baseDao.getStatisticsByRule(modelClass, criterions, projections);
 	}
 
@@ -209,8 +221,9 @@ class BaseService<T> {
 	 * @param sqlString sql
 	 * @param values    不定参数数组
 	 * @return 受影响的行数
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public int executeSql(@NotNull String sqlString, @NotNull Object... values) {
+	public int executeSql(@NotNull String sqlString, @NotNull Object... values) throws Exception {
 		return baseDao.executeSql(sqlString, values);
 	}
 
@@ -218,8 +231,9 @@ class BaseService<T> {
 	 * refresh 刷新实体状态
 	 *
 	 * @param model 实体
+	 * @throws Exception 必须捕获异常进行异常处理
 	 */
-	public void refresh(@NotNull T model) {
+	public void refresh(@NotNull T model) throws Exception {
 		baseDao.refresh(model);
 	}
 }
