@@ -115,7 +115,7 @@ public class Query implements Serializable {
 
 	private boolean isNullOrEmpty(Object value) {
 		if (value instanceof String) {
-			return value == null || "".equals(value);
+			return "".equals(value);
 		}
 		return value == null;
 	}
@@ -356,7 +356,7 @@ public class Query implements Serializable {
 		addOrder(propertyName, order);
 	}
 
-	public Class getModleClass() {
+	public Class getModelClass() {
 		return this.clazz;
 	}
 
