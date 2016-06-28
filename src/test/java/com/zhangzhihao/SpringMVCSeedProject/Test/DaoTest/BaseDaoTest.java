@@ -41,15 +41,15 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void containsTest(){
-		User user=new User(UUID.randomUUID().toString(),UUID.randomUUID().toString(),AuthorityType.School_Level_Admin);
+	public void containsTest() {
+		User user = new User(UUID.randomUUID().toString(), UUID.randomUUID().toString(), AuthorityType.School_Level_Admin);
 		boolean contains = userDao.contains(user);
 		assertFalse(contains);
 	}
 
 	@Test
-	public void detachTest(){
-		User user=new User(UUID.randomUUID().toString(),UUID.randomUUID().toString(),AuthorityType.School_Level_Admin);
+	public void detachTest() {
+		User user = new User(UUID.randomUUID().toString(), UUID.randomUUID().toString(), AuthorityType.School_Level_Admin);
 		userDao.save(user);
 		userDao.detach(user);
 		boolean contains = userDao.contains(user);
@@ -102,7 +102,7 @@ public class BaseDaoTest extends BaseTest {
 	public void getByIntegerIdTest() {
 		Teacher teacher = new Teacher("name", "password");
 		teacherDao.save(teacher);
-		assertEquals(teacher.getId(),teacherDao.getById(Teacher.class,teacher.getId()).getId());
+		assertEquals(teacher.getId(), teacherDao.getById(Teacher.class, teacher.getId()).getId());
 	}
 
 	@Test
@@ -125,12 +125,12 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void getAllByQueryTest(){
-		Query query=new Query(User.class,entityManager);
-		query.eq("authorityType",0);
-		query.like("passWord","admin");
+	public void getAllByQueryTest() {
+		Query query = new Query(User.class, entityManager);
+		query.eq("authorityType", 0);
+		query.like("passWord", "admin");
 		List<User> allByQuery = userDao.getAllByQuery(query);
-		if(allByQuery!=null){
+		if (allByQuery != null) {
 			allByQuery.stream().forEach(System.out::println);
 		}
 	}
@@ -146,9 +146,9 @@ public class BaseDaoTest extends BaseTest {
 
 	@Test
 	public void getListByPageAndQueryTest() {
-		Query query=new Query(User.class,entityManager);
-		query.eq("authorityType",4);
-		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class,2,3,query);
+		Query query = new Query(User.class, entityManager);
+		query.eq("authorityType", 4);
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class, 2, 3, query);
 		List<User> results = listByPageAndQuery.getResults();
 		System.out.println(listByPageAndQuery);
 		if (!results.isEmpty()) {
@@ -160,9 +160,9 @@ public class BaseDaoTest extends BaseTest {
 
 	@Test
 	public void getListByPageAndQueryTest2() {
-		Query query=new Query(User.class,entityManager);
-		query.like("passWord","BaseDao");
-		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class,2,3,query);
+		Query query = new Query(User.class, entityManager);
+		query.like("passWord", "BaseDao");
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class, 2, 3, query);
 		List<User> results = listByPageAndQuery.getResults();
 		System.out.println(listByPageAndQuery);
 		if (!results.isEmpty()) {
@@ -172,7 +172,7 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void getCountTest(){
+	public void getCountTest() {
 		int count = userDao.getCount(User.class);
 		System.out.println(count);
 	}
@@ -180,7 +180,7 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getCountByQueryTest() {
 		Query query = new Query(User.class, entityManager);
-		query.eq("authorityType",1);
+		query.eq("authorityType", 1);
 		int countByQuery = userDao.getCountByQuery(query);
 		System.out.println(countByQuery);
 	}
@@ -188,8 +188,9 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getStatisticsByQueryTest() {
 		Query query = new Query(User.class, entityManager);
-//		query.setGroupBy("passWord");
-		query.notEq("authorityType",4);
+
+		query.notEq("authorityType", 4)
+				.isNotNull("userName");
 		Object statisticsByQuery = userDao.getStatisticsByQuery(query);
 		System.out.println(statisticsByQuery);
 	}

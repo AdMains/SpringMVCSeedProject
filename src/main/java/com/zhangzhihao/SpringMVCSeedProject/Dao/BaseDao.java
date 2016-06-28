@@ -137,7 +137,7 @@ public class BaseDao<T> {
 	@Transactional(readOnly = true)
 	public List<T> getAll(Class<T> modelClass) {
 		Query query = new Query(modelClass, entityManager);
-		return entityManager.createQuery(query.newCriteriaQuery()).getResultList();
+		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
 	}
 
 	/**
@@ -147,7 +147,7 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public List<T> getAllByQuery(@NotNull Query query) {
-		return entityManager.createQuery(query.newCriteriaQuery()).getResultList();
+		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
 	}
 
 
@@ -167,7 +167,7 @@ public class BaseDao<T> {
 			return null;
 		}
 		Query query =new Query(modelClass, entityManager);
-		return entityManager.createQuery(query.newCriteriaQuery())
+		return entityManager.createQuery(query.createCriteriaQuery())
 				.setFirstResult((currentPageNumber - 1) * pageSize)
 				.setMaxResults(pageSize)
 				.getResultList();
@@ -195,7 +195,7 @@ public class BaseDao<T> {
 		if (currentPageNumber > pageCount && pageCount != 0) {
 			currentPageNumber = pageCount;
 		}
-		TypedQuery typedQuery = entityManager.createQuery(query.newCriteriaQuery());
+		TypedQuery typedQuery = entityManager.createQuery(query.createCriteriaQuery());
 		//查看是否要分页
 		if (currentPageNumber > 0 && pageSize > 0) {
 			typedQuery
@@ -216,7 +216,7 @@ public class BaseDao<T> {
 	public int getCount(Class<T> modelClass) {
 		Query query=new Query(modelClass,entityManager);
 		return entityManager
-				.createQuery(query.newCriteriaQuery())
+				.createQuery(query.createCriteriaQuery())
 				.getResultList()
 				.size();
 	}
@@ -230,7 +230,7 @@ public class BaseDao<T> {
 	@Transactional(readOnly = true)
 	public int getCountByQuery(@NotNull final Query query) {
 		return entityManager
-				.createQuery(query.newCriteriaQuery())
+				.createQuery(query.createCriteriaQuery())
 				.getResultList()
 				.size();
 	}
@@ -243,7 +243,7 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public Object getStatisticsByQuery(@NotNull final Query query) {
-		return entityManager.createQuery(query.newCriteriaQuery()).getResultList();
+		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
 	}
 
 

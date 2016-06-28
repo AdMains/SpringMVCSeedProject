@@ -13,5 +13,5 @@
     build.gradle ：项目配置文件，管理依赖，编译，打包
 
 # 主要的后端架构：
-    Spring + Spring MVC + Hibernate
+    Spring + Spring MVC + JPA + Spring Data + Hibernate
 

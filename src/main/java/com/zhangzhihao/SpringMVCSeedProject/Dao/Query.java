@@ -1,6 +1,8 @@
 package com.zhangzhihao.SpringMVCSeedProject.Dao;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.In;
@@ -8,32 +10,49 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Query基类<br>
+ * Query
  * 封装JPA CriteriaBuilder查询条件
  */
 @SuppressWarnings({"unused", "unchecked", "rawtypes", "null", "hiding"})
 public class Query implements Serializable {
 
-	private static final long serialVersionUID = 5064932771068929342L;
+	private static final long serialVersionUID = 3366932251068926942L;
 
 //	private static Logger log = Logger.getLogger(Query.class);
 
 	private EntityManager entityManager;
 
 	/**
-	 * 要查询的模型对象
+	 * 要查询的实体类型
 	 */
 	private Class clazz;
 
 	/**
-	 * 查询条件列表
+	 * 查询根，定义查询的From子句中能出现的类型。
+	 * Criteria查询的查询根定义了实体类型，能为将来导航获得想要的结果，它与SQL查询中的FROM子句类似。
+	 * Root实例也是类型化的，且定义了查询的FROM子句中能够出现的类型。
+	 * 查询根实例能通过传入一个实体类型给 AbstractQuery.from方法获得。
+	 * Criteria查询，可以有多个查询根。
 	 */
 	private Root from;
 
+	/**
+	 * 谓词，也就是过滤条件，用CriteriaBuilder生成。
+	 * 过滤条件应用到SQL语句的FROM子句中，
+	 * 在Criteria 查询中，查询条件通过Predicate 或Expression 实例应用到CriteriaQuery 对象上。
+	 */
 	private List<Predicate> predicates;
 
+	/**
+	 * 安全查询主语句
+	 */
 	private CriteriaQuery criteriaQuery;
 
+	/**
+	 * 安全查询创建工厂。
+	 * CriteriaBuilder是一个工厂对象，安全查询的开始，
+	 * 用于构建JPA安全查询，创建CriteriaQuery，创建查询具体具体条件Predicate 等。
+	 */
 	private CriteriaBuilder criteriaBuilder;
 
 	/**
@@ -42,12 +61,18 @@ public class Query implements Serializable {
 	private List<Order> orders;
 
 	/**
-	 * 关联模式
+	 * 子查询
 	 */
 	private Map<String, Query> subQuery;
 
+	/**
+	 * 关联查询
+	 */
 	private Map<String, Query> linkQuery;
 
+	/**
+	 * 子查询字段
+	 */
 	private String projection;
 
 	/**
@@ -55,6 +80,9 @@ public class Query implements Serializable {
 	 */
 	private List<Query> orQuery;
 
+	/**
+	 * 分组条件
+	 */
 	private String groupBy;
 
 	private Query() {
@@ -62,10 +90,11 @@ public class Query implements Serializable {
 
 	/**
 	 * 创建查询条件
+	 *
 	 * @param clazz
 	 * @param entityManager
 	 */
-	public  Query(Class clazz, EntityManager entityManager) {
+	public Query(@NotNull Class clazz, @NotNull EntityManager entityManager) {
 		this.clazz = clazz;
 		this.entityManager = entityManager;
 		this.criteriaBuilder = this.entityManager.getCriteriaBuilder();
@@ -76,9 +105,9 @@ public class Query implements Serializable {
 	}
 
 	/**
-	 * 增加子查询
+	 * 增加子查询,必须设置子查询字段 projection
 	 */
-	private void addSubQuery(String propertyName, Query query) {
+	private void addSubQuery(@NotNull final String propertyName, @NotNull Query query) {
 		if (this.subQuery == null)
 			this.subQuery = new HashMap();
 
@@ -88,14 +117,14 @@ public class Query implements Serializable {
 		this.subQuery.put(propertyName, query);
 	}
 
-	private void addSubQuery(Query query) {
-		addSubQuery(query.projection, query);
-	}
+//	private void addSubQuery(@NotNull Query query) {
+//		addSubQuery(query.projection, query);
+//	}
 
 	/**
 	 * 增关联查询
 	 */
-	public void addLinkQuery(String propertyName, Query query) {
+	public void addLinkQuery(@NotNull final String propertyName, @NotNull Query query) {
 		if (this.linkQuery == null)
 			this.linkQuery = new HashMap();
 
@@ -105,82 +134,67 @@ public class Query implements Serializable {
 	/**
 	 * 相等
 	 */
-	public void eq(String propertyName, Object value) {
-		if (isNullOrEmpty(value))
-			return;
+	public Query eq(@NotNull final String propertyName, @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), value));
+		return this;
 	}
 
-	private boolean isNullOrEmpty(Object value) {
-		if (value instanceof String) {
-			return "".equals(value);
-		}
-		return value == null;
-	}
-
-	public void or(List<String> propertyName, Object value) {
-		if (isNullOrEmpty(value))
-			return;
-		if ((propertyName == null) || (propertyName.size() == 0))
-			return;
+	/**
+	 * 或
+	 *
+	 * @param propertyName
+	 * @param value
+	 */
+	public Query or(@NotNull final List<String> propertyName, @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), value));
-		for (int i = 1; i < propertyName.size(); ++i)
+		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), value));
 		this.predicates.add(predicate);
+		return this;
 	}
 
-	public void orLike(List<String> propertyName, String value) {
-		if (isNullOrEmpty(value) || (propertyName.size() == 0))
-			return;
-		if (value.indexOf("%") < 0)
+
+	/**
+	 * 模糊查询,或者包含
+	 *
+	 * @param propertyName
+	 * @param value
+	 * @return
+	 */
+	public Query orLike(@NotNull final List<String> propertyName, @NotNull String value) {
+		if (!value.contains("%"))
 			value = "%" + value + "%";
-		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), value.toString()));
-		for (int i = 1; i < propertyName.size(); ++i)
+		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), value));
+		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), value));
 		this.predicates.add(predicate);
+		return this;
 	}
 
 	/**
-	 * 空
+	 * 查找特定字段为空
 	 */
-	public void isNull(String propertyName) {
+	public Query isNull(@NotNull final String propertyName) {
 		this.predicates.add(criteriaBuilder.isNull(from.get(propertyName)));
+		return this;
 	}
 
 	/**
-	 * 非空
+	 * 查找特定字段非空
 	 */
-	public void isNotNull(String propertyName) {
+	public Query isNotNull(@NotNull final String propertyName) {
 		this.predicates.add(criteriaBuilder.isNotNull(from.get(propertyName)));
+		return this;
 	}
 
 	/**
 	 * 不相等
 	 */
-	public void notEq(String propertyName, Object value) {
-		if (isNullOrEmpty(value)) {
-			return;
-		}
+	public Query notEq(@NotNull final String propertyName, @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), value));
+		return this;
 	}
 
-	/**
-	 * not in
-	 *
-	 * @param propertyName 属性名称
-	 * @param value        值集合
-	 */
-	public void notIn(String propertyName, Collection value) {
-		if ((value == null) || (value.size() == 0)) {
-			return;
-		}
-		Iterator iterator = value.iterator();
-		In in = criteriaBuilder.in(from.get(propertyName));
-		while (iterator.hasNext()) {
-			in.value(iterator.next());
-		}
-		this.predicates.add(criteriaBuilder.not(in));
-	}
 
 	/**
 	 * 模糊匹配
@@ -188,12 +202,11 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public void like(String propertyName, String value) {
-		if (isNullOrEmpty(value))
-			return;
-		if (value.indexOf("%") < 0)
+	public Query like(@NotNull final String propertyName, @NotNull String value) {
+		if (!value.contains("%"))
 			value = "%" + value + "%";
 		this.predicates.add(criteriaBuilder.like(from.get(propertyName), value));
+		return this;
 	}
 
 	/**
@@ -203,28 +216,15 @@ public class Query implements Serializable {
 	 * @param lo           属性起始值
 	 * @param go           属性结束值
 	 */
-	public void between(String propertyName, Date lo, Date go) {
-		if (!isNullOrEmpty(lo) && !isNullOrEmpty(go)) {
-			this.predicates.add(criteriaBuilder.between(from.get(propertyName), lo, go));
-		}
-
-		// if (!isNullOrEmpty(lo) && !isNullOrEmpty(go)) {
-		// this.predicates.add(criteriaBuilder.lessThan(from.get(propertyName),
-		// new DateTime(lo).toString()));
-		// }
-		// if (!isNullOrEmpty(go)) {
-		// this.predicates.add(criteriaBuilder.greaterThan(from.get(propertyName),
-		// new DateTime(go).toString()));
-		// }
-
+	public Query between(@NotNull final String propertyName, @NotNull final Date lo, @NotNull final Date go) {
+		this.predicates.add(criteriaBuilder.between(from.get(propertyName), lo, go));
+		return this;
 	}
 
-	public void between(String propertyName, Number lo, Number go) {
-		if (!(isNullOrEmpty(lo)))
-			ge(propertyName, lo);
-
-		if (!(isNullOrEmpty(go)))
-			le(propertyName, go);
+	public Query between(@NotNull final String propertyName, @NotNull final Number lo, @NotNull final Number go) {
+		ge(propertyName, lo)
+				.le(propertyName, go);
+		return this;
 	}
 
 	/**
@@ -233,11 +233,9 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public void le(String propertyName, Number value) {
-		if (isNullOrEmpty(value)) {
-			return;
-		}
+	public Query le(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.le(from.get(propertyName), value));
+		return this;
 	}
 
 	/**
@@ -246,11 +244,9 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public void lt(String propertyName, Number value) {
-		if (isNullOrEmpty(value)) {
-			return;
-		}
+	public Query lt(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), value));
+		return this;
 	}
 
 	/**
@@ -259,11 +255,9 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public void ge(String propertyName, Number value) {
-		if (isNullOrEmpty(value)) {
-			return;
-		}
+	public Query ge(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), value));
+		return this;
 	}
 
 	/**
@@ -272,36 +266,50 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public void gt(String propertyName, Number value) {
-		if (isNullOrEmpty(value)) {
-			return;
-		}
+	public Query gt(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), value));
+		return this;
 	}
 
 	/**
-	 * in
+	 * 包含
 	 *
 	 * @param propertyName 属性名称
 	 * @param value        值集合
 	 */
-	public void in(String propertyName, Collection value) {
-		if ((value == null) || (value.size() == 0)) {
-			return;
-		}
+	public Query in(@NotNull final String propertyName, @NotNull final Collection value) {
 		Iterator iterator = value.iterator();
 		In in = criteriaBuilder.in(from.get(propertyName));
 		while (iterator.hasNext()) {
 			in.value(iterator.next());
 		}
 		this.predicates.add(in);
+		return this;
 	}
 
 	/**
-	 * 直接添加JPA内部的查询条件,用于应付一些复杂查询的情况,例如或
+	 * 不包含
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        值集合
 	 */
-	public void addCriterions(Predicate predicate) {
+	public Query notIn(@NotNull final String propertyName, @NotNull final Collection value) {
+		Iterator iterator = value.iterator();
+		In in = criteriaBuilder.in(from.get(propertyName));
+		while (iterator.hasNext()) {
+			in.value(iterator.next());
+		}
+		this.predicates.add(criteriaBuilder.not(in));
+		return this;
+	}
+
+	/**
+	 * 直接添加JPA内部的查询条件,
+	 * 用于应付一些复杂查询的情况,例如或
+	 */
+	public Query addCriterions(Predicate predicate) {
 		this.predicates.add(predicate);
+		return this;
 	}
 
 	/**
@@ -309,7 +317,7 @@ public class Query implements Serializable {
 	 *
 	 * @return JPA离线查询
 	 */
-	public CriteriaQuery newCriteriaQuery() {
+	public CriteriaQuery createCriteriaQuery() {
 		criteriaQuery.where(predicates.toArray(new Predicate[0]));
 		if (!isNullOrEmpty(groupBy)) {
 			criteriaQuery.groupBy(from.get(groupBy));
@@ -336,10 +344,7 @@ public class Query implements Serializable {
 		}
 	}
 
-	public void addOrder(String propertyName, String order) {
-		if (order == null || propertyName == null)
-			return;
-
+	public Query addOrder(@NotNull final String propertyName, @NotNull final String order) {
 		if (this.orders == null)
 			this.orders = new ArrayList();
 
@@ -347,11 +352,29 @@ public class Query implements Serializable {
 			this.orders.add(criteriaBuilder.asc(from.get(propertyName)));
 		else if (order.equalsIgnoreCase("desc"))
 			this.orders.add(criteriaBuilder.desc(from.get(propertyName)));
+		return this;
 	}
 
-	public void setOrder(String propertyName, String order) {
+	/**
+	 * @param propertyName
+	 * @param order        asc desc
+	 */
+	public void setOrder(@NotNull final String propertyName, @NotNull final String order) {
 		this.orders = null;
 		addOrder(propertyName, order);
+	}
+
+	/**
+	 * 工具方法
+	 *
+	 * @param value
+	 * @return
+	 */
+	private boolean isNullOrEmpty(Object value) {
+		if (value instanceof String) {
+			return "".equals(value);
+		}
+		return value == null;
 	}
 
 	public Class getModelClass() {
