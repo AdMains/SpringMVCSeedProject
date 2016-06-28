@@ -6,6 +6,7 @@ import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -31,7 +32,7 @@ class BaseService<T> {
 	 *
 	 * @param model 需要添加的对象
 	 */
-	public void save(@NotNull final T model) {
+	public void save(@NotNull final T model) throws Exception {
 		baseDao.save(model);
 	}
 
@@ -41,7 +42,7 @@ class BaseService<T> {
 	 * @param modelList 需要增加的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void saveAll(final @NotNull List<T> modelList) {
+	public void saveAll(final @NotNull List<T> modelList) throws Exception {
 		baseDao.saveAll(modelList);
 	}
 
@@ -51,7 +52,7 @@ class BaseService<T> {
 	 * @param model 需要删除的对象
 	 *              失败会抛异常
 	 */
-	public void delete(@NotNull final T model) {
+	public void delete(@NotNull final T model) throws Exception {
 		baseDao.delete(model);
 	}
 
@@ -61,7 +62,7 @@ class BaseService<T> {
 	 * @param modelList 需要删除的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void deleteAll(@NotNull final List<T> modelList) {
+	public void deleteAll(@NotNull final List<T> modelList) throws Exception {
 		baseDao.deleteAll(modelList);
 	}
 
@@ -71,7 +72,7 @@ class BaseService<T> {
 	 * @param id 需要删除的对象的id
 	 *           失败抛出异常
 	 */
-	public void deleteById(@NotNull Serializable id) {
+	public void deleteById(@NotNull Serializable id) throws Exception {
 		baseDao.deleteById(modelClass, id);
 	}
 
@@ -81,7 +82,7 @@ class BaseService<T> {
 	 * @param model 需要更新的对象
 	 *              失败会抛出异常
 	 */
-	public void saveOrUpdate(@NotNull final T model) {
+	public void saveOrUpdate(@NotNull final T model) throws Exception {
 		baseDao.saveOrUpdate(model);
 	}
 
@@ -91,7 +92,7 @@ class BaseService<T> {
 	 * @param modelList 需要更新或保存的对象
 	 *                  失败会抛出异常
 	 */
-	public void saveOrUpdateAll(@NotNull final List<T> modelList) {
+	public void saveOrUpdateAll(@NotNull final List<T> modelList) throws Exception {
 		baseDao.saveOrUpdateAll(modelList);
 	}
 
@@ -101,7 +102,7 @@ class BaseService<T> {
 	 * @param id 主键(Serializable)
 	 * @return model
 	 */
-	public T getById(@NotNull final Serializable id) {
+	public T getById(@NotNull final Serializable id) throws Exception {
 		return baseDao.getById(modelClass, id);
 	}
 
@@ -110,10 +111,18 @@ class BaseService<T> {
 	 *
 	 * @return List
 	 */
-	public List<T> getAll() {
+	public List<T> getAll() throws Exception {
 		return baseDao.getAll(modelClass);
 	}
 
+	/**
+	 * 通过条件获得全部
+	 *
+	 * @return List
+	 */
+	public List<T> getAllByQuery(@NotNull Query query) {
+		return baseDao.getAllByQuery(query);
+	}
 
 	/**
 	 * 分页查询
@@ -123,7 +132,8 @@ class BaseService<T> {
 	 * @return 查询结果
 	 */
 	public List<T> getListByPage(@NotNull final Integer currentPageNumber,
-	                             @NotNull final Integer pageSize) {
+	                             @NotNull final Integer pageSize)
+			throws Exception {
 		return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
 	}
 
@@ -137,10 +147,20 @@ class BaseService<T> {
 	 */
 	public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
 	                                            @NotNull Integer pageSize,
-	                                            @NotNull Query query) {
+	                                            @NotNull Query query)
+			throws Exception {
 		return baseDao.getListByPageAndQuery(modelClass, currentPageNumber, pageSize, query);
 	}
 
+	/**
+	 * 获得数量 利用Count(*)实现
+	 *
+	 * @return 数量
+	 */
+	@Transactional(readOnly = true)
+	public int getCount() {
+		return baseDao.getCount(modelClass);
+	}
 
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
@@ -148,8 +168,8 @@ class BaseService<T> {
 	 * @param query 查询条件
 	 * @return 数量
 	 */
-	public int getCountByQuery(@NotNull final Query query) {
-		return baseDao.getCountByQuery(modelClass, query);
+	public int getCountByQuery(@NotNull final Query query) throws Exception {
+		return baseDao.getCountByQuery(query);
 	}
 
 	/**
@@ -158,9 +178,9 @@ class BaseService<T> {
 	 * @param query 查询条件
 	 * @return 结果
 	 */
-	public List getStatisticsByQuery(@NotNull final Query query) {
-		return baseDao.getStatisticsByQuery(modelClass, query);
-	}
+//	public List getStatisticsByQuery(@NotNull final Query query) throws Exception {
+//		return baseDao.getStatisticsByQuery(query);
+//	}
 
 
 	/**
@@ -170,7 +190,8 @@ class BaseService<T> {
 	 * @param values 不定参数数组
 	 * @return 受影响的行数
 	 */
-	public int executeSql(@NotNull String sql, @NotNull Object... values) {
+	public int executeSql(@NotNull String sql, @NotNull Object... values)
+			throws Exception {
 		return baseDao.executeSql(sql, values);
 	}
 
@@ -179,7 +200,7 @@ class BaseService<T> {
 	 *
 	 * @param model 实体
 	 */
-	public void refresh(@NotNull T model) {
+	public void refresh(@NotNull T model) throws Exception {
 		baseDao.refresh(model);
 	}
 }

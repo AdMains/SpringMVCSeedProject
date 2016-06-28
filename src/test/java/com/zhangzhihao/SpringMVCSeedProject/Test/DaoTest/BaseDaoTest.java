@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 
 @SuppressWarnings({"unchecked"})
@@ -42,6 +41,22 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
+	public void containsTest(){
+		User user=new User(UUID.randomUUID().toString(),UUID.randomUUID().toString(),AuthorityType.School_Level_Admin);
+		boolean contains = userDao.contains(user);
+		assertFalse(contains);
+	}
+
+	@Test
+	public void detachTest(){
+		User user=new User(UUID.randomUUID().toString(),UUID.randomUUID().toString(),AuthorityType.School_Level_Admin);
+		userDao.save(user);
+		userDao.detach(user);
+		boolean contains = userDao.contains(user);
+		assertFalse(contains);
+	}
+
+	@Test
 	public void saveTest() {
 		userDao.save(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
 		teacherDao.save(new Teacher("name", "BaseDao"));
@@ -49,7 +64,7 @@ public class BaseDaoTest extends BaseTest {
 
 	@Test
 	public void deleteTest() {
-		userDao.save(new User("66666", "ppppp", AuthorityType.Admin));
+		userDao.save(new User("66666", UUID.randomUUID().toString(), AuthorityType.Admin));
 		userDao.deleteById(User.class, "66666");
 	}
 
@@ -100,13 +115,24 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void findAllTest() {
+	public void getAllTest() {
 		List<User> userList = userDao.getAll(User.class);
 		System.out.println(userList);
 		if (userList.size() > 0) {
 			userList.stream().forEach(System.out::println);
 		}
 		assertNotNull(userList);
+	}
+
+	@Test
+	public void getAllByQueryTest(){
+		Query query=new Query(User.class,entityManager);
+		query.eq("authorityType",0);
+		query.like("passWord","admin");
+		List<User> allByQuery = userDao.getAllByQuery(query);
+		if(allByQuery!=null){
+			allByQuery.stream().forEach(System.out::println);
+		}
 	}
 
 	@Test
@@ -119,12 +145,12 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void getListByPageAndRuleTest() {
-		Query query=Query.forClass(User.class,entityManager);
+	public void getListByPageAndQueryTest() {
+		Query query=new Query(User.class,entityManager);
 		query.eq("authorityType",4);
-		PageResults<User> listByPageAndRule = userDao.getListByPageAndQuery(User.class,2,3,query);
-		List<User> results = listByPageAndRule.getResults();
-		System.out.println(listByPageAndRule);
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class,2,3,query);
+		List<User> results = listByPageAndQuery.getResults();
+		System.out.println(listByPageAndQuery);
 		if (!results.isEmpty()) {
 			results.forEach(System.out::println);
 		}
@@ -133,53 +159,39 @@ public class BaseDaoTest extends BaseTest {
 
 
 	@Test
-	public void getListByPageAndRuleTest2() {
-//		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndQuery
-//		List<Teacher> results = listByPageAndRule.getResults();
-//		System.out.println(listByPageAndRule);
-//		if (!results.isEmpty()) {
-//			results.forEach(System.out::println);
-//		}
-//		assertNotNull(results);
+	public void getListByPageAndQueryTest2() {
+		Query query=new Query(User.class,entityManager);
+		query.like("passWord","BaseDao");
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class,2,3,query);
+		List<User> results = listByPageAndQuery.getResults();
+		System.out.println(listByPageAndQuery);
+		if (!results.isEmpty()) {
+			results.forEach(System.out::println);
+		}
+		assertNotNull(results);
 	}
 
 	@Test
-	public void getListByPageAndRuleTest3() {
-//		PageResults<Teacher> listByPageAndRule = teacherDao.getListByPageAndRule(Teacher.class, 1, 2
-//				, new Criterion[]{}
-//				, new Order[]{Order.asc("name")}, new Projection[]{Projections.projectionList()
-//						.add(Property.forName("passWord").as("passWord"))
-//						.add(Property.forName("name").as("name"))
-//				});
-//		List<Teacher> results = listByPageAndRule.getResults();
-//		System.out.println(listByPageAndRule);
-//		if (!results.isEmpty()) {
-//			results.forEach(System.out::println);
-//		}
-//		assertNotNull(results);
+	public void getCountTest(){
+		int count = userDao.getCount(User.class);
+		System.out.println(count);
 	}
 
 	@Test
-	public void getCountByRuleTest() {
-		Query query = Query.forClass(User.class, entityManager);
+	public void getCountByQueryTest() {
+		Query query = new Query(User.class, entityManager);
 		query.eq("authorityType",1);
-		int countByRule = userDao.getCountByQuery(User.class,query);
-		System.out.println(countByRule);
+		int countByQuery = userDao.getCountByQuery(query);
+		System.out.println(countByQuery);
 	}
 
 	@Test
-	public void getStatisticsByRuleTest() {
-//		List result = teacherDao.getStatisticsByRule(Teacher.class, new Criterion[]{}, new Projection[]{Projections.projectionList()
-//				.add(Projections.groupProperty("passWord"))
-//				.add(Projections.count("id"))
-//		});
-//		for (Object item : result) {
-//			Object[] objects = (Object[]) item;
-//			for (int i = 0; i < objects.length; i++) {
-//				System.out.print(objects[i] + "           ");
-//			}
-//			System.out.println();
-//		}
+	public void getStatisticsByQueryTest() {
+		Query query = new Query(User.class, entityManager);
+//		query.setGroupBy("passWord");
+		query.notEq("authorityType",4);
+		Object statisticsByQuery = userDao.getStatisticsByQuery(query);
+		System.out.println(statisticsByQuery);
 	}
 
 	@Test

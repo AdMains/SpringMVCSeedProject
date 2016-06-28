@@ -60,7 +60,12 @@ public class Query implements Serializable {
 	private Query() {
 	}
 
-	private Query(Class clazz, EntityManager entityManager) {
+	/**
+	 * 创建查询条件
+	 * @param clazz
+	 * @param entityManager
+	 */
+	public  Query(Class clazz, EntityManager entityManager) {
 		this.clazz = clazz;
 		this.entityManager = entityManager;
 		this.criteriaBuilder = this.entityManager.getCriteriaBuilder();
@@ -68,13 +73,6 @@ public class Query implements Serializable {
 		this.from = criteriaQuery.from(this.clazz);
 		this.predicates = new ArrayList();
 		this.orders = new ArrayList();
-	}
-
-	/**
-	 * 通过类创建查询条件
-	 */
-	public static Query forClass(Class clazz, EntityManager entityManager) {
-		return new Query(clazz, entityManager);
 	}
 
 	/**

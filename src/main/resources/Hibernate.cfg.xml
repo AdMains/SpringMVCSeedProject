@@ -2,7 +2,8 @@
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <!-- 通常，一个session-factory节点代表一个数据库 -->
+    <!--已弃用-->
+    <!-- 通常，一个session-factory节点代表一个数据库  -->
     <session-factory>
 
         <!-- 1. 数据库连接配置  已移至Spring.xml-->

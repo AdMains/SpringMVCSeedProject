@@ -26,10 +26,26 @@ import java.util.List;
 public class BaseDao<T> {
 
 	//获取到和当前事务关联的 EntityManager 对象
-	//通过 @PersistenceContext 注解来标记成员变量!
+	//实际上是获得EntityManager的代理对象，是线程安全的
 	@PersistenceContext
 	private EntityManager entityManager;
 
+
+	/**
+	 * 这个实体是否存在在数据库
+	 * @param model 实体
+	 * @return 是否存在
+	 */
+	public boolean contains(@NotNull final T model){
+		return entityManager.contains(model);
+	}
+	/**
+	 * 使实体变为不受管理的状态
+	 * @param model 实体
+	 */
+	public void detach(@NotNull final T model){
+		entityManager.detach(model);
+	}
 	/**
 	 * 保存对象
 	 *
@@ -77,7 +93,7 @@ public class BaseDao<T> {
 	 *                   失败抛出异常
 	 */
 	public void deleteById(final Class<T> modelClass, @NotNull Serializable id) {
-		entityManager.remove(this.getById(modelClass, id));
+		this.delete(this.getById(modelClass, id));
 	}
 
 	/**
@@ -120,7 +136,17 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public List<T> getAll(Class<T> modelClass) {
-		Query query = Query.forClass(modelClass, entityManager);
+		Query query = new Query(modelClass, entityManager);
+		return entityManager.createQuery(query.newCriteriaQuery()).getResultList();
+	}
+
+	/**
+	 * 通过条件获得全部
+	 *
+	 * @return List
+	 */
+	@Transactional(readOnly = true)
+	public List<T> getAllByQuery(@NotNull Query query) {
 		return entityManager.createQuery(query.newCriteriaQuery()).getResultList();
 	}
 
@@ -140,7 +166,7 @@ public class BaseDao<T> {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
-		Query query = Query.forClass(modelClass, entityManager);
+		Query query =new Query(modelClass, entityManager);
 		return entityManager.createQuery(query.newCriteriaQuery())
 				.setFirstResult((currentPageNumber - 1) * pageSize)
 				.setMaxResults(pageSize)
@@ -162,7 +188,7 @@ public class BaseDao<T> {
 	                                            @NotNull Integer pageSize,
 	                                            @NotNull Query query) {
 		//参数验证
-		int totalCount = getCountByQuery(modelClass, query);
+		int totalCount = getCountByQuery(query);
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
 
@@ -180,16 +206,29 @@ public class BaseDao<T> {
 		return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
 	}
 
+	/**
+	 * 获得数量 利用Count(*)实现
+	 *
+	 * @param modelClass 类型，比如User.class
+	 * @return 数量
+	 */
+	@Transactional(readOnly = true)
+	public int getCount(Class<T> modelClass) {
+		Query query=new Query(modelClass,entityManager);
+		return entityManager
+				.createQuery(query.newCriteriaQuery())
+				.getResultList()
+				.size();
+	}
 
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param query      查询条件
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByQuery(Class<T> modelClass, @NotNull final Query query) {
+	public int getCountByQuery(@NotNull final Query query) {
 		return entityManager
 				.createQuery(query.newCriteriaQuery())
 				.getResultList()
@@ -199,13 +238,11 @@ public class BaseDao<T> {
 	/**
 	 * 获得统计结果
 	 *
-	 * @param modelClass 类型，比如User.class
 	 * @param query      查询条件
 	 * @return 结果
 	 */
 	@Transactional(readOnly = true)
-	public List getStatisticsByQuery(Class<T> modelClass,
-	                                 @NotNull final Query query) {
+	public Object getStatisticsByQuery(@NotNull final Query query) {
 		return entityManager.createQuery(query.newCriteriaQuery()).getResultList();
 	}
 
@@ -233,5 +270,7 @@ public class BaseDao<T> {
 	public void refresh(@NotNull T model) {
 		entityManager.refresh(model);
 	}
+
+
 }
 
