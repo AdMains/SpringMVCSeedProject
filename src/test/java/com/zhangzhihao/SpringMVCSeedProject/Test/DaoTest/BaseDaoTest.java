@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -127,8 +128,8 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getAllByQueryTest() {
 		Query query = new Query(User.class, entityManager);
-		query.eq("authorityType", 0);
-		query.like("passWord", "admin");
+		query.whereEqual("authorityType", 0)
+				.whereLike("passWord", "admin");
 		List<User> allByQuery = userDao.getAllByQuery(query);
 		if (allByQuery != null) {
 			allByQuery.stream().forEach(System.out::println);
@@ -146,8 +147,8 @@ public class BaseDaoTest extends BaseTest {
 
 	@Test
 	public void getListByPageAndQueryTest() {
-		Query query = new Query(User.class, entityManager);
-		query.eq("authorityType", 4);
+		Query query = new Query(User.class, entityManager)
+				.whereEqual("authorityType", 4);
 		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class, 2, 3, query);
 		List<User> results = listByPageAndQuery.getResults();
 		System.out.println(listByPageAndQuery);
@@ -161,7 +162,7 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getListByPageAndQueryTest2() {
 		Query query = new Query(User.class, entityManager);
-		query.like("passWord", "BaseDao");
+		query.whereLike("passWord", "BaseDao");
 		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(User.class, 2, 3, query);
 		List<User> results = listByPageAndQuery.getResults();
 		System.out.println(listByPageAndQuery);
@@ -180,7 +181,7 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getCountByQueryTest() {
 		Query query = new Query(User.class, entityManager);
-		query.eq("authorityType", 1);
+		query.whereEqual("authorityType", 1);
 		int countByQuery = userDao.getCountByQuery(query);
 		System.out.println(countByQuery);
 	}
@@ -189,8 +190,23 @@ public class BaseDaoTest extends BaseTest {
 	public void getStatisticsByQueryTest() {
 		Query query = new Query(User.class, entityManager);
 
-		query.notEq("authorityType", 4)
-				.isNotNull("userName");
+		query.whereNotEqual("authorityType", 4)
+				.whereIsNotNull("userName")
+				.setGroupBy("passWord");
+		ArrayList<User> statisticsByQuery = (ArrayList<User>) userDao.getStatisticsByQuery(query);
+		System.out.println(statisticsByQuery);
+		statisticsByQuery.forEach(System.out::println);
+	}
+
+	@Test
+	public void getStatisticsByQueryTest2() {
+		Query query = new Query(Teacher.class, entityManager);
+
+		query.selectAvg("id")
+				.selectMax("id")
+				.whereNotEqual("name", "admin")
+				.whereIsNotNull("name")
+				.setGroupBy("passWord");
 		Object statisticsByQuery = userDao.getStatisticsByQuery(query);
 		System.out.println(statisticsByQuery);
 	}

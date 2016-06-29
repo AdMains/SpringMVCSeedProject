@@ -56,6 +56,11 @@ public class Query implements Serializable {
 	private CriteriaBuilder criteriaBuilder;
 
 	/**
+	 * select条件，用于处理平均值之类的查询
+	 */
+	private Selection selection;
+
+	/**
 	 * 排序方式列表
 	 */
 	private List<Order> orders;
@@ -105,21 +110,40 @@ public class Query implements Serializable {
 	}
 
 	/**
-	 * 增加子查询,必须设置子查询字段 projection
+	 * 创建查询条件
+	 *
+	 * @return JPA离线查询
 	 */
-	private void addSubQuery(@NotNull final String propertyName, @NotNull Query query) {
-		if (this.subQuery == null)
-			this.subQuery = new HashMap();
-
-		if (query.projection == null)
-			throw new RuntimeException("子查询字段未设置");
-
-		this.subQuery.put(propertyName, query);
+	public CriteriaQuery createCriteriaQuery() {
+		criteriaQuery.where(predicates.toArray(new Predicate[0]));
+		if (!isNullOrEmpty(groupBy)) {
+			criteriaQuery.groupBy(from.get(groupBy));
+		}
+		if (this.orders != null) {
+			criteriaQuery.orderBy(orders);
+		}
+		addLinkCondition(this);
+		//return criteriaQuery;//.select(criteriaBuilder.avg(from.get("authorityType")))
+		if (selection != null) {
+			criteriaQuery.select(selection);
+		}
+		return criteriaQuery;
 	}
 
-//	private void addSubQuery(@NotNull Query query) {
-//		addSubQuery(query.projection, query);
-//	}
+	private void addLinkCondition(Query query) {
+
+		Map subQuery = query.linkQuery;
+		if (subQuery == null)
+			return;
+
+		for (Iterator queryIterator = subQuery.keySet().iterator(); queryIterator.hasNext(); ) {
+			String key = (String) queryIterator.next();
+			Query sub = (Query) subQuery.get(key);
+			from.join(key);
+			criteriaQuery.where(sub.predicates.toArray(new Predicate[0]));
+			addLinkCondition(sub);
+		}
+	}
 
 	/**
 	 * 增关联查询
@@ -132,9 +156,66 @@ public class Query implements Serializable {
 	}
 
 	/**
+	 * 设置查询
+	 *
+	 * @param selection
+	 * @return
+	 */
+	public Query setSelect(Selection selection) {
+		this.selection = selection;
+		return this;
+	}
+
+	public Query selectAvg(@NotNull final String propertyName) {
+		Expression<Double> avg = criteriaBuilder.avg(from.get(propertyName));
+		setSelect(avg);
+		return this;
+	}
+
+	public Query selectSum(@NotNull final String propertyName) {
+		setSelect(criteriaBuilder.sum(from.get(propertyName)));
+		return this;
+	}
+
+	public Query selectSumAsLong(@NotNull final String propertyName) {
+		setSelect(criteriaBuilder.sumAsLong(from.get(propertyName)));
+		return this;
+	}
+
+	public Query selectSumAsDouble(@NotNull final String propertyName) {
+		setSelect(criteriaBuilder.sumAsDouble(from.get(propertyName)));
+		return this;
+	}
+
+	public Query selectMax(@NotNull final String propertyName) {
+		setSelect(criteriaBuilder.max(from.get(propertyName)));
+		return this;
+	}
+
+	public Query selectMin(@NotNull final String propertyName) {
+		setSelect(criteriaBuilder.min(from.get(propertyName)));
+		return this;
+	}
+
+
+	/**
+	 * 增加子查询,必须设置子查询字段 projection
+	 */
+	private void addSubQuery(@NotNull final String propertyName, @NotNull Query query) {
+		if (this.subQuery == null)
+			this.subQuery = new HashMap();
+
+		if (query.projection == null)
+			throw new RuntimeException("子查询字段未设置");
+
+		this.subQuery.put(propertyName, query);
+	}
+
+
+	/**
 	 * 相等
 	 */
-	public Query eq(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereEqual(@NotNull final String propertyName, @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), value));
 		return this;
 	}
@@ -145,7 +226,7 @@ public class Query implements Serializable {
 	 * @param propertyName
 	 * @param value
 	 */
-	public Query or(@NotNull final List<String> propertyName, @NotNull final Object value) {
+	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), value));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), value));
@@ -161,7 +242,7 @@ public class Query implements Serializable {
 	 * @param value
 	 * @return
 	 */
-	public Query orLike(@NotNull final List<String> propertyName, @NotNull String value) {
+	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull String value) {
 		if (!value.contains("%"))
 			value = "%" + value + "%";
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), value));
@@ -174,7 +255,7 @@ public class Query implements Serializable {
 	/**
 	 * 查找特定字段为空
 	 */
-	public Query isNull(@NotNull final String propertyName) {
+	public Query whereIsNull(@NotNull final String propertyName) {
 		this.predicates.add(criteriaBuilder.isNull(from.get(propertyName)));
 		return this;
 	}
@@ -182,7 +263,7 @@ public class Query implements Serializable {
 	/**
 	 * 查找特定字段非空
 	 */
-	public Query isNotNull(@NotNull final String propertyName) {
+	public Query whereIsNotNull(@NotNull final String propertyName) {
 		this.predicates.add(criteriaBuilder.isNotNull(from.get(propertyName)));
 		return this;
 	}
@@ -190,7 +271,7 @@ public class Query implements Serializable {
 	/**
 	 * 不相等
 	 */
-	public Query notEq(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), value));
 		return this;
 	}
@@ -202,7 +283,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query like(@NotNull final String propertyName, @NotNull String value) {
+	public Query whereLike(@NotNull final String propertyName, @NotNull String value) {
 		if (!value.contains("%"))
 			value = "%" + value + "%";
 		this.predicates.add(criteriaBuilder.like(from.get(propertyName), value));
@@ -216,14 +297,14 @@ public class Query implements Serializable {
 	 * @param lo           属性起始值
 	 * @param go           属性结束值
 	 */
-	public Query between(@NotNull final String propertyName, @NotNull final Date lo, @NotNull final Date go) {
+	public Query whereBetween(@NotNull final String propertyName, @NotNull final Date lo, @NotNull final Date go) {
 		this.predicates.add(criteriaBuilder.between(from.get(propertyName), lo, go));
 		return this;
 	}
 
-	public Query between(@NotNull final String propertyName, @NotNull final Number lo, @NotNull final Number go) {
-		ge(propertyName, lo)
-				.le(propertyName, go);
+	public Query whereBetween(@NotNull final String propertyName, @NotNull final Number lo, @NotNull final Number go) {
+		whereGreaterThanOrEqual(propertyName, lo)
+				.whereLessOrEqual(propertyName, go);
 		return this;
 	}
 
@@ -233,7 +314,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query le(@NotNull final String propertyName, @NotNull final Number value) {
+	public Query whereLessOrEqual(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.le(from.get(propertyName), value));
 		return this;
 	}
@@ -244,7 +325,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query lt(@NotNull final String propertyName, @NotNull final Number value) {
+	public Query whereLessThan(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), value));
 		return this;
 	}
@@ -255,7 +336,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query ge(@NotNull final String propertyName, @NotNull final Number value) {
+	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), value));
 		return this;
 	}
@@ -266,7 +347,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query gt(@NotNull final String propertyName, @NotNull final Number value) {
+	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final Number value) {
 		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), value));
 		return this;
 	}
@@ -277,7 +358,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        值集合
 	 */
-	public Query in(@NotNull final String propertyName, @NotNull final Collection value) {
+	public Query whereIn(@NotNull final String propertyName, @NotNull final Collection value) {
 		Iterator iterator = value.iterator();
 		In in = criteriaBuilder.in(from.get(propertyName));
 		while (iterator.hasNext()) {
@@ -293,7 +374,7 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        值集合
 	 */
-	public Query notIn(@NotNull final String propertyName, @NotNull final Collection value) {
+	public Query whereNotIn(@NotNull final String propertyName, @NotNull final Collection value) {
 		Iterator iterator = value.iterator();
 		In in = criteriaBuilder.in(from.get(propertyName));
 		while (iterator.hasNext()) {
@@ -312,37 +393,6 @@ public class Query implements Serializable {
 		return this;
 	}
 
-	/**
-	 * 创建查询条件
-	 *
-	 * @return JPA离线查询
-	 */
-	public CriteriaQuery createCriteriaQuery() {
-		criteriaQuery.where(predicates.toArray(new Predicate[0]));
-		if (!isNullOrEmpty(groupBy)) {
-			criteriaQuery.groupBy(from.get(groupBy));
-		}
-		if (this.orders != null) {
-			criteriaQuery.orderBy(orders);
-		}
-		addLinkCondition(this);
-		return criteriaQuery;
-	}
-
-	private void addLinkCondition(Query query) {
-
-		Map subQuery = query.linkQuery;
-		if (subQuery == null)
-			return;
-
-		for (Iterator queryIterator = subQuery.keySet().iterator(); queryIterator.hasNext(); ) {
-			String key = (String) queryIterator.next();
-			Query sub = (Query) subQuery.get(key);
-			from.join(key);
-			criteriaQuery.where(sub.predicates.toArray(new Predicate[0]));
-			addLinkCondition(sub);
-		}
-	}
 
 	public Query addOrder(@NotNull final String propertyName, @NotNull final String order) {
 		if (this.orders == null)
