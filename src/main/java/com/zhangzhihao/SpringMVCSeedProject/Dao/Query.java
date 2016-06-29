@@ -18,8 +18,6 @@ public class Query implements Serializable {
 
 	private static final long serialVersionUID = 3366932251068926942L;
 
-//	private static Logger log = Logger.getLogger(Query.class);
-
 	private EntityManager entityManager;
 
 	/**
@@ -96,8 +94,8 @@ public class Query implements Serializable {
 	/**
 	 * 创建查询条件
 	 *
-	 * @param clazz
-	 * @param entityManager
+	 * @param clazz         要查询的类型
+	 * @param entityManager EntityManager
 	 */
 	public Query(@NotNull Class clazz, @NotNull EntityManager entityManager) {
 		this.clazz = clazz;
@@ -110,9 +108,9 @@ public class Query implements Serializable {
 	}
 
 	/**
-	 * 创建查询条件
+	 * 构造函数
 	 *
-	 * @param entityManager
+	 * @param entityManager EntityManager
 	 */
 	public Query(@NotNull EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -121,7 +119,13 @@ public class Query implements Serializable {
 		this.orders = new ArrayList();
 	}
 
-	public Query from(@NotNull final Class clazz){
+	/**
+	 * FluentAPI 式构造函数
+	 *
+	 * @param clazz 要查询的类型
+	 * @return 返回Query对象
+	 */
+	public Query from(@NotNull final Class clazz) {
 		this.clazz = clazz;
 		this.criteriaQuery = criteriaBuilder.createQuery(this.clazz);
 		this.from = criteriaQuery.from(this.clazz);
@@ -148,15 +152,18 @@ public class Query implements Serializable {
 		return criteriaQuery;
 	}
 
+	/**
+	 * 添加连接查询,在最后创建CriteriaQuery的时候调用
+	 *
+	 * @param query query对象
+	 */
 	private void addLinkCondition(Query query) {
-
-		Map subQuery = query.linkQuery;
-		if (subQuery == null)
+		Map linkQuery = query.linkQuery;
+		if (linkQuery == null)
 			return;
-
-		for (Iterator queryIterator = subQuery.keySet().iterator(); queryIterator.hasNext(); ) {
-			String key = (String) queryIterator.next();
-			Query sub = (Query) subQuery.get(key);
+		for (Object o : linkQuery.keySet()) {
+			String key = o.toString();
+			Query sub = (Query) linkQuery.get(key);
 			from.join(key);
 			criteriaQuery.where(sub.predicates.toArray(new Predicate[0]));
 			addLinkCondition(sub);
@@ -188,7 +195,7 @@ public class Query implements Serializable {
 
 	/**
 	 * 直接添加JPA内部的查询条件,
-	 * 用于应付一些复杂查询的情况,例如或
+	 * 用于应付一些复杂查询的情况,例如 "或"
 	 */
 	public Query addCriterions(Predicate predicate) {
 		this.predicates.add(predicate);
@@ -196,6 +203,13 @@ public class Query implements Serializable {
 	}
 
 
+	/**
+	 * 增加升序还是降序排序，可以同时包含多个排序规则
+	 *
+	 * @param propertyName 排序的属性名
+	 * @param order        排序方式 asc或desc
+	 * @return 返回query实例
+	 */
 	public Query addOrder(@NotNull final String propertyName, @NotNull final String order) {
 		if (this.orders == null)
 			this.orders = new ArrayList();
@@ -208,66 +222,183 @@ public class Query implements Serializable {
 	}
 
 	/**
-	 * @param propertyName
-	 * @param order        asc desc
+	 * 设置升序还是降序排序
+	 *
+	 * @param propertyName 排序的属性名
+	 * @param order        排序方式 asc或desc
+	 * @return 返回query实例
 	 */
-	public void setOrder(@NotNull final String propertyName, @NotNull final String order) {
+	public Query setOrder(@NotNull final String propertyName, @NotNull final String order) {
 		this.orders = null;
 		addOrder(propertyName, order);
+		return this;
 	}
 
 
 	/**
-	 * 设置查询
+	 * 设置查询，此方法为高级用法，用于应付比较复杂的查询规则
+	 * 比如 Or Some Any
 	 *
-	 * @param selection
-	 * @return
+	 * @param selection 查询规则
+	 * @return query实例
 	 */
 	public Query setSelect(Selection selection) {
 		this.selection = selection;
 		return this;
 	}
 
-	public Query select(){return this;}
+	/**
+	 * 此方法只是为了读起来更有语义感，实际上不做任何工作，可以不用
+	 *
+	 * @return query实例
+	 */
+	public Query select() {
+		return this;
+	}
 
+	/**
+	 * 查询特定属性的平均值
+	 *
+	 * @param propertyName 要计算平均值的属性名
+	 * @return query实例
+	 */
 	public Query selectAvg(@NotNull final String propertyName) {
 		Expression<Double> avg = criteriaBuilder.avg(from.get(propertyName));
 		setSelect(avg);
 		return this;
 	}
 
+	/**
+	 * 查询特定属性的值之和
+	 *
+	 * @param propertyName 要计算和的属性名
+	 * @return query实例
+	 */
 	public Query selectSum(@NotNull final String propertyName) {
 		setSelect(criteriaBuilder.sum(from.get(propertyName)));
 		return this;
 	}
 
+	/**
+	 * 查询特定属性值的和，并设置查询结果类型为Long
+	 *
+	 * @param propertyName 要计算和的属性名
+	 * @return query实例
+	 */
 	public Query selectSumAsLong(@NotNull final String propertyName) {
 		setSelect(criteriaBuilder.sumAsLong(from.get(propertyName)));
 		return this;
 	}
 
+	/**
+	 * 查询特定属性值的和，并设置查询结果类型为Double
+	 *
+	 * @param propertyName 要计算和的属性名
+	 * @return query实例
+	 */
 	public Query selectSumAsDouble(@NotNull final String propertyName) {
 		setSelect(criteriaBuilder.sumAsDouble(from.get(propertyName)));
 		return this;
 	}
 
+	/**
+	 * 查询特定属性的最大值
+	 *
+	 * @param propertyName 要查询最大值的属性名
+	 * @return query实例
+	 */
 	public Query selectMax(@NotNull final String propertyName) {
 		setSelect(criteriaBuilder.max(from.get(propertyName)));
 		return this;
 	}
 
+	/**
+	 * 查询特定属性的最小值
+	 *
+	 * @param propertyName 要查询最小值的属性名
+	 * @return query实例
+	 */
 	public Query selectMin(@NotNull final String propertyName) {
 		setSelect(criteriaBuilder.min(from.get(propertyName)));
 		return this;
 	}
 
 
+	/**
+	 * 查找属性值等于特定值的实体
+	 *
+	 * @param propertyName 要查询属性的属性名
+	 * @param value        特定值
+	 * @return query实例
+	 */
 	public Query whereEqual(@NotNull final String propertyName, @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), value));
 		return this;
 	}
 
+	/**
+	 * 查找属性值不等于特定值的实体
+	 *
+	 * @param propertyName 要查询属性的属性名
+	 * @param value        特定值
+	 * @return query实例
+	 */
+	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), value));
+		return this;
+	}
 
+	/**
+	 * 查找属性值小于等于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereLessOrEqual(@NotNull final String propertyName, @NotNull final Number value) {
+		this.predicates.add(criteriaBuilder.le(from.get(propertyName), value));
+		return this;
+	}
+
+	/**
+	 * 查找属性值小于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereLessThan(@NotNull final String propertyName, @NotNull final Number value) {
+		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), value));
+		return this;
+	}
+
+	/**
+	 * 查找属性值大于等于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final Number value) {
+		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), value));
+		return this;
+	}
+
+	/**
+	 * 查找属性值大于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final Number value) {
+		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), value));
+		return this;
+	}
+
+	/**
+	 * 或者特定属性名等于特定值的实体
+	 *
+	 * @param propertyName 要查询的属性的属性名
+	 * @param value        特定值
+	 * @return query实例
+	 */
 	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), value));
 		for (int i = 1; i < propertyName.size(); i++)
@@ -275,49 +406,6 @@ public class Query implements Serializable {
 		this.predicates.add(predicate);
 		return this;
 	}
-
-
-	/**
-	 * 模糊查询,或者包含
-	 *
-	 * @param propertyName
-	 * @param value
-	 * @return
-	 */
-	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull String value) {
-		if (!value.contains("%"))
-			value = "%" + value + "%";
-		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), value));
-		for (int i = 1; i < propertyName.size(); i++)
-			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), value));
-		this.predicates.add(predicate);
-		return this;
-	}
-
-	/**
-	 * 查找特定字段为空
-	 */
-	public Query whereIsNull(@NotNull final String propertyName) {
-		this.predicates.add(criteriaBuilder.isNull(from.get(propertyName)));
-		return this;
-	}
-
-	/**
-	 * 查找特定字段非空
-	 */
-	public Query whereIsNotNull(@NotNull final String propertyName) {
-		this.predicates.add(criteriaBuilder.isNotNull(from.get(propertyName)));
-		return this;
-	}
-
-	/**
-	 * 不相等
-	 */
-	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final Object value) {
-		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), value));
-		return this;
-	}
-
 
 	/**
 	 * 模糊匹配
@@ -333,6 +421,46 @@ public class Query implements Serializable {
 	}
 
 	/**
+	 * 模糊查询,或者包含
+	 *
+	 * @param propertyName 要查询的特定属性的属性名
+	 * @param value        特定值
+	 * @return query实例
+	 */
+	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull String value) {
+		if (!value.contains("%"))
+			value = "%" + value + "%";
+		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), value));
+		for (int i = 1; i < propertyName.size(); i++)
+			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), value));
+		this.predicates.add(predicate);
+		return this;
+	}
+
+	/**
+	 * 查找特定字段为空的实体
+	 *
+	 * @param propertyName 特定属性的属性名
+	 * @return query实例
+	 */
+	public Query whereIsNull(@NotNull final String propertyName) {
+		this.predicates.add(criteriaBuilder.isNull(from.get(propertyName)));
+		return this;
+	}
+
+	/**
+	 * 查找特定字段非空的实体
+	 *
+	 * @param propertyName 特定属性的属性名
+	 * @return query实例
+	 */
+	public Query whereIsNotNull(@NotNull final String propertyName) {
+		this.predicates.add(criteriaBuilder.isNotNull(from.get(propertyName)));
+		return this;
+	}
+
+
+	/**
 	 * 时间区间查询
 	 *
 	 * @param propertyName 属性名称
@@ -344,55 +472,19 @@ public class Query implements Serializable {
 		return this;
 	}
 
+	/**
+	 * 数字区间查询
+	 *
+	 * @param propertyName 属性名称
+	 * @param lo           数字起始值
+	 * @param go           数字结束值
+	 */
 	public Query whereBetween(@NotNull final String propertyName, @NotNull final Number lo, @NotNull final Number go) {
 		whereGreaterThanOrEqual(propertyName, lo)
 				.whereLessOrEqual(propertyName, go);
 		return this;
 	}
 
-	/**
-	 * 小于等于
-	 *
-	 * @param propertyName 属性名称
-	 * @param value        属性值
-	 */
-	public Query whereLessOrEqual(@NotNull final String propertyName, @NotNull final Number value) {
-		this.predicates.add(criteriaBuilder.le(from.get(propertyName), value));
-		return this;
-	}
-
-	/**
-	 * 小于
-	 *
-	 * @param propertyName 属性名称
-	 * @param value        属性值
-	 */
-	public Query whereLessThan(@NotNull final String propertyName, @NotNull final Number value) {
-		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), value));
-		return this;
-	}
-
-	/**
-	 * 大于等于
-	 *
-	 * @param propertyName 属性名称
-	 * @param value        属性值
-	 */
-	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final Number value) {
-		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), value));
-		return this;
-	}
-
-	/**
-	 * 大于
-	 *
-	 * @param propertyName 属性名称
-	 * @param value        属性值
-	 */
-	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final Number value) {
-		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), value));
-		return this;
-	}
 
 	/**
 	 * 包含
@@ -426,6 +518,11 @@ public class Query implements Serializable {
 		return this;
 	}
 
+	/**
+	 * 设置分组方式
+	 *
+	 * @param groupBy 分组查询的属性名
+	 */
 	public void groupBy(String groupBy) {
 		this.groupBy = groupBy;
 	}
@@ -442,7 +539,6 @@ public class Query implements Serializable {
 		}
 		return value == null;
 	}
-
 
 
 	public Class getModelClass() {
