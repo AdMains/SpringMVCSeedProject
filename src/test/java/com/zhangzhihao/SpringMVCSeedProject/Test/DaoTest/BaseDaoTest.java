@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 
@@ -192,7 +193,7 @@ public class BaseDaoTest extends BaseTest {
 
 		query.whereNotEqual("authorityType", 4)
 				.whereIsNotNull("userName")
-				.setGroupBy("passWord");
+				.groupBy("passWord");
 		ArrayList<User> statisticsByQuery = (ArrayList<User>) userDao.getStatisticsByQuery(query);
 		System.out.println(statisticsByQuery);
 		statisticsByQuery.forEach(System.out::println);
@@ -202,13 +203,35 @@ public class BaseDaoTest extends BaseTest {
 	public void getStatisticsByQueryTest2() {
 		Query query = new Query(Teacher.class, entityManager);
 
-		query.selectAvg("id")
+		query.selectMax("id")
+				.whereNotEqual("name", "admin")
+				.whereIsNotNull("name")
+				.groupBy("passWord");
+		Object statisticsByQuery = teacherDao.getStatisticsByQuery(query);
+		System.out.println(statisticsByQuery);
+	}
+
+	@Test
+	public void getStatisticsByQueryTest3() {
+		Query query = new Query(entityManager);
+		//更加语义化
+		query.from(Teacher.class)
 				.selectMax("id")
 				.whereNotEqual("name", "admin")
 				.whereIsNotNull("name")
-				.setGroupBy("passWord");
-		Object statisticsByQuery = userDao.getStatisticsByQuery(query);
+				.groupBy("passWord");
+		Object statisticsByQuery = teacherDao.getStatisticsByQuery(query);
 		System.out.println(statisticsByQuery);
+	}
+
+	@Test
+	public void getStatisticsByQueryTest4() {
+		Query query = new Query(entityManager);
+		query.from(User.class)
+				.select()
+				.whereIn("authorityType",asList(1,2,3));
+		List<User> allByQuery = userDao.getAllByQuery(query);
+		allByQuery.stream().forEach(System.out::println);
 	}
 
 	@Test

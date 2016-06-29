@@ -112,6 +112,25 @@ public class Query implements Serializable {
 	/**
 	 * 创建查询条件
 	 *
+	 * @param entityManager
+	 */
+	public Query(@NotNull EntityManager entityManager) {
+		this.entityManager = entityManager;
+		this.criteriaBuilder = this.entityManager.getCriteriaBuilder();
+		this.predicates = new ArrayList();
+		this.orders = new ArrayList();
+	}
+
+	public Query from(@NotNull final Class clazz){
+		this.clazz = clazz;
+		this.criteriaQuery = criteriaBuilder.createQuery(this.clazz);
+		this.from = criteriaQuery.from(this.clazz);
+		return this;
+	}
+
+	/**
+	 * 创建查询条件
+	 *
 	 * @return JPA离线查询
 	 */
 	public CriteriaQuery createCriteriaQuery() {
@@ -122,11 +141,10 @@ public class Query implements Serializable {
 		if (this.orders != null) {
 			criteriaQuery.orderBy(orders);
 		}
-		addLinkCondition(this);
-		//return criteriaQuery;//.select(criteriaBuilder.avg(from.get("authorityType")))
 		if (selection != null) {
 			criteriaQuery.select(selection);
 		}
+		addLinkCondition(this);
 		return criteriaQuery;
 	}
 
@@ -156,6 +174,50 @@ public class Query implements Serializable {
 	}
 
 	/**
+	 * 增加子查询,必须设置子查询字段 projection
+	 */
+	private void addSubQuery(@NotNull final String propertyName, @NotNull Query query) {
+		if (this.subQuery == null)
+			this.subQuery = new HashMap();
+
+		if (query.projection == null)
+			throw new RuntimeException("子查询字段未设置");
+
+		this.subQuery.put(propertyName, query);
+	}
+
+	/**
+	 * 直接添加JPA内部的查询条件,
+	 * 用于应付一些复杂查询的情况,例如或
+	 */
+	public Query addCriterions(Predicate predicate) {
+		this.predicates.add(predicate);
+		return this;
+	}
+
+
+	public Query addOrder(@NotNull final String propertyName, @NotNull final String order) {
+		if (this.orders == null)
+			this.orders = new ArrayList();
+
+		if (order.equalsIgnoreCase("asc"))
+			this.orders.add(criteriaBuilder.asc(from.get(propertyName)));
+		else if (order.equalsIgnoreCase("desc"))
+			this.orders.add(criteriaBuilder.desc(from.get(propertyName)));
+		return this;
+	}
+
+	/**
+	 * @param propertyName
+	 * @param order        asc desc
+	 */
+	public void setOrder(@NotNull final String propertyName, @NotNull final String order) {
+		this.orders = null;
+		addOrder(propertyName, order);
+	}
+
+
+	/**
 	 * 设置查询
 	 *
 	 * @param selection
@@ -165,6 +227,8 @@ public class Query implements Serializable {
 		this.selection = selection;
 		return this;
 	}
+
+	public Query select(){return this;}
 
 	public Query selectAvg(@NotNull final String propertyName) {
 		Expression<Double> avg = criteriaBuilder.avg(from.get(propertyName));
@@ -198,34 +262,12 @@ public class Query implements Serializable {
 	}
 
 
-	/**
-	 * 增加子查询,必须设置子查询字段 projection
-	 */
-	private void addSubQuery(@NotNull final String propertyName, @NotNull Query query) {
-		if (this.subQuery == null)
-			this.subQuery = new HashMap();
-
-		if (query.projection == null)
-			throw new RuntimeException("子查询字段未设置");
-
-		this.subQuery.put(propertyName, query);
-	}
-
-
-	/**
-	 * 相等
-	 */
 	public Query whereEqual(@NotNull final String propertyName, @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), value));
 		return this;
 	}
 
-	/**
-	 * 或
-	 *
-	 * @param propertyName
-	 * @param value
-	 */
+
 	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), value));
 		for (int i = 1; i < propertyName.size(); i++)
@@ -384,34 +426,8 @@ public class Query implements Serializable {
 		return this;
 	}
 
-	/**
-	 * 直接添加JPA内部的查询条件,
-	 * 用于应付一些复杂查询的情况,例如或
-	 */
-	public Query addCriterions(Predicate predicate) {
-		this.predicates.add(predicate);
-		return this;
-	}
-
-
-	public Query addOrder(@NotNull final String propertyName, @NotNull final String order) {
-		if (this.orders == null)
-			this.orders = new ArrayList();
-
-		if (order.equalsIgnoreCase("asc"))
-			this.orders.add(criteriaBuilder.asc(from.get(propertyName)));
-		else if (order.equalsIgnoreCase("desc"))
-			this.orders.add(criteriaBuilder.desc(from.get(propertyName)));
-		return this;
-	}
-
-	/**
-	 * @param propertyName
-	 * @param order        asc desc
-	 */
-	public void setOrder(@NotNull final String propertyName, @NotNull final String order) {
-		this.orders = null;
-		addOrder(propertyName, order);
+	public void groupBy(String groupBy) {
+		this.groupBy = groupBy;
 	}
 
 	/**
@@ -426,6 +442,8 @@ public class Query implements Serializable {
 		}
 		return value == null;
 	}
+
+
 
 	public Class getModelClass() {
 		return this.clazz;
@@ -481,14 +499,6 @@ public class Query implements Serializable {
 
 	public void setFetchModes(List<String> fetchField, List<String> fetchMode) {
 
-	}
-
-	public String getGroupBy() {
-		return groupBy;
-	}
-
-	public void setGroupBy(String groupBy) {
-		this.groupBy = groupBy;
 	}
 
 }
