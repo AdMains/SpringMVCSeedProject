@@ -33,19 +33,23 @@ public class BaseDao<T> {
 
 	/**
 	 * 这个实体是否存在在数据库
+	 *
 	 * @param model 实体
 	 * @return 是否存在
 	 */
-	public boolean contains(@NotNull final T model){
+	public boolean contains(@NotNull final T model) {
 		return entityManager.contains(model);
 	}
+
 	/**
 	 * 使实体变为不受管理的状态
+	 *
 	 * @param model 实体
 	 */
-	public void detach(@NotNull final T model){
+	public void detach(@NotNull final T model) {
 		entityManager.detach(model);
 	}
+
 	/**
 	 * 保存对象
 	 *
@@ -166,7 +170,7 @@ public class BaseDao<T> {
 		if (currentPageNumber <= 0 || pageSize <= 0) {
 			return null;
 		}
-		Query query =new Query(modelClass, entityManager);
+		Query query = new Query(modelClass, entityManager);
 		return entityManager.createQuery(query.createCriteriaQuery())
 				.setFirstResult((currentPageNumber - 1) * pageSize)
 				.setMaxResults(pageSize)
@@ -214,7 +218,7 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public int getCount(Class<T> modelClass) {
-		Query query=new Query(modelClass,entityManager);
+		Query query = new Query(modelClass, entityManager);
 		return entityManager
 				.createQuery(query.createCriteriaQuery())
 				.getResultList()
@@ -224,7 +228,7 @@ public class BaseDao<T> {
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param query      查询条件
+	 * @param query 查询条件
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
@@ -238,7 +242,7 @@ public class BaseDao<T> {
 	/**
 	 * 获得统计结果
 	 *
-	 * @param query      查询条件
+	 * @param query 查询条件
 	 * @return 结果
 	 */
 	@Transactional(readOnly = true)
@@ -260,6 +264,90 @@ public class BaseDao<T> {
 			nativeQuery.setParameter(i, values[i]);
 		}
 		return nativeQuery.executeUpdate();
+	}
+
+	/**
+	 * 通过jpql查询
+	 *
+	 * @param jpql
+	 * @param values
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Object queryByJpql(@NotNull final String jpql, @NotNull Object... values) {
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+		return query.getResultList();
+	}
+
+	/**
+	 * 获得符合对应条件的数量 利用Count(*)实现
+	 *
+	 * @param jpql jpql查询条件
+	 * @return 数量
+	 */
+	@Transactional(readOnly = true)
+	public int getCountByJpql(@NotNull final String jpql, @NotNull Object... values) {
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+		return query.getResultList().size();
+	}
+
+	/**
+	 * 通过Jpql分页查询
+	 *
+	 * @param currentPageNumber 当前页
+	 * @param pageSize          每页数量
+	 * @param jpql              jpql语句
+	 * @param values            jpql参数
+	 * @return 查询结果
+	 */
+	@Transactional(readOnly = true)
+	public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
+	                                                @NotNull Integer pageSize,
+	                                                @NotNull final String jpql,
+	                                                @NotNull Object... values) {
+		//参数验证
+		int totalCount = getCountByJpql(jpql, values);
+		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
+				: totalCount / pageSize + 1;
+
+		if (currentPageNumber > pageCount && pageCount != 0) {
+			currentPageNumber = pageCount;
+		}
+
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+
+		//查看是否要分页
+		if (currentPageNumber > 0 && pageSize > 0) {
+			query
+					.setFirstResult((currentPageNumber - 1) * pageSize)
+					.setMaxResults(pageSize);
+		}
+		List<Object> list = query.getResultList();
+		return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
+	}
+
+	/**
+	 * 执行jpql语句
+	 *
+	 * @param jpql
+	 * @param values
+	 * @return
+	 */
+	public int executeJpql(@NotNull final String jpql, @NotNull Object... values) {
+		javax.persistence.Query query = entityManager.createQuery(jpql);
+		for (int i = 0; i < values.length; i++) {
+			query.setParameter(i, values[i]);
+		}
+		return query.executeUpdate();
 	}
 
 	/**

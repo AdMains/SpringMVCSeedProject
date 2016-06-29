@@ -178,9 +178,9 @@ class BaseService<T> {
 	 * @param query 查询条件
 	 * @return 结果
 	 */
-//	public List getStatisticsByQuery(@NotNull final Query query) throws Exception {
-//		return baseDao.getStatisticsByQuery(query);
-//	}
+	public Object getStatisticsByQuery(@NotNull final Query query) throws Exception {
+		return baseDao.getStatisticsByQuery(query);
+	}
 
 
 	/**
@@ -193,6 +193,56 @@ class BaseService<T> {
 	public int executeSql(@NotNull String sql, @NotNull Object... values)
 			throws Exception {
 		return baseDao.executeSql(sql, values);
+	}
+
+	/**
+	 * 通过jpql查询
+	 *
+	 * @param jpql
+	 * @param values
+	 * @return
+	 */
+	public Object queryByJpql(@NotNull final String jpql, @NotNull Object... values) {
+		return baseDao.queryByJpql(jpql, values);
+	}
+
+	/**
+	 * 获得符合对应条件的数量 利用Count(*)实现
+	 *
+	 * @param jpql jpql查询条件
+	 * @return 数量
+	 */
+	public int getCountByJpql(@NotNull final String jpql, @NotNull Object... values) {
+		return baseDao.getCountByJpql(jpql, values);
+	}
+
+
+	/**
+	 * 通过Jpql分页查询
+	 *
+	 * @param currentPageNumber 当前页
+	 * @param pageSize          每页数量
+	 * @param jpql              jpql语句
+	 * @param values            jpql参数
+	 * @return 查询结果
+	 */
+	@Transactional(readOnly = true)
+	public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
+	                                                @NotNull Integer pageSize,
+	                                                @NotNull final String jpql,
+	                                                @NotNull Object... values) {
+		return baseDao.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
+	}
+
+	/**
+	 * 执行jpql语句
+	 *
+	 * @param jpql
+	 * @param values
+	 * @return
+	 */
+	public int executeJpql(@NotNull final String jpql, @NotNull Object... values) {
+		return baseDao.executeJpql(jpql, values);
 	}
 
 	/**

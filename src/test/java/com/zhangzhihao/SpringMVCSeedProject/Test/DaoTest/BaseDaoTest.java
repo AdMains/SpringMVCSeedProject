@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -194,9 +193,8 @@ public class BaseDaoTest extends BaseTest {
 		query.whereNotEqual("authorityType", 4)
 				.whereIsNotNull("userName")
 				.groupBy("passWord");
-		ArrayList<User> statisticsByQuery = (ArrayList<User>) userDao.getStatisticsByQuery(query);
+		Object statisticsByQuery = userDao.getStatisticsByQuery(query);
 		System.out.println(statisticsByQuery);
-		statisticsByQuery.forEach(System.out::println);
 	}
 
 	@Test
@@ -229,9 +227,35 @@ public class BaseDaoTest extends BaseTest {
 		Query query = new Query(entityManager);
 		query.from(User.class)
 				.select()
-				.whereIn("authorityType",asList(1,2,3));
+				.whereIn("authorityType", asList(1, 2, 3));
 		List<User> allByQuery = userDao.getAllByQuery(query);
 		allByQuery.stream().forEach(System.out::println);
+	}
+
+	/*@Test
+	public void getStatisticsByQueryTest5() {
+		Query query = new Query(entityManager);
+		Query cardQuery=new Query(entityManager);
+		query.from(User.class)
+				.select()
+				.whereIn("authorityType",asList(1,2,3))
+				.addLinkQuery("userCard",cardQuery);
+		List<User> allByQuery = userDao.getAllByQuery(query);
+		allByQuery.stream().forEach(System.out::println);
+	}*/
+
+	@Test
+	public void queryByJpqlTest() {
+		String jpql = "select o from User o where o.passWord = ?0 ";
+		PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql, "BaseDao");
+		results.getResults().stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void getListByPageAndJpqlTest() {
+		String jpql = "select o from User o where o.userName = ?0 ";
+		List<User> users = (List<User>) userDao.queryByJpql(jpql, "admin");
+		users.stream().forEach(System.out::println);
 	}
 
 	@Test
