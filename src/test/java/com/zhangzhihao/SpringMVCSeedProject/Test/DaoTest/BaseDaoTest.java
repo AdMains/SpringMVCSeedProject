@@ -224,6 +224,20 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
+	public void getStatisticsByQueryTestSuccess() {
+		Query query = new Query(entityManager);
+		query.from(User.class)
+				.whereNotEqual("authorityType", AuthorityType.Admin)
+				.whereIsNotNull("userName")
+				.groupBy("passWord")
+				.createTypedQuery()
+				.getResultList()
+				.stream()
+				.forEach(System.out::println);
+
+	}
+
+	@Test
 	public void getStatisticsByQueryTest2() {
 		Query query = new Query(entityManager);
 		ParameterExpression parameter = query.createParameter(String.class);

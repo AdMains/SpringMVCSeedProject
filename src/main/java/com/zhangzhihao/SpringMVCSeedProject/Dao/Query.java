@@ -9,6 +9,7 @@ import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Query
@@ -63,6 +64,11 @@ public class Query implements Serializable {
 	 * 排序方式列表
 	 */
 	private List<Order> orders;
+
+	/**
+	 * 查询参数
+	 */
+	private Map<ParameterExpression, Object> parameters;
 
 	/**
 	 * 子查询
@@ -139,7 +145,27 @@ public class Query implements Serializable {
 	 * @return 返回强类型查询的实例
 	 */
 	public TypedQuery createTypedQuery() {
-		return entityManager.createQuery(this.createCriteriaQuery());
+		TypedQuery typedQuery = entityManager.createQuery(this.createCriteriaQuery());
+		if (parameters != null) {
+			for (ParameterExpression parameter : parameters.keySet()) {
+				typedQuery.setParameter(parameter, parameters.get(parameter));
+			}
+		}
+		return typedQuery;
+	}
+
+	public void setParameter(ParameterExpression parameter, Object object) {
+		if (parameters == null) {
+			parameters = new HashMap<>();
+		}
+		parameters.put(parameter, object);
+	}
+
+	private ParameterExpression makeParameter(Object value) {
+		Class<?> aClass = value.getClass();
+		ParameterExpression<Enum> parameter = this.createParameter(aClass);
+		setParameter(parameter, value);
+		return parameter;
 	}
 
 
@@ -346,11 +372,23 @@ public class Query implements Serializable {
 	 * 查找属性值等于特定值的实体
 	 *
 	 * @param propertyName 要查询属性的属性名
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereEqual(@NotNull final String propertyName, @NotNull final ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), expression));
+	public Query whereEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 查找属性值等于特定值的实体
+	 *
+	 * @param propertyName 要查询属性的属性名
+	 * @param value        属性值
+	 * @return query实例
+	 */
+	public Query whereEqual(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -358,11 +396,23 @@ public class Query implements Serializable {
 	 * 查找属性值不等于特定值的实体
 	 *
 	 * @param propertyName 要查询属性的属性名
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), expression));
+	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 查找属性值不等于特定值的实体
+	 *
+	 * @param propertyName 要查询属性的属性名
+	 * @param value        属性值
+	 * @return query实例
+	 */
+	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -370,10 +420,21 @@ public class Query implements Serializable {
 	 * 查找属性值小于等于特定值的实体
 	 *
 	 * @param propertyName 属性名称
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 */
-	public Query whereLessThanOrEqual(@NotNull final String propertyName, @NotNull final ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.le(from.get(propertyName), expression));
+	public Query whereLessThanOrEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.le(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 查找属性值小于等于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereLessThanOrEqual(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.le(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -381,10 +442,21 @@ public class Query implements Serializable {
 	 * 查找属性值小于特定值的实体
 	 *
 	 * @param propertyName 属性名称
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 */
-	public Query whereLessThan(@NotNull final String propertyName, @NotNull final ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), expression));
+	public Query whereLessThan(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 查找属性值小于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereLessThan(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -392,10 +464,21 @@ public class Query implements Serializable {
 	 * 查找属性值大于等于特定值的实体
 	 *
 	 * @param propertyName 属性名称
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 */
-	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), expression));
+	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 查找属性值大于等于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -403,10 +486,21 @@ public class Query implements Serializable {
 	 * 查找属性值大于特定值的实体
 	 *
 	 * @param propertyName 属性名称
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 */
-	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), expression));
+	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 查找属性值大于特定值的实体
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -414,13 +508,28 @@ public class Query implements Serializable {
 	 * 或者特定属性名等于特定值的实体
 	 *
 	 * @param propertyName 要查询的属性的属性名
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final ParameterExpression expression) {
-		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), expression));
+	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final ParameterExpression parameter) {
+		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), parameter));
 		for (int i = 1; i < propertyName.size(); i++)
-			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), expression));
+			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), parameter));
+		this.predicates.add(predicate);
+		return this;
+	}
+
+	/**
+	 * 或者特定属性名等于特定值的实体
+	 *
+	 * @param propertyName 要查询的属性的属性名
+	 * @param value        属性值
+	 * @return query实例
+	 */
+	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final Object value) {
+		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), makeParameter(value)));
+		for (int i = 1; i < propertyName.size(); i++)
+			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), makeParameter(value)));
 		this.predicates.add(predicate);
 		return this;
 	}
@@ -429,10 +538,21 @@ public class Query implements Serializable {
 	 * 模糊匹配
 	 *
 	 * @param propertyName 属性名称
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 */
-	public Query whereLike(@NotNull final String propertyName, @NotNull ParameterExpression expression) {
-		this.predicates.add(criteriaBuilder.like(from.get(propertyName), expression));
+	public Query whereLike(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+		this.predicates.add(criteriaBuilder.like(from.get(propertyName), parameter));
+		return this;
+	}
+
+	/**
+	 * 模糊匹配
+	 *
+	 * @param propertyName 属性名称
+	 * @param value        属性值
+	 */
+	public Query whereLike(@NotNull final String propertyName, @NotNull final Object value) {
+		this.predicates.add(criteriaBuilder.like(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
 
@@ -440,13 +560,28 @@ public class Query implements Serializable {
 	 * 模糊查询,或者包含
 	 *
 	 * @param propertyName 要查询的特定属性的属性名
-	 * @param expression   参数表达式
+	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull ParameterExpression expression) {
-		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), expression));
+	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull final ParameterExpression parameter) {
+		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), parameter));
 		for (int i = 1; i < propertyName.size(); i++)
-			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), expression));
+			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), parameter));
+		this.predicates.add(predicate);
+		return this;
+	}
+
+	/**
+	 * 模糊查询,或者包含
+	 *
+	 * @param propertyName 要查询的特定属性的属性名
+	 * @param value        参数值
+	 * @return query实例
+	 */
+	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull Object value) {
+		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), makeParameter(value)));
+		for (int i = 1; i < propertyName.size(); i++)
+			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), makeParameter(value)));
 		this.predicates.add(predicate);
 		return this;
 	}
@@ -499,6 +634,19 @@ public class Query implements Serializable {
 		return this;
 	}
 
+	/**
+	 * 数字区间查询
+	 *
+	 * @param propertyName 属性名称
+	 * @param lo           数字起始值
+	 * @param go           数字结束值
+	 */
+	public Query whereBetween(@NotNull final String propertyName, @NotNull final Number lo, @NotNull final Number go) {
+		whereGreaterThanOrEqual(propertyName, lo)
+				.whereLessThanOrEqual(propertyName, go);
+		return this;
+	}
+
 
 	/**
 	 * 包含
@@ -514,6 +662,23 @@ public class Query implements Serializable {
 	}
 
 	/**
+	 * 包含
+	 *
+	 * @param propertyName 属性名称
+	 * @param values       参数值集合
+	 */
+	public Query whereValueIn(@NotNull final String propertyName, @NotNull final List<Object> values) {
+		In in = criteriaBuilder.in(from.get(propertyName));
+		values.stream()
+				.map(this::makeParameter)
+				.collect(Collectors.toList())
+				.stream()
+				.forEach(in::value);
+		this.predicates.add(in);
+		return this;
+	}
+
+	/**
 	 * 不包含
 	 *
 	 * @param propertyName 属性名称
@@ -522,6 +687,23 @@ public class Query implements Serializable {
 	public Query whereNotIn(@NotNull final String propertyName, @NotNull final List<ParameterExpression> values) {
 		In in = criteriaBuilder.in(from.get(propertyName));
 		values.stream().forEach(in::value);
+		this.predicates.add(criteriaBuilder.not(in));
+		return this;
+	}
+
+	/**
+	 * 不包含
+	 *
+	 * @param propertyName 属性名称
+	 * @param values       参数集合
+	 */
+	public Query whereValueNotIn(@NotNull final String propertyName, @NotNull final List<Object> values) {
+		In in = criteriaBuilder.in(from.get(propertyName));
+		values.stream()
+				.map(this::makeParameter)
+				.collect(Collectors.toList())
+				.stream()
+				.forEach(in::value);
 		this.predicates.add(criteriaBuilder.not(in));
 		return this;
 	}
@@ -597,6 +779,14 @@ public class Query implements Serializable {
 
 	public CriteriaBuilder getCriteriaBuilder() {
 		return criteriaBuilder;
+	}
+
+	public Map<ParameterExpression, Object> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Map<ParameterExpression, Object> parameters) {
+		this.parameters = parameters;
 	}
 
 	public void setFetchModes(List<String> fetchField, List<String> fetchMode) {
