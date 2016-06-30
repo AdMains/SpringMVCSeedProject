@@ -183,23 +183,22 @@ public class BaseDao<T> {
 	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
-	 * @param query             封装的查询条件
+	 * @param typedQuery        封装的查询条件
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
 	public PageResults<T> getListByPageAndQuery(Class<T> modelClass,
 	                                            @NotNull Integer currentPageNumber,
 	                                            @NotNull Integer pageSize,
-	                                            @NotNull Query query) {
+	                                            @NotNull TypedQuery typedQuery) {
 		//参数验证
-		int totalCount = getCountByQuery(query);
+		int totalCount = getCountByQuery(typedQuery);
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
 
 		if (currentPageNumber > pageCount && pageCount != 0) {
 			currentPageNumber = pageCount;
 		}
-		TypedQuery typedQuery = entityManager.createQuery(query.createCriteriaQuery());
 		//查看是否要分页
 		if (currentPageNumber > 0 && pageSize > 0) {
 			typedQuery
@@ -228,13 +227,12 @@ public class BaseDao<T> {
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param query 查询条件
+	 * @param typedQuery 查询条件
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByQuery(@NotNull final Query query) {
-		return entityManager
-				.createQuery(query.createCriteriaQuery())
+	public int getCountByQuery(@NotNull final TypedQuery typedQuery) {
+		return typedQuery
 				.getResultList()
 				.size();
 	}

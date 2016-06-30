@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -142,14 +143,14 @@ class BaseService<T> {
 	 *
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
-	 * @param query             封装的查询条件
+	 * @param typedQuery        封装的查询条件
 	 * @return 查询结果
 	 */
 	public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
 	                                            @NotNull Integer pageSize,
-	                                            @NotNull Query query)
+	                                            @NotNull TypedQuery typedQuery)
 			throws Exception {
-		return baseDao.getListByPageAndQuery(modelClass, currentPageNumber, pageSize, query);
+		return baseDao.getListByPageAndQuery(modelClass, currentPageNumber, pageSize, typedQuery);
 	}
 
 	/**
@@ -165,11 +166,11 @@ class BaseService<T> {
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param query 查询条件
+	 * @param typedQuery 查询条件
 	 * @return 数量
 	 */
-	public int getCountByQuery(@NotNull final Query query) throws Exception {
-		return baseDao.getCountByQuery(query);
+	public int getCountByQuery(@NotNull final TypedQuery typedQuery) throws Exception {
+		return baseDao.getCountByQuery(typedQuery);
 	}
 
 	/**
