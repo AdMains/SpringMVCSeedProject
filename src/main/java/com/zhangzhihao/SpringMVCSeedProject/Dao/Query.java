@@ -4,6 +4,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Dao;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import java.io.Serializable;
@@ -133,6 +134,16 @@ public class Query implements Serializable {
 	}
 
 	/**
+	 * 创建强类型查询
+	 *
+	 * @return 返回强类型查询的实例
+	 */
+	public TypedQuery createTypedQuery() {
+		return entityManager.createQuery(this.createCriteriaQuery());
+	}
+
+
+	/**
 	 * 创建查询条件
 	 *
 	 * @return JPA标准查询
@@ -150,6 +161,13 @@ public class Query implements Serializable {
 		}
 		addLinkCondition(this);
 		return criteriaQuery;
+	}
+
+	/**
+	 * 参数化查询
+	 */
+	public ParameterExpression createParameter(Class clazz) {
+		return this.getCriteriaBuilder().parameter(clazz);
 	}
 
 	/**

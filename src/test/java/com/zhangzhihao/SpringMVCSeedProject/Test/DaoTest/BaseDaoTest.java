@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.ParameterExpression;
 import java.util.List;
 import java.util.Random;
@@ -129,16 +128,16 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getAllByQueryTest() {
 		Query query = new Query(User.class, entityManager);
-		ParameterExpression<Enum> parameter1 = query.getCriteriaBuilder().parameter(Enum.class);
-		ParameterExpression<String> parameter2 = query.getCriteriaBuilder().parameter(String.class);
-		query.whereEqual("authorityType", parameter1)
-				.whereLike("passWord", parameter2);
-		List allByQuery = entityManager.createQuery(query.createCriteriaQuery())
+		ParameterExpression<Enum> parameter1 = query.createParameter(Enum.class);
+		ParameterExpression<String> parameter2 = query.createParameter(String.class);
+		List resultList = query.whereEqual("authorityType", parameter1)
+				.whereLike("passWord", parameter2)
+				.createTypedQuery()
 				.setParameter(parameter1, AuthorityType.College_Level_Admin)
 				.setParameter(parameter2, "BaseDao")
 				.getResultList();
-		if (allByQuery != null) {
-			allByQuery.stream().forEach(System.out::println);
+		if (resultList != null) {
+			resultList.stream().forEach(System.out::println);
 		}
 	}
 
@@ -151,10 +150,10 @@ public class BaseDaoTest extends BaseTest {
 		assertNotNull(listByPage);
 	}
 
-	@Test
+	/*@Test
 	public void getListByPageAndQueryTest() {
 
-		Query query = new Query(User.class, entityManager);
+		Query query = new Query(User.class);
 		ParameterExpression<Enum> parameter1 = query.getCriteriaBuilder().parameter(Enum.class);
 		query.whereEqual("authorityType", parameter1);
 
@@ -167,12 +166,12 @@ public class BaseDaoTest extends BaseTest {
 			results.forEach(System.out::println);
 		}
 		assertNotNull(results);
-	}
+	}*/
 
 
-	@Test
+	/*@Test
 	public void getListByPageAndQueryTest2() {
-		Query query = new Query(User.class, entityManager);
+		Query query = new Query(User.class);
 		ParameterExpression<String> parameter = query.getCriteriaBuilder().parameter(String.class);
 
 		query.whereLike("passWord", parameter);
@@ -186,7 +185,7 @@ public class BaseDaoTest extends BaseTest {
 			results.forEach(System.out::println);
 		}
 		assertNotNull(results);
-	}
+	}*/
 
 	@Test
 	public void getCountTest() {
@@ -194,15 +193,15 @@ public class BaseDaoTest extends BaseTest {
 		System.out.println(count);
 	}
 
-	@Test
+	/*@Test
 	public void getCountByQueryTest() {
-		Query query = new Query(User.class, entityManager);
+		Query query = new Query(User.class);
 		ParameterExpression<Enum> parameter = query.getCriteriaBuilder().parameter(Enum.class);
 		query.whereEqual("authorityType", parameter);
 		TypedQuery typedQuery = entityManager.createQuery(query.createCriteriaQuery()).setParameter(parameter, AuthorityType.Admin);
 		int countByQuery = userDao.getCountByQuery(typedQuery);
 		System.out.println(countByQuery);
-	}
+	}*/
 
 	/*@Test
 	public void getStatisticsByQueryTest() {
