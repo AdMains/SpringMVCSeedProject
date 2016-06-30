@@ -432,8 +432,6 @@ public class Query implements Serializable {
 	 * @param expression   参数表达式
 	 */
 	public Query whereLike(@NotNull final String propertyName, @NotNull ParameterExpression expression) {
-		/*if (!value.contains("%"))
-			value = "%" + value + "%";*/
 		this.predicates.add(criteriaBuilder.like(from.get(propertyName), expression));
 		return this;
 	}
@@ -446,8 +444,6 @@ public class Query implements Serializable {
 	 * @return query实例
 	 */
 	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull ParameterExpression expression) {
-		/*if (!value.contains("%"))
-			value = "%" + value + "%";*/
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), expression));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), expression));
@@ -535,8 +531,9 @@ public class Query implements Serializable {
 	 *
 	 * @param groupBy 分组查询的属性名
 	 */
-	public void groupBy(@NotNull final String groupBy) {
+	public Query groupBy(@NotNull final String groupBy) {
 		this.groupBy = groupBy;
+		return this;
 	}
 
 	/**

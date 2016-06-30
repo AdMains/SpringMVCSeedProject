@@ -2,7 +2,6 @@ package com.zhangzhihao.SpringMVCSeedProject.Service;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,14 +115,6 @@ class BaseService<T> {
 		return baseDao.getAll(modelClass);
 	}
 
-	/**
-	 * 通过条件获得全部
-	 *
-	 * @return List
-	 */
-	public List<T> getAllByQuery(@NotNull Query query) {
-		return baseDao.getAllByQuery(query);
-	}
 
 	/**
 	 * 分页查询
@@ -150,7 +141,7 @@ class BaseService<T> {
 	                                            @NotNull Integer pageSize,
 	                                            @NotNull TypedQuery typedQuery)
 			throws Exception {
-		return baseDao.getListByPageAndQuery(modelClass, currentPageNumber, pageSize, typedQuery);
+		return baseDao.getListByPageAndQuery(currentPageNumber, pageSize, typedQuery);
 	}
 
 	/**
@@ -172,17 +163,6 @@ class BaseService<T> {
 	public int getCountByQuery(@NotNull final TypedQuery typedQuery) throws Exception {
 		return baseDao.getCountByQuery(typedQuery);
 	}
-
-	/**
-	 * 获得统计结果
-	 *
-	 * @param query 查询条件
-	 * @return 结果
-	 */
-	public Object getStatisticsByQuery(@NotNull final Query query) throws Exception {
-		return baseDao.getStatisticsByQuery(query);
-	}
-
 
 	/**
 	 * 执行Sql语句

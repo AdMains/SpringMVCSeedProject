@@ -144,16 +144,6 @@ public class BaseDao<T> {
 		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
 	}
 
-	/**
-	 * 通过条件获得全部
-	 *
-	 * @return List
-	 */
-	@Transactional(readOnly = true)
-	public List<T> getAllByQuery(@NotNull Query query) {
-		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
-	}
-
 
 	/**
 	 * 分页查询
@@ -180,15 +170,13 @@ public class BaseDao<T> {
 	/**
 	 * 按条件分页
 	 *
-	 * @param modelClass        类型，比如User.class
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
 	 * @param typedQuery        封装的查询条件
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
-	public PageResults<T> getListByPageAndQuery(Class<T> modelClass,
-	                                            @NotNull Integer currentPageNumber,
+	public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
 	                                            @NotNull Integer pageSize,
 	                                            @NotNull TypedQuery typedQuery) {
 		//参数验证
@@ -236,18 +224,6 @@ public class BaseDao<T> {
 				.getResultList()
 				.size();
 	}
-
-	/**
-	 * 获得统计结果
-	 *
-	 * @param query 查询条件
-	 * @return 结果
-	 */
-	@Transactional(readOnly = true)
-	public Object getStatisticsByQuery(@NotNull final Query query) {
-		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
-	}
-
 
 	/**
 	 * 执行Sql语句
