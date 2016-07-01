@@ -6,7 +6,6 @@ import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -42,7 +41,7 @@ class BaseService<T> {
 	 * @param modelList 需要增加的对象的集合
 	 *                  失败会抛异常
 	 */
-	public void saveAll(final @NotNull List<T> modelList) throws Exception {
+	public void saveAll(@NotNull final List<T> modelList) throws Exception {
 		baseDao.saveAll(modelList);
 	}
 
@@ -72,7 +71,7 @@ class BaseService<T> {
 	 * @param id 需要删除的对象的id
 	 *           失败抛出异常
 	 */
-	public void deleteById(@NotNull Serializable id) throws Exception {
+	public void deleteById(@NotNull final Serializable id) throws Exception {
 		baseDao.deleteById(modelClass, id);
 	}
 
@@ -149,8 +148,7 @@ class BaseService<T> {
 	 *
 	 * @return 数量
 	 */
-	@Transactional(readOnly = true)
-	public int getCount() {
+	public int getCount() throws Exception {
 		return baseDao.getCount(modelClass);
 	}
 
@@ -171,7 +169,7 @@ class BaseService<T> {
 	 * @param values 不定参数数组
 	 * @return 受影响的行数
 	 */
-	public int executeSql(@NotNull String sql, @NotNull Object... values)
+	public int executeSql(@NotNull final String sql, @NotNull final Object... values)
 			throws Exception {
 		return baseDao.executeSql(sql, values);
 	}
@@ -179,11 +177,11 @@ class BaseService<T> {
 	/**
 	 * 通过jpql查询
 	 *
-	 * @param jpql
-	 * @param values
-	 * @return
+	 * @param jpql   jpql语句
+	 * @param values 参数列表
+	 * @return 受影响的行数
 	 */
-	public Object queryByJpql(@NotNull final String jpql, @NotNull Object... values) {
+	public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		return baseDao.queryByJpql(jpql, values);
 	}
 
@@ -193,7 +191,7 @@ class BaseService<T> {
 	 * @param jpql jpql查询条件
 	 * @return 数量
 	 */
-	public int getCountByJpql(@NotNull final String jpql, @NotNull Object... values) {
+	public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		return baseDao.getCountByJpql(jpql, values);
 	}
 
@@ -207,7 +205,6 @@ class BaseService<T> {
 	 * @param values            jpql参数
 	 * @return 查询结果
 	 */
-	@Transactional(readOnly = true)
 	public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
 	                                                @NotNull Integer pageSize,
 	                                                @NotNull final String jpql,
@@ -218,11 +215,11 @@ class BaseService<T> {
 	/**
 	 * 执行jpql语句
 	 *
-	 * @param jpql
-	 * @param values
-	 * @return
+	 * @param jpql   jpql语句
+	 * @param values 参数列表
+	 * @return 受影响的行数
 	 */
-	public int executeJpql(@NotNull final String jpql, @NotNull Object... values) {
+	public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		return baseDao.executeJpql(jpql, values);
 	}
 

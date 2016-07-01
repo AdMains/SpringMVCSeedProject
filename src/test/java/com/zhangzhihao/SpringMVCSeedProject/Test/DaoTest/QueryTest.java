@@ -42,7 +42,7 @@ public class QueryTest extends BaseTest {
 	}
 
 	@Test
-	public void getListByPageAndQueryTest() {
+	public void getListByPageAndQueryTest() throws Exception {
 		Query query = new Query(entityManager);
 		/*TypedQuery typedQuery = query.from(User.class)
 				.whereEqual("authorityType", AuthorityType.School_Level_Admin)
@@ -60,7 +60,7 @@ public class QueryTest extends BaseTest {
 
 
 	@Test
-	public void getListByPageAndQueryTest2() {
+	public void getListByPageAndQueryTest2() throws Exception {
 		Query query = new Query(entityManager);
 
 		/*TypedQuery typedQuery = query.from(User.class)
@@ -109,7 +109,7 @@ public class QueryTest extends BaseTest {
 		Query query = new Query(entityManager);
 		query.from(User.class)
 				.whereNotEqual("authorityType", AuthorityType.Admin)
-				.whereEqual("passWord","BaseDao")
+				.whereEqual("passWord", "BaseDao")
 				.whereIsNotNull("userName")
 				.groupBy("passWord")
 				.createTypedQuery()
@@ -154,7 +154,7 @@ public class QueryTest extends BaseTest {
 		Query query = new Query(entityManager);
 		query.from(User.class)
 				.select()
-				.whereValueIn("authorityType",asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
+				.whereValueIn("authorityType", asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
 				.createTypedQuery()
 				.getResultList()
 				.forEach(System.out::println);
@@ -165,10 +165,10 @@ public class QueryTest extends BaseTest {
 		Query query = new Query(entityManager);
 		query.from(User.class)
 				.select()
-				.whereValueNotIn("authorityType",asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
+				.whereValueNotIn("authorityType", asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
 				.whereIsNotNull("passWord")
-				.whereNotEqual("passWord","BaseDao")
-				.whereNotEqual("userName","test")
+				.whereNotEqual("passWord", "BaseDao")
+				.whereNotEqual("userName", "test")
 				.createTypedQuery()
 				.getResultList()
 				.forEach(System.out::println);
@@ -179,10 +179,10 @@ public class QueryTest extends BaseTest {
 		Query query = new Query(entityManager);
 		query.from(User.class)
 				.selectCount()
-				.whereValueNotIn("authorityType",asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
+				.whereValueNotIn("authorityType", asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
 				.whereIsNotNull("passWord")
-				.whereNotEqual("passWord","BaseDao")
-				.whereNotEqual("userName","test")
+				.whereNotEqual("passWord", "BaseDao")
+				.whereNotEqual("userName", "test")
 				.createTypedQuery()
 				.getResultList()
 				.forEach(System.out::println);

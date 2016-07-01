@@ -96,7 +96,7 @@ public class BaseDao<T> {
 	 * @param id         需要删除的对象的id
 	 *                   失败抛出异常
 	 */
-	public void deleteById(final Class<T> modelClass, @NotNull Serializable id) {
+	public void deleteById(final Class<T> modelClass, @NotNull final Serializable id) {
 		this.delete(this.getById(modelClass, id));
 	}
 
@@ -178,14 +178,10 @@ public class BaseDao<T> {
 	@Transactional(readOnly = true)
 	public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
 	                                            @NotNull Integer pageSize,
-	                                            @NotNull Query query) {
-		//参数验证
-		int totalCount = 0;
-		try {
-			totalCount = getCountByQuery((Query) query.deepClone());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	                                            @NotNull Query query)
+			throws Exception {
+		//获得符合条件的总数目
+		int totalCount = getCountByQuery((Query) query.deepClone());
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
 
@@ -212,10 +208,7 @@ public class BaseDao<T> {
 	@Transactional(readOnly = true)
 	public int getCount(Class<T> modelClass) {
 		Query query = new Query(modelClass, entityManager);
-		return entityManager
-				.createQuery(query.createCriteriaQuery())
-				.getResultList()
-				.size();
+		return getCountByQuery(query);
 	}
 
 	/**
@@ -227,10 +220,11 @@ public class BaseDao<T> {
 	@Transactional(readOnly = true)
 	public int getCountByQuery(@NotNull final Query query) {
 		query.selectCount();
-		return Integer.parseInt(query.createTypedQuery().getSingleResult().toString());
-		/*return typedQuery
-				.getResultList()
-				.size();*/
+		return Integer.parseInt(
+				query.createTypedQuery()
+						.getSingleResult()
+						.toString()
+		);
 	}
 
 	/**
@@ -240,7 +234,7 @@ public class BaseDao<T> {
 	 * @param values 不定参数数组
 	 * @return 受影响的行数
 	 */
-	public int executeSql(@NotNull String sql, @NotNull Object... values) {
+	public int executeSql(@NotNull String sql, @NotNull final Object... values) {
 		javax.persistence.Query nativeQuery = entityManager.createNativeQuery(sql);
 		for (int i = 0; i < values.length; i++) {
 			nativeQuery.setParameter(i, values[i]);
@@ -256,7 +250,7 @@ public class BaseDao<T> {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Object queryByJpql(@NotNull final String jpql, @NotNull Object... values) {
+	public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		javax.persistence.Query query = entityManager.createQuery(jpql);
 		for (int i = 0; i < values.length; i++) {
 			query.setParameter(i, values[i]);
@@ -271,7 +265,7 @@ public class BaseDao<T> {
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByJpql(@NotNull final String jpql, @NotNull Object... values) {
+	public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		javax.persistence.Query query = entityManager.createQuery(jpql);
 		for (int i = 0; i < values.length; i++) {
 			query.setParameter(i, values[i]);
@@ -292,7 +286,7 @@ public class BaseDao<T> {
 	public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
 	                                                @NotNull Integer pageSize,
 	                                                @NotNull final String jpql,
-	                                                @NotNull Object... values) {
+	                                                @NotNull final Object... values) {
 		//参数验证
 		int totalCount = getCountByJpql(jpql, values);
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
@@ -324,7 +318,7 @@ public class BaseDao<T> {
 	 * @param values
 	 * @return
 	 */
-	public int executeJpql(@NotNull final String jpql, @NotNull Object... values) {
+	public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		javax.persistence.Query query = entityManager.createQuery(jpql);
 		for (int i = 0; i < values.length; i++) {
 			query.setParameter(i, values[i]);

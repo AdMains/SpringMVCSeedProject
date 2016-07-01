@@ -132,7 +132,7 @@ public class Query implements Serializable {
 	 * @param clazz 要查询的类型
 	 * @return 返回Query对象
 	 */
-	public Query from(@NotNull final Class clazz) {
+	public Query from(@NotNull Class clazz) {
 		this.clazz = clazz;
 		this.criteriaQuery = criteriaBuilder.createQuery(this.clazz);
 		this.from = criteriaQuery.from(this.clazz);
@@ -205,7 +205,7 @@ public class Query implements Serializable {
 	/**
 	 * 参数化查询
 	 */
-	public ParameterExpression createParameter(Class clazz) {
+	public ParameterExpression createParameter(@NotNull Class clazz) {
 		return this.getCriteriaBuilder().parameter(clazz);
 	}
 
@@ -214,7 +214,7 @@ public class Query implements Serializable {
 	 *
 	 * @param query query对象
 	 */
-	private void addLinkCondition(Query query) {
+	private void addLinkCondition(@NotNull Query query) {
 		Map linkQuery = query.linkQuery;
 		if (linkQuery == null)
 			return;
@@ -254,7 +254,7 @@ public class Query implements Serializable {
 	 * 直接添加JPA内部的查询条件,
 	 * 用于应付一些复杂查询的情况,例如 "或"
 	 */
-	public Query addCriterions(Predicate predicate) {
+	public Query addCriterions(@NotNull Predicate predicate) {
 		this.predicates.add(predicate);
 		return this;
 	}

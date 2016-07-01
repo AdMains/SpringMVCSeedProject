@@ -152,7 +152,7 @@ public class BaseDaoTest extends BaseTest {
 	}
 
 	@Test
-	public void getListByPageAndQueryTest() {
+	public void getListByPageAndQueryTest() throws Exception {
 		Query query = new Query(entityManager);
 		query.from(User.class)
 				.whereEqual("authorityType", AuthorityType.College_Level_Admin);
@@ -171,7 +171,7 @@ public class BaseDaoTest extends BaseTest {
 
 
 	@Test
-	public void getListByPageAndQueryTest2() {
+	public void getListByPageAndQueryTest2() throws Exception {
 		Query query = new Query(entityManager);
 		//ParameterExpression<String> parameter = query.createParameter(String.class);
 
