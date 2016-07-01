@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @param <T> 实体类型
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"unchecked", "unused"})
 class BaseService<T> {
 	@Autowired
 	private BaseDao<T> baseDao;

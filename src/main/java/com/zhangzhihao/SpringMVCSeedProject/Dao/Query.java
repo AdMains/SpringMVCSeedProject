@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Query
  * 封装JPA CriteriaBuilder查询条件
  */
-@SuppressWarnings({"unused", "unchecked", "rawtypes", "null", "hiding"})
+@SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
 public class Query implements Serializable {
 
 	private static final long serialVersionUID = 3366932251068926942L;
@@ -766,7 +766,7 @@ public class Query implements Serializable {
 	/**
 	 * 深拷贝
 	 *
-	 * @return
+	 * @return 深拷贝得到的新实例
 	 */
 	public Object deepClone() throws Exception {
 		// 序列化

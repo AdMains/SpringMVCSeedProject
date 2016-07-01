@@ -141,7 +141,9 @@ public class BaseDao<T> {
 	@Transactional(readOnly = true)
 	public List<T> getAll(Class<T> modelClass) {
 		Query query = new Query(modelClass, entityManager);
-		return entityManager.createQuery(query.createCriteriaQuery()).getResultList();
+		return query
+				.createTypedQuery()
+				.getResultList();
 	}
 
 
@@ -161,7 +163,8 @@ public class BaseDao<T> {
 			return null;
 		}
 		Query query = new Query(modelClass, entityManager);
-		return entityManager.createQuery(query.createCriteriaQuery())
+		return query
+				.createTypedQuery()
 				.setFirstResult((currentPageNumber - 1) * pageSize)
 				.setMaxResults(pageSize)
 				.getResultList();
@@ -219,9 +222,9 @@ public class BaseDao<T> {
 	 */
 	@Transactional(readOnly = true)
 	public int getCountByQuery(@NotNull final Query query) {
-		query.selectCount();
 		return Integer.parseInt(
-				query.createTypedQuery()
+				query.selectCount()
+						.createTypedQuery()
 						.getSingleResult()
 						.toString()
 		);
@@ -245,9 +248,9 @@ public class BaseDao<T> {
 	/**
 	 * 通过jpql查询
 	 *
-	 * @param jpql
-	 * @param values
-	 * @return
+	 * @param jpql   jpql语句
+	 * @param values 不定参数数组
+	 * @return 返回值
 	 */
 	@Transactional(readOnly = true)
 	public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
@@ -314,9 +317,9 @@ public class BaseDao<T> {
 	/**
 	 * 执行jpql语句
 	 *
-	 * @param jpql
-	 * @param values
-	 * @return
+	 * @param jpql   jpql语句
+	 * @param values 参数
+	 * @return 受影响的行数
 	 */
 	public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
 		javax.persistence.Query query = entityManager.createQuery(jpql);
