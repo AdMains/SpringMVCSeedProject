@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.persistence.criteria.CriteriaBuilder.In;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,7 +140,8 @@ public class Query implements Serializable {
 	}
 
 	/**
-	 * 创建强类型查询
+	 * 创建强类型查询,并且自动注入参数！！！
+	 * 如果使用参数化自动注入的方法，必须调用此方法创建强类型查询
 	 *
 	 * @return 返回强类型查询的实例
 	 */
@@ -154,14 +155,26 @@ public class Query implements Serializable {
 		return typedQuery;
 	}
 
-	public void setParameter(ParameterExpression parameter, Object object) {
+	/**
+	 * 将ParameterExpression和对应的值添加进一个map里，最后在createTypedQuery时放入TypedQuery里面，完成参数化查询
+	 *
+	 * @param parameter ParameterExpression参数
+	 * @param object    参数值
+	 */
+	private void setParameter(@NotNull final ParameterExpression parameter, @NotNull final Object object) {
 		if (parameters == null) {
 			parameters = new HashMap<>();
 		}
 		parameters.put(parameter, object);
 	}
 
-	private ParameterExpression makeParameter(Object value) {
+	/**
+	 * 自动创建ParameterExpression参数
+	 *
+	 * @param value 参数值
+	 * @return 返回ParameterExpression参数
+	 */
+	private ParameterExpression makeParameter(@NotNull final Object value) {
 		Class<?> aClass = value.getClass();
 		ParameterExpression<Enum> parameter = this.createParameter(aClass);
 		setParameter(parameter, value);
@@ -266,7 +279,7 @@ public class Query implements Serializable {
 	}
 
 	/**
-	 * 设置升序还是降序排序
+	 * 设置升序还是降序排序，只能有一个排序规则
 	 *
 	 * @param propertyName 排序的属性名
 	 * @param order        排序方式 asc或desc
@@ -297,6 +310,28 @@ public class Query implements Serializable {
 	 * @return query实例
 	 */
 	public Query select() {
+		return this;
+	}
+
+	/**
+	 * 查询总数
+	 *
+	 * @return query实例
+	 */
+	public Query selectCount() {
+		Expression<Long> count = criteriaBuilder.count(from);
+		setSelect(count);
+		return this;
+	}
+
+	/**
+	 * 查询总数并去重
+	 *
+	 * @return query实例
+	 */
+	public Query selectCountDistinct() {
+		Expression<Long> count = criteriaBuilder.countDistinct(from);
+		setSelect(count);
 		return this;
 	}
 
@@ -578,7 +613,7 @@ public class Query implements Serializable {
 	 * @param value        参数值
 	 * @return query实例
 	 */
-	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull Object value) {
+	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), makeParameter(value)));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), makeParameter(value)));
@@ -728,6 +763,24 @@ public class Query implements Serializable {
 		return value == null;
 	}
 
+	/**
+	 * 深拷贝
+	 *
+	 * @return
+	 */
+	public Object deepClone() throws Exception {
+		// 序列化
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(bos);
+
+		oos.writeObject(this);
+
+		// 反序列化
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		ObjectInputStream ois = new ObjectInputStream(bis);
+
+		return ois.readObject();
+	}
 
 	public Class getModelClass() {
 		return this.clazz;
@@ -779,6 +832,14 @@ public class Query implements Serializable {
 
 	public CriteriaBuilder getCriteriaBuilder() {
 		return criteriaBuilder;
+	}
+
+	public Selection getSelection() {
+		return selection;
+	}
+
+	public void setSelection(Selection selection) {
+		this.selection = selection;
 	}
 
 	public Map<ParameterExpression, Object> getParameters() {

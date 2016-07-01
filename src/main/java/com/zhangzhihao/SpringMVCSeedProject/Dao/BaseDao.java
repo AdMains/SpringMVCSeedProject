@@ -172,21 +172,27 @@ public class BaseDao<T> {
 	 *
 	 * @param currentPageNumber 页码
 	 * @param pageSize          每页数量
-	 * @param typedQuery        封装的查询条件
+	 * @param query             封装的查询条件
 	 * @return 查询结果
 	 */
 	@Transactional(readOnly = true)
 	public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
 	                                            @NotNull Integer pageSize,
-	                                            @NotNull TypedQuery typedQuery) {
+	                                            @NotNull Query query) {
 		//参数验证
-		int totalCount = getCountByQuery(typedQuery);
+		int totalCount = 0;
+		try {
+			totalCount = getCountByQuery((Query) query.deepClone());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
 
 		if (currentPageNumber > pageCount && pageCount != 0) {
 			currentPageNumber = pageCount;
 		}
+		TypedQuery typedQuery = query.createTypedQuery();
 		//查看是否要分页
 		if (currentPageNumber > 0 && pageSize > 0) {
 			typedQuery
@@ -215,14 +221,16 @@ public class BaseDao<T> {
 	/**
 	 * 获得符合对应条件的数量 利用Count(*)实现
 	 *
-	 * @param typedQuery 查询条件
+	 * @param query 查询条件
 	 * @return 数量
 	 */
 	@Transactional(readOnly = true)
-	public int getCountByQuery(@NotNull final TypedQuery typedQuery) {
-		return typedQuery
+	public int getCountByQuery(@NotNull final Query query) {
+		query.selectCount();
+		return Integer.parseInt(query.createTypedQuery().getSingleResult().toString());
+		/*return typedQuery
 				.getResultList()
-				.size();
+				.size();*/
 	}
 
 	/**

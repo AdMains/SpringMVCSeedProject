@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.ParameterExpression;
 import java.util.List;
 import java.util.Random;
@@ -155,12 +154,13 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getListByPageAndQueryTest() {
 		Query query = new Query(entityManager);
-		ParameterExpression<Enum> parameter1 = query.createParameter(Enum.class);
-		TypedQuery typedQuery = query.from(User.class)
+		query.from(User.class)
+				.whereEqual("authorityType", AuthorityType.College_Level_Admin);
+		/*TypedQuery typedQuery = query.from(User.class)
 				.whereEqual("authorityType", parameter1)
 				.createTypedQuery()
-				.setParameter(parameter1, AuthorityType.Admin);
-		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, typedQuery);
+				.setParameter(parameter1, AuthorityType.Admin);*/
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
 		System.out.println(listByPageAndQuery);
 		List<User> results = listByPageAndQuery.getResults();
 		if (!results.isEmpty()) {
@@ -173,14 +173,17 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getListByPageAndQueryTest2() {
 		Query query = new Query(entityManager);
-		ParameterExpression<String> parameter = query.createParameter(String.class);
+		//ParameterExpression<String> parameter = query.createParameter(String.class);
 
-		TypedQuery typedQuery = query.from(User.class)
+		/*TypedQuery typedQuery = query.from(User.class)
 				.whereLike("passWord", parameter)
 				.createTypedQuery()
-				.setParameter(parameter, "BaseDao");
+				.setParameter(parameter, "BaseDao");*/
 
-		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, typedQuery);
+		query.from(User.class)
+				.whereLike("passWord", "BaseDao");
+
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
 		List<User> results = listByPageAndQuery.getResults();
 		System.out.println(listByPageAndQuery);
 		if (!results.isEmpty()) {
@@ -198,12 +201,15 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void getCountByQueryTest() {
 		Query query = new Query(entityManager);
-		ParameterExpression<Enum> parameter = query.createParameter(Enum.class);
+		/*ParameterExpression<Enum> parameter = query.createParameter(Enum.class);
 		TypedQuery typedQuery = query.from(User.class)
 				.whereEqual("authorityType", parameter)
 				.createTypedQuery()
-				.setParameter(parameter, AuthorityType.Admin);
-		int countByQuery = userDao.getCountByQuery(typedQuery);
+				.setParameter(parameter, AuthorityType.Admin);*/
+		query.from(User.class)
+				.whereEqual("authorityType", AuthorityType.College_Level_Admin);
+
+		int countByQuery = userDao.getCountByQuery(query);
 		System.out.println(countByQuery);
 	}
 

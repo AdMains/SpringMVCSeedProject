@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.ParameterExpression;
 import java.util.List;
 
@@ -45,10 +44,12 @@ public class QueryTest extends BaseTest {
 	@Test
 	public void getListByPageAndQueryTest() {
 		Query query = new Query(entityManager);
-		TypedQuery typedQuery = query.from(User.class)
+		/*TypedQuery typedQuery = query.from(User.class)
 				.whereEqual("authorityType", AuthorityType.School_Level_Admin)
-				.createTypedQuery();
-		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, typedQuery);
+				.createTypedQuery();*/
+		query.from(User.class)
+				.whereEqual("authorityType", AuthorityType.School_Level_Admin);
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
 		System.out.println(listByPageAndQuery);
 		List<User> results = listByPageAndQuery.getResults();
 		if (!results.isEmpty()) {
@@ -62,11 +63,13 @@ public class QueryTest extends BaseTest {
 	public void getListByPageAndQueryTest2() {
 		Query query = new Query(entityManager);
 
-		TypedQuery typedQuery = query.from(User.class)
+		/*TypedQuery typedQuery = query.from(User.class)
 				.whereLike("passWord", "BaseDao")
-				.createTypedQuery();
+				.createTypedQuery();*/
+		query.from(User.class)
+				.whereEqual("authorityType", AuthorityType.School_Level_Admin);
 
-		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, typedQuery);
+		PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
 		List<User> results = listByPageAndQuery.getResults();
 		System.out.println(listByPageAndQuery);
 		if (!results.isEmpty()) {
@@ -78,10 +81,12 @@ public class QueryTest extends BaseTest {
 	@Test
 	public void getCountByQueryTest() {
 		Query query = new Query(entityManager);
-		TypedQuery typedQuery = query.from(User.class)
+		/*TypedQuery typedQuery = query.from(User.class)
 				.whereEqual("authorityType", AuthorityType.Admin)
-				.createTypedQuery();
-		int countByQuery = userDao.getCountByQuery(typedQuery);
+				.createTypedQuery();*/
+		query.from(User.class)
+				.whereEqual("authorityType", AuthorityType.Admin);
+		int countByQuery = userDao.getCountByQuery(query);
 		System.out.println(countByQuery);
 	}
 
@@ -150,6 +155,34 @@ public class QueryTest extends BaseTest {
 		query.from(User.class)
 				.select()
 				.whereValueIn("authorityType",asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
+				.createTypedQuery()
+				.getResultList()
+				.forEach(System.out::println);
+	}
+
+	@Test
+	public void getStatisticsByQueryTest5() {
+		Query query = new Query(entityManager);
+		query.from(User.class)
+				.select()
+				.whereValueNotIn("authorityType",asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
+				.whereIsNotNull("passWord")
+				.whereNotEqual("passWord","BaseDao")
+				.whereNotEqual("userName","test")
+				.createTypedQuery()
+				.getResultList()
+				.forEach(System.out::println);
+	}
+
+	@Test
+	public void getStatisticsByQueryTest6() {
+		Query query = new Query(entityManager);
+		query.from(User.class)
+				.selectCount()
+				.whereValueNotIn("authorityType",asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
+				.whereIsNotNull("passWord")
+				.whereNotEqual("passWord","BaseDao")
+				.whereNotEqual("userName","test")
 				.createTypedQuery()
 				.getResultList()
 				.forEach(System.out::println);
