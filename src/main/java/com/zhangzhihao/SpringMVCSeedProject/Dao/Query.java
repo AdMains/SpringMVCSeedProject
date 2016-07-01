@@ -147,11 +147,11 @@ public class Query implements Serializable {
 	 */
 	public TypedQuery createTypedQuery() {
 		TypedQuery typedQuery = entityManager.createQuery(this.createCriteriaQuery());
-		if (parameters != null) {
-			for (ParameterExpression parameter : parameters.keySet()) {
+
+		if (parameters != null)
+			for (ParameterExpression parameter : parameters.keySet())
 				typedQuery.setParameter(parameter, parameters.get(parameter));
-			}
-		}
+
 		return typedQuery;
 	}
 
@@ -161,10 +161,11 @@ public class Query implements Serializable {
 	 * @param parameter ParameterExpression参数
 	 * @param object    参数值
 	 */
-	private void setParameter(@NotNull final ParameterExpression parameter, @NotNull final Object object) {
-		if (parameters == null) {
+	private void setParameter(@NotNull final ParameterExpression parameter,
+	                          @NotNull final Object object) {
+		if (parameters == null)
 			parameters = new HashMap<>();
-		}
+
 		parameters.put(parameter, object);
 	}
 
@@ -189,15 +190,16 @@ public class Query implements Serializable {
 	 */
 	public CriteriaQuery createCriteriaQuery() {
 		criteriaQuery.where(predicates.toArray(new Predicate[0]));
-		if (!isNullOrEmpty(groupBy)) {
+
+		if (!isNullOrEmpty(groupBy))
 			criteriaQuery.groupBy(from.get(groupBy));
-		}
-		if (orders != null) {
+
+		if (orders != null)
 			criteriaQuery.orderBy(orders);
-		}
-		if (selection != null) {
+
+		if (selection != null)
 			criteriaQuery.select(selection);
-		}
+
 		addLinkCondition(this);
 		return criteriaQuery;
 	}
@@ -230,7 +232,8 @@ public class Query implements Serializable {
 	/**
 	 * 增关联查询
 	 */
-	public void addLinkQuery(@NotNull final String propertyName, @NotNull Query query) {
+	public void addLinkQuery(@NotNull final String propertyName,
+	                         @NotNull Query query) {
 		if (this.linkQuery == null)
 			this.linkQuery = new HashMap();
 
@@ -240,7 +243,8 @@ public class Query implements Serializable {
 	/**
 	 * 增加子查询,必须设置子查询字段 projection
 	 */
-	private void addSubQuery(@NotNull final String propertyName, @NotNull Query query) {
+	private void addSubQuery(@NotNull final String propertyName,
+	                         @NotNull Query query) {
 		if (this.subQuery == null)
 			this.subQuery = new HashMap();
 
@@ -267,7 +271,8 @@ public class Query implements Serializable {
 	 * @param order        排序方式 asc或desc
 	 * @return 返回query实例
 	 */
-	public Query addOrder(@NotNull final String propertyName, @NotNull final String order) {
+	public Query addOrder(@NotNull final String propertyName,
+	                      @NotNull final String order) {
 		if (this.orders == null)
 			this.orders = new ArrayList();
 
@@ -285,7 +290,8 @@ public class Query implements Serializable {
 	 * @param order        排序方式 asc或desc
 	 * @return 返回query实例
 	 */
-	public Query setOrder(@NotNull final String propertyName, @NotNull final String order) {
+	public Query setOrder(@NotNull final String propertyName,
+	                      @NotNull final String order) {
 		this.orders = null;
 		addOrder(propertyName, order);
 		return this;
@@ -410,7 +416,8 @@ public class Query implements Serializable {
 	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereEqual(@NotNull final String propertyName,
+	                        @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), parameter));
 		return this;
 	}
@@ -422,7 +429,8 @@ public class Query implements Serializable {
 	 * @param value        属性值
 	 * @return query实例
 	 */
-	public Query whereEqual(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereEqual(@NotNull final String propertyName,
+	                        @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.equal(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -434,7 +442,8 @@ public class Query implements Serializable {
 	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereNotEqual(@NotNull final String propertyName,
+	                           @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), parameter));
 		return this;
 	}
@@ -446,7 +455,8 @@ public class Query implements Serializable {
 	 * @param value        属性值
 	 * @return query实例
 	 */
-	public Query whereNotEqual(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereNotEqual(@NotNull final String propertyName,
+	                           @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.notEqual(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -457,7 +467,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param parameter    参数表达式
 	 */
-	public Query whereLessThanOrEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereLessThanOrEqual(@NotNull final String propertyName,
+	                                  @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.le(from.get(propertyName), parameter));
 		return this;
 	}
@@ -468,7 +479,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query whereLessThanOrEqual(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereLessThanOrEqual(@NotNull final String propertyName,
+	                                  @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.le(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -479,7 +491,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param parameter    参数表达式
 	 */
-	public Query whereLessThan(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereLessThan(@NotNull final String propertyName,
+	                           @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), parameter));
 		return this;
 	}
@@ -490,7 +503,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query whereLessThan(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereLessThan(@NotNull final String propertyName,
+	                           @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.lt(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -501,7 +515,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param parameter    参数表达式
 	 */
-	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereGreaterThanOrEqual(@NotNull final String propertyName,
+	                                     @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), parameter));
 		return this;
 	}
@@ -512,7 +527,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query whereGreaterThanOrEqual(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereGreaterThanOrEqual(@NotNull final String propertyName,
+	                                     @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.ge(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -523,7 +539,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param parameter    参数表达式
 	 */
-	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereGreaterThan(@NotNull final String propertyName,
+	                              @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), parameter));
 		return this;
 	}
@@ -534,7 +551,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query whereGreaterThan(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereGreaterThan(@NotNull final String propertyName,
+	                              @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.gt(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -546,7 +564,8 @@ public class Query implements Serializable {
 	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereOr(@NotNull final List<String> propertyName,
+	                     @NotNull final ParameterExpression parameter) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), parameter));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), parameter));
@@ -561,7 +580,8 @@ public class Query implements Serializable {
 	 * @param value        属性值
 	 * @return query实例
 	 */
-	public Query whereOr(@NotNull final List<String> propertyName, @NotNull final Object value) {
+	public Query whereOr(@NotNull final List<String> propertyName,
+	                     @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.equal(from.get(propertyName.get(0)), makeParameter(value)));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.equal(from.get(propertyName.get(i)), makeParameter(value)));
@@ -575,7 +595,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param parameter    参数表达式
 	 */
-	public Query whereLike(@NotNull final String propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereLike(@NotNull final String propertyName,
+	                       @NotNull final ParameterExpression parameter) {
 		this.predicates.add(criteriaBuilder.like(from.get(propertyName), parameter));
 		return this;
 	}
@@ -586,7 +607,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param value        属性值
 	 */
-	public Query whereLike(@NotNull final String propertyName, @NotNull final Object value) {
+	public Query whereLike(@NotNull final String propertyName,
+	                       @NotNull final Object value) {
 		this.predicates.add(criteriaBuilder.like(from.get(propertyName), makeParameter(value)));
 		return this;
 	}
@@ -598,7 +620,8 @@ public class Query implements Serializable {
 	 * @param parameter    参数表达式
 	 * @return query实例
 	 */
-	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull final ParameterExpression parameter) {
+	public Query whereOrLike(@NotNull final List<String> propertyName,
+	                         @NotNull final ParameterExpression parameter) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), parameter));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), parameter));
@@ -613,7 +636,8 @@ public class Query implements Serializable {
 	 * @param value        参数值
 	 * @return query实例
 	 */
-	public Query whereOrLike(@NotNull final List<String> propertyName, @NotNull final Object value) {
+	public Query whereOrLike(@NotNull final List<String> propertyName,
+	                         @NotNull final Object value) {
 		Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), makeParameter(value)));
 		for (int i = 1; i < propertyName.size(); i++)
 			predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), makeParameter(value)));
@@ -651,7 +675,9 @@ public class Query implements Serializable {
 	 * @param lo           属性起始值
 	 * @param go           属性结束值
 	 */
-	public Query whereBetween(@NotNull final String propertyName, @NotNull final Date lo, @NotNull final Date go) {
+	public Query whereBetween(@NotNull final String propertyName,
+	                          @NotNull final Date lo,
+	                          @NotNull final Date go) {
 		this.predicates.add(criteriaBuilder.between(from.get(propertyName), lo, go));
 		return this;
 	}
@@ -663,7 +689,9 @@ public class Query implements Serializable {
 	 * @param lo           数字起始值
 	 * @param go           数字结束值
 	 */
-	public Query whereBetween(@NotNull final String propertyName, @NotNull final ParameterExpression lo, @NotNull final ParameterExpression go) {
+	public Query whereBetween(@NotNull final String propertyName,
+	                          @NotNull final ParameterExpression lo,
+	                          @NotNull final ParameterExpression go) {
 		whereGreaterThanOrEqual(propertyName, lo)
 				.whereLessThanOrEqual(propertyName, go);
 		return this;
@@ -676,7 +704,9 @@ public class Query implements Serializable {
 	 * @param lo           数字起始值
 	 * @param go           数字结束值
 	 */
-	public Query whereBetween(@NotNull final String propertyName, @NotNull final Number lo, @NotNull final Number go) {
+	public Query whereBetween(@NotNull final String propertyName,
+	                          @NotNull final Number lo,
+	                          @NotNull final Number go) {
 		whereGreaterThanOrEqual(propertyName, lo)
 				.whereLessThanOrEqual(propertyName, go);
 		return this;
@@ -689,7 +719,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param values       参数集合
 	 */
-	public Query whereIn(@NotNull final String propertyName, @NotNull final List<ParameterExpression> values) {
+	public Query whereIn(@NotNull final String propertyName,
+	                     @NotNull final List<ParameterExpression> values) {
 		In in = criteriaBuilder.in(from.get(propertyName));
 		values.stream().forEach(in::value);
 		this.predicates.add(in);
@@ -702,7 +733,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param values       参数值集合
 	 */
-	public Query whereValueIn(@NotNull final String propertyName, @NotNull final List<Object> values) {
+	public Query whereValueIn(@NotNull final String propertyName,
+	                          @NotNull final List<Object> values) {
 		In in = criteriaBuilder.in(from.get(propertyName));
 		values.stream()
 				.map(this::makeParameter)
@@ -719,7 +751,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param values       参数集合
 	 */
-	public Query whereNotIn(@NotNull final String propertyName, @NotNull final List<ParameterExpression> values) {
+	public Query whereNotIn(@NotNull final String propertyName,
+	                        @NotNull final List<ParameterExpression> values) {
 		In in = criteriaBuilder.in(from.get(propertyName));
 		values.stream().forEach(in::value);
 		this.predicates.add(criteriaBuilder.not(in));
@@ -732,7 +765,8 @@ public class Query implements Serializable {
 	 * @param propertyName 属性名称
 	 * @param values       参数集合
 	 */
-	public Query whereValueNotIn(@NotNull final String propertyName, @NotNull final List<Object> values) {
+	public Query whereValueNotIn(@NotNull final String propertyName,
+	                             @NotNull final List<Object> values) {
 		In in = criteriaBuilder.in(from.get(propertyName));
 		values.stream()
 				.map(this::makeParameter)
@@ -757,9 +791,9 @@ public class Query implements Serializable {
 	 * 工具方法
 	 */
 	private boolean isNullOrEmpty(Object value) {
-		if (value instanceof String) {
+		if (value instanceof String)
 			return "".equals(value);
-		}
+		
 		return value == null;
 	}
 
