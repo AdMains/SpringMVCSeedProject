@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                             http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.springframework.org/schema/context
@@ -26,8 +27,13 @@
         <property name="password" value="${jdbc.password}"/>
         <property name="driverClass" value="${jdbc.driverClass}"/>
         <property name="jdbcUrl" value="${jdbc.connectionURL}"/>
-        <property name="initialPoolSize" value="${jdbc.initPoolSize}"/>
-        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+        <property name="checkoutTimeout" value="30000"/>
+        <property name="idleConnectionTestPeriod" value="10"/>
+        <property name="initialPoolSize" value="5"/>
+        <property name="maxIdleTime" value="30"/>
+        <property name="maxPoolSize" value="50"/>
+        <property name="minPoolSize" value="5"/>
+        <property name="maxStatements" value="5"/>
         <property name="autoCommitOnClose" value="true"/>
     </bean>
     <!-- jpa Entity Factory 配置 -->
