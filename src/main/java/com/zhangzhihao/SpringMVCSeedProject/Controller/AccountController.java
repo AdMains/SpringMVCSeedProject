@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+@SuppressWarnings("JavaDoc")
 @Controller
 @RequestMapping("/Account")
 public class AccountController {
@@ -39,10 +40,12 @@ public class AccountController {
 	public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password, HttpSession session) {
 		String userName = UserName.trim();
 		User LoginUser = null;
-		try {
-			LoginUser = userService.getById(userName);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (userName != null && userName != "") {
+			try {
+				LoginUser = userService.getById(userName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		assert LoginUser != null;
 		if (LoginUser.getPassWord().equals(Password.trim())) {
