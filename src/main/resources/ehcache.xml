@@ -63,7 +63,7 @@
 
      overflowToDisk:设置基于内存的缓存中的对象数目达到上限后,是否把溢出的对象写到基于硬盘的缓存中
     -->
-    <cache name="users"
+    <cache name="springCache"
            maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="600"

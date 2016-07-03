@@ -98,5 +98,5 @@
         <property name="cacheManager" ref="ehcache" />
     </bean>
     <!--启用缓存注解 注解方式配置@EnableCaching-->
-    <cache:annotation-driven/>
+    <cache:annotation-driven cache-manager="cacheManager"/>
 </beans>

@@ -17,59 +17,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
-public class AccountControllerTest extends BaseTest{
+public class AccountControllerTest extends BaseTest {
 
-    @Autowired
-    private AccountController controller;
+	@Autowired
+	private AccountController controller;
 
-    @Before
-    public void setup() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/views/");
-        viewResolver.setSuffix(".jsp");
+	@Before
+	public void setup() {
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setPrefix("/WEB-INF/views/");
+		viewResolver.setSuffix(".jsp");
 //        AccountController accountController = new AccountController();
 //        this.mockMvc=standaloneSetup(accountController).build();
 //        mockMvc = MockMvcBuilders.standaloneSetup(new AccountController()).setViewResolvers(viewResolver).build();
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).setViewResolvers(viewResolver).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(controller).setViewResolvers(viewResolver).build();
 
-    }
-    @Test
-    public void testLoginPage() throws  Exception{
-        mockMvc.perform(get("/Account/Login"))
-                .andExpect(view().name("Account/Login"))
-                .andExpect(status().isOk());
-    }
+	}
+
+	@Test
+	public void testLoginPage() throws Exception {
+		mockMvc.perform(get("/Account/Login"))
+				.andExpect(view().name("Account/Login"))
+				.andExpect(status().isOk());
+	}
 
 	/*
-     * 登录成功测试
+	 * 登录成功测试
      * @throws Exception
      */
 
-    @Test
-    public void testLoginSuccess() throws Exception{
+	@Test
+	public void testLoginSuccess() throws Exception {
 //        MockHttpSession session=new MockHttpSession();
 //        session.setAttribute("User",new User());
 
-        mockMvc.perform(post("/Account/Login")
-                .param("UserName","admin")
-                .param("Password","admin"))
-                .andExpect(status().is(302))
-                .andExpect(view().name("redirect:/MustLogin"));
-    }
+		mockMvc.perform(post("/Account/Login")
+				.param("UserName", "admin")
+				.param("Password", "admin"))
+				.andExpect(status().is(302))
+				.andExpect(view().name("redirect:/MustLogin"));
+	}
 
 	/*
-     * 登录失败测试
+	 * 登录失败测试
      * @throws Exception
      */
 
-    @Test
-    public void testLoginFalse() throws Exception{
-        MockHttpSession session=new MockHttpSession();
-        session.setAttribute("User",new User());
-        mockMvc.perform(post("/Account/Login")
-                .param("UserName","admin")
-                .param("Password","11111"))
-                .andExpect(status().is(200))
-                .andExpect(view().name("/Account/Login"));
-    }
+	@Test
+	public void testLoginFalse() throws Exception {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("User", new User());
+		mockMvc.perform(post("/Account/Login")
+				.param("UserName", "admin")
+				.param("Password", "11111"))
+				.andExpect(status().is(200))
+				.andExpect(view().name("/Account/Login"));
+	}
 }

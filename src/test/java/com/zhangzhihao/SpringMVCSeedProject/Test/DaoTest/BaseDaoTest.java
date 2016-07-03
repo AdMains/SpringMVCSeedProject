@@ -22,7 +22,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings("ALL")
 public class BaseDaoTest extends BaseTest {
 
 	@Autowired
@@ -61,7 +61,10 @@ public class BaseDaoTest extends BaseTest {
 	@Test
 	public void saveTest() {
 		userDao.save(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
-		teacherDao.save(new Teacher("name", "BaseDao"));
+		Teacher teacher = new Teacher("name", "BaseDao");
+		System.out.println(teacher);
+		teacherDao.save(teacher);
+		System.out.println(teacher);
 	}
 
 	@Test

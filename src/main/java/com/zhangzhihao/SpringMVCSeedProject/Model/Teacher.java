@@ -9,11 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Teacher")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Teacher {
+public class Teacher implements Serializable {
 	@Id
 	@GeneratedValue(generator = "generator")
 	@GenericGenerator(name = "generator", strategy = "increment")

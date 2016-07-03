@@ -9,11 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class User {
+public class User implements Serializable {
 	@Id
 	@NotNull
 	private String userName;

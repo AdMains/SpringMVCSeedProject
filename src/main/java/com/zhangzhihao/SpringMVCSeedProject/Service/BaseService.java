@@ -5,6 +5,8 @@ import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
 import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
@@ -18,6 +20,7 @@ import java.util.List;
  */
 @SuppressWarnings({"unchecked", "unused"})
 class BaseService<T> {
+	private final Logger logger = LoggerFactory.getLogger(BaseService.class);
 	@Autowired
 	private BaseDao<T> baseDao;
 	private Class<T> modelClass;
