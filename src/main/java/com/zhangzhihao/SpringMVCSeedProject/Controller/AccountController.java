@@ -3,6 +3,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Controller;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import com.zhangzhihao.SpringMVCSeedProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +37,7 @@ public class AccountController {
 	 * @param session
 	 * @return
 	 */
+	@Cacheable("users")
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password, HttpSession session) {
 		String userName = UserName.trim();

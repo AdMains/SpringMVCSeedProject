@@ -5,7 +5,6 @@ import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -21,7 +20,9 @@ import java.util.List;
  * @param <T> 实体类型
  */
 @SuppressWarnings({"unchecked"})
-@Transactional(timeout = 5, isolation = Isolation.READ_COMMITTED)//propagation = Propagation.REQUIRES_NEW,加上注释的这句单元测试不会回滚，事务失效
+@Transactional(timeout = 5)
+//, isolation = Isolation.READ_COMMITTED)加上这个注释@NotNull会失效
+// propagation = Propagation.REQUIRES_NEW,加上注释的这句单元测试不会回滚，事务失效
 @Repository
 @Primary
 public class BaseDao<T> {
