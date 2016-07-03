@@ -37,7 +37,7 @@ public class AccountController {
 	 * @param session
 	 * @return
 	 */
-	@Cacheable("users")
+	@Cacheable("springCache")
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public String Login(@RequestParam("UserName") String UserName, @RequestParam("Password") String Password, HttpSession session) {
 		String userName = UserName.trim();
