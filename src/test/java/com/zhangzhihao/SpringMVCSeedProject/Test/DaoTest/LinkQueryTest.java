@@ -88,6 +88,7 @@ public class LinkQueryTest extends BaseTest {
     public void QueryTest(){
         Query query = new Query(User.class, entityManager);
         query
+                .whereIsNotNull("userName")
                 .join("bankCard")
                 .whereEqual(query.getFrom().get("user").get("userName"),"admin")
                 .whereNotEqual("cardNumber","test")
