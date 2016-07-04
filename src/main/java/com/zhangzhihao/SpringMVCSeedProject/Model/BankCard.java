@@ -21,7 +21,7 @@ public class BankCard implements Serializable {
     @NotNull
     private String accountHolder;
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "userName")
     @Fetch(FetchMode.SELECT)
     private User user;

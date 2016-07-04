@@ -22,7 +22,7 @@ public class User implements Serializable {
     private String passWord;
     @NotNull
     private AuthorityType authorityType;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true,fetch = FetchType.LAZY)
     @Fetch(FetchMode.SELECT)
     private BankCard bankCard;
 

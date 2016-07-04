@@ -72,20 +72,7 @@ public class Query implements Serializable {
      */
     private Map<ParameterExpression, Object> parameters;
 
-    /**
-     * 子查询
-     */
-    private Map<String, Query> subQuery;
-
-    /**
-     * 关联查询
-     */
-    private Map<String, Query> linkQuery;
-
-    /**
-     * 子查询字段
-     */
-    private String projection;
+    private Query subQuery;
 
     /**
      * 或条件
@@ -202,7 +189,6 @@ public class Query implements Serializable {
         if (selection != null)
             criteriaQuery.select(selection);
 
-        addLinkCondition(this);
         return criteriaQuery;
     }
 
@@ -213,35 +199,6 @@ public class Query implements Serializable {
         return this.getCriteriaBuilder().parameter(clazz);
     }
 
-    /**
-     * 添加连接查询,在最后创建CriteriaQuery的时候调用
-     *
-     * @param query query对象
-     */
-    private void addLinkCondition(@NotNull Query query) {
-        Map linkQuery = query.linkQuery;
-        if (linkQuery == null)
-            return;
-        for (Object o : linkQuery.keySet()) {
-            String key = o.toString();
-            Query sub = (Query) linkQuery.get(key);
-            from.join(key);
-            criteriaQuery.where(sub.predicates.toArray(new Predicate[0]));
-            addLinkCondition(sub);
-        }
-    }
-
-    /**
-     * 增关联查询
-     */
-    public Query addLinkQuery(@NotNull final String propertyName,
-                              @NotNull Query query) {
-        if (this.linkQuery == null)
-            this.linkQuery = new HashMap();
-
-        this.linkQuery.put(propertyName, query);
-        return this;
-    }
 
     /**
      * 关联查询
@@ -255,19 +212,16 @@ public class Query implements Serializable {
     }
 
     /**
-     * 增加子查询,必须设置子查询字段 projection
+     * 子查询
+     *
+     * @param clazz 查询实体类
+     * @return 子查询主语
      */
-    private Query addSubQuery(@NotNull final String propertyName,
-                              @NotNull Query query) {
-        if (this.subQuery == null)
-            this.subQuery = new HashMap();
-
-        if (query.projection == null)
-            throw new RuntimeException("子查询字段未设置");
-
-        this.subQuery.put(propertyName, query);
-        return this;
+    public Query subQuery(@NotNull Class clazz) {
+        subQuery = new Query(clazz, entityManager);
+        return subQuery;
     }
+
 
     /**
      * 直接添加JPA内部的查询条件,
@@ -1079,13 +1033,6 @@ public class Query implements Serializable {
         return this.clazz;
     }
 
-    public String getProjection() {
-        return this.projection;
-    }
-
-    public void setProjection(String projection) {
-        this.projection = projection;
-    }
 
     public Class getClazz() {
         return this.clazz;
