@@ -207,7 +207,7 @@ public class Query implements Serializable {
     }
 
     /**
-     * 参数化查询
+     * 创建参数化查询的参数
      */
     public ParameterExpression createParameter(@NotNull Class clazz) {
         return this.getCriteriaBuilder().parameter(clazz);
@@ -450,6 +450,10 @@ public class Query implements Serializable {
         return this;
     }
 
+    private CriteriaBuilderImpl getCriteriaBuilderImpl() {
+        return (CriteriaBuilderImpl) entityManager.getCriteriaBuilder();
+    }
+
     /**
      * 查找属性值等于特定值的实体
      *
@@ -460,7 +464,7 @@ public class Query implements Serializable {
     public Query whereEqual(@NotNull final Expression<?> x,
                             @NotNull final Object value) {
         ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.EQUAL, x, value);
+                new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.EQUAL, x, value);
         this.predicates.add(comparisonPredicate);
         return this;
     }
@@ -501,7 +505,7 @@ public class Query implements Serializable {
     public Query whereNotEqual(@NotNull final Expression<?> x,
                                @NotNull final Object value) {
         ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.NOT_EQUAL, x, value);
+                new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.NOT_EQUAL, x, value);
         this.predicates.add(comparisonPredicate);
         return this;
     }
@@ -542,7 +546,7 @@ public class Query implements Serializable {
     public Query whereLessThanOrEqual(@NotNull final Expression<?> x,
                                       @NotNull final Object value) {
         ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.LESS_THAN_OR_EQUAL, x, value);
+                new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.LESS_THAN_OR_EQUAL, x, value);
         this.predicates.add(comparisonPredicate);
         return this;
     }
@@ -583,7 +587,7 @@ public class Query implements Serializable {
     public Query whereLessThan(@NotNull final Expression<?> x,
                                @NotNull final Object value) {
         ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.LESS_THAN, x, value);
+                new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.LESS_THAN, x, value);
         this.predicates.add(comparisonPredicate);
         return this;
     }
@@ -624,7 +628,7 @@ public class Query implements Serializable {
     public Query whereGreaterThanOrEqual(@NotNull final Expression<?> x,
                                          @NotNull final Object value) {
         ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.GREATER_THAN_OR_EQUAL, x, value);
+                new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.GREATER_THAN_OR_EQUAL, x, value);
         this.predicates.add(comparisonPredicate);
         return this;
     }
@@ -665,7 +669,7 @@ public class Query implements Serializable {
     public Query whereGreaterThan(@NotNull final Expression<?> x,
                                   @NotNull final Object value) {
         ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.GREATER_THAN, x, value);
+                new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.GREATER_THAN, x, value);
         this.predicates.add(comparisonPredicate);
         return this;
     }
@@ -709,13 +713,13 @@ public class Query implements Serializable {
      * @param value 属性值
      * @return query实例
      */
-    /*public Query whereOr(@NotNull final Expression<?> x,
-                                  @NotNull final Object value) {
-        ComparisonPredicate comparisonPredicate =
-                new ComparisonPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), ComparisonPredicate.ComparisonOperator.EQUAL, x, value);
-        this.predicates.add(comparisonPredicate);
+    public Query whereOr(@NotNull final Expression<?> x,
+                         @NotNull final Object value) {
+        ComparisonPredicate comparisonPredicate = new ComparisonPredicate(getCriteriaBuilderImpl(), ComparisonPredicate.ComparisonOperator.EQUAL, x, value);
+        CompoundPredicate compoundPredicate = new CompoundPredicate(getCriteriaBuilderImpl(), Predicate.BooleanOperator.OR, comparisonPredicate);
+        this.predicates.add(compoundPredicate);
         return this;
-    }*/
+    }
 
     /**
      * 模糊匹配
@@ -750,7 +754,7 @@ public class Query implements Serializable {
      */
     public Query whereLike(@NotNull final Expression<String> x,
                            @NotNull final String value) {
-        LikePredicate like = new LikePredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x, value);
+        LikePredicate like = new LikePredicate(getCriteriaBuilderImpl(), x, value);
         this.predicates.add(like);
         return this;
     }
@@ -794,12 +798,13 @@ public class Query implements Serializable {
      * @param value 属性值
      * @return query实例
      */
-    /*public Query whereOrLike(@NotNull final Expression<String> x,
-                           @NotNull final String value) {
-        LikePredicate like = new LikePredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x, value);
-        this.predicates.add(like);
+    public Query whereOrLike(@NotNull final Expression<String> x,
+                             @NotNull final String value) {
+        LikePredicate like = new LikePredicate(getCriteriaBuilderImpl(), x, value);
+        CompoundPredicate compoundPredicate = new CompoundPredicate(getCriteriaBuilderImpl(), Predicate.BooleanOperator.OR, like);
+        this.predicates.add(compoundPredicate);
         return this;
-    }*/
+    }
 
     /**
      * 查找特定字段为空的实体
@@ -819,7 +824,7 @@ public class Query implements Serializable {
      * @return query实例
      */
     public Query whereIsNull(@NotNull final Expression<?> x) {
-        NullnessPredicate nullnessPredicate = new NullnessPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x);
+        NullnessPredicate nullnessPredicate = new NullnessPredicate(getCriteriaBuilderImpl(), x);
         this.predicates.add(nullnessPredicate);
         return this;
     }
@@ -842,7 +847,7 @@ public class Query implements Serializable {
      * @return query实例
      */
     public Query whereIsNotNull(@NotNull final Expression<?> x) {
-        Predicate not = new NullnessPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x).not();
+        Predicate not = new NullnessPredicate(getCriteriaBuilderImpl(), x).not();
         this.predicates.add(not);
         return this;
     }
@@ -854,6 +859,7 @@ public class Query implements Serializable {
      * @param propertyName 属性名称
      * @param lo           属性起始值
      * @param go           属性结束值
+     * @return query实例
      */
     public Query whereBetween(@NotNull final String propertyName,
                               @NotNull final Date lo,
@@ -868,11 +874,12 @@ public class Query implements Serializable {
      * @param x  查询表达式
      * @param lo 属性起始值
      * @param go 属性结束值
+     * @return query实例
      */
     public Query whereBetween(@NotNull final Expression<? extends Date> x,
                               @NotNull final Date lo,
                               @NotNull final Date go) {
-        BetweenPredicate<Date> dateBetweenPredicate = new BetweenPredicate<>((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x, lo, go);
+        BetweenPredicate<Date> dateBetweenPredicate = new BetweenPredicate<>(getCriteriaBuilderImpl(), x, lo, go);
         this.predicates.add(dateBetweenPredicate);
         return this;
     }
@@ -883,6 +890,7 @@ public class Query implements Serializable {
      * @param propertyName 属性名称
      * @param lo           数字起始值
      * @param go           数字结束值
+     * @return query实例
      */
     public Query whereBetween(@NotNull final String propertyName,
                               @NotNull final ParameterExpression lo,
@@ -898,6 +906,7 @@ public class Query implements Serializable {
      * @param propertyName 属性名称
      * @param lo           数字起始值
      * @param go           数字结束值
+     * @return query实例
      */
     public Query whereBetween(@NotNull final String propertyName,
                               @NotNull final Number lo,
@@ -913,11 +922,12 @@ public class Query implements Serializable {
      * @param x  查询表达式
      * @param lo 属性起始值
      * @param go 属性结束值
+     * @return query实例
      */
     public Query whereBetween(@NotNull final Expression<? extends Number> x,
                               @NotNull final Number lo,
                               @NotNull final Number go) {
-        BetweenPredicate<Number> dateBetweenPredicate = new BetweenPredicate<>((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x, lo, go);
+        BetweenPredicate<Number> dateBetweenPredicate = new BetweenPredicate<>(getCriteriaBuilderImpl(), x, lo, go);
         this.predicates.add(dateBetweenPredicate);
         return this;
     }
@@ -927,6 +937,7 @@ public class Query implements Serializable {
      *
      * @param propertyName 属性名称
      * @param values       参数集合
+     * @return query实例
      */
     public Query whereIn(@NotNull final String propertyName,
                          @NotNull final List<ParameterExpression> values) {
@@ -941,6 +952,7 @@ public class Query implements Serializable {
      *
      * @param propertyName 属性名称
      * @param values       参数值集合
+     * @return query实例
      */
     public Query whereValueIn(@NotNull final String propertyName,
                               @NotNull final List<Object> values) {
@@ -963,7 +975,7 @@ public class Query implements Serializable {
      */
     public Query whereValueIn(@NotNull final Expression<?> x,
                               @NotNull final List<Object> values) {
-        InPredicate inPredicate = new InPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x);
+        InPredicate inPredicate = new InPredicate(getCriteriaBuilderImpl(), x);
         values.stream()
                 .map(this::makeParameter)
                 .collect(Collectors.toList())
@@ -1014,7 +1026,7 @@ public class Query implements Serializable {
      */
     public Query whereValueNotIn(@NotNull final Expression<?> x,
                                  @NotNull final List<Object> values) {
-        InPredicate inPredicate = new InPredicate((CriteriaBuilderImpl) entityManager.getCriteriaBuilder(), x);
+        InPredicate inPredicate = new InPredicate(getCriteriaBuilderImpl(), x);
         values.stream()
                 .map(this::makeParameter)
                 .collect(Collectors.toList())
