@@ -35,13 +35,13 @@ public class LinkQueryTest extends BaseTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Test
+    //@Test
     public void addUser() {
         User user = new User("admin", "admin", AuthorityType.Admin);
         userDao.save(user);
     }
 
-    @Test
+    //@Test
     public void addUsers() {
         List<User> userList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -60,7 +60,7 @@ public class LinkQueryTest extends BaseTest {
         bankCardDao.saveOrUpdateAll(bankCardList);
     }
 
-    @Test
+    //@Test
     public void addBankCard() {
         User admin = userDao.getById(User.class, "admin");
         BankCard bankCard = new BankCard("8888", "建行", admin.getUserName(), admin);

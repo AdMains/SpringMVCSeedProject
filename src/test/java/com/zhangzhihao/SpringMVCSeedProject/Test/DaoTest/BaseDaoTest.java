@@ -34,14 +34,6 @@ public class BaseDaoTest extends BaseTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    /**
-     * 测试@NotNull 注解
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void saveAllTest() {
-        userDao.saveAll(null);
-    }
-
     @Test
     public void containsTest() {
         User user = new User(UUID.randomUUID().toString(), UUID.randomUUID().toString(), AuthorityType.School_Level_Admin);
@@ -160,7 +152,7 @@ public class BaseDaoTest extends BaseTest {
         query.from(User.class)
                 .whereEqual("authorityType", AuthorityType.College_Level_Admin);
         /*TypedQuery typedQuery = query.from(User.class)
-				.whereEqual("authorityType", parameter1)
+                .whereEqual("authorityType", parameter1)
 				.createTypedQuery()
 				.setParameter(parameter1, AuthorityType.Admin);*/
         PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
