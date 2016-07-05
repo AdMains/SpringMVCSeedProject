@@ -40,7 +40,9 @@
 
         <a class="btn btn-purple waves-effect waves-light" href="/"><i class="fa fa-angle-left"></i>返回首页</a>
         <script type="text/javascript">
-            console.log("${MSG}");
+            console.log("错误信息${MSG}");
+            console.log("出错行${Line}");
+            console.log("出错方法${Method}");
             <%--console.log("${detailed}")--%>
         </script>
     </div>

@@ -22,6 +22,8 @@ public class HandlerExceptionController {
 
         ModelAndView modelAndView = new ModelAndView("../../500");
         modelAndView.addObject("MSG", ex.toString());
+        modelAndView.addObject("Line", ex.getStackTrace()[0].getLineNumber());
+        modelAndView.addObject("Method", ex.getStackTrace()[0].getMethodName());
         Writer writer = new StringWriter();
         //客户端输出一下，打开F12可以看到
         ex.printStackTrace(new PrintWriter(writer));
