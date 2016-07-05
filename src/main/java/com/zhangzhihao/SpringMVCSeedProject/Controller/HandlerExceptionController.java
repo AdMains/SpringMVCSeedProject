@@ -1,7 +1,5 @@
 package com.zhangzhihao.SpringMVCSeedProject.Controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,16 +8,22 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
+
 @ControllerAdvice
 public class HandlerExceptionController {
-    private Logger logger = LoggerFactory.getLogger(HandlerExceptionController.class);
 
     @ExceptionHandler({Exception.class})
     public ModelAndView HandlerMethod(Exception ex) {
-        logger.error(ex.toString());
+
+
+        //将错误信息记录到数据库
+        LogToDB(ex);
+
         ModelAndView modelAndView = new ModelAndView("../../500");
         modelAndView.addObject("MSG", ex.toString());
         Writer writer = new StringWriter();
+        //客户端输出一下，打开F12可以看到
         ex.printStackTrace(new PrintWriter(writer));
         modelAndView.addObject("detailed", writer.toString());
         return modelAndView;

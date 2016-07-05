@@ -13,8 +13,6 @@
             <user>root</user>
             <password>root</password>
         </connectionSource>
-        <!--<sqlDialect class="ch.qos.logback.core.db.dialect.MySQLDialect" />
-        <insertHeaders>true</insertHeaders>-->
     </appender>
 
     <logger name="org" level="ERROR" additivity="false">
@@ -39,7 +37,6 @@
 
     <!--TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF-->
     <root level="WARN">
-        <appender-ref ref="db-classic-mysql"/>
         <appender-ref ref="stdOut"/>
     </root>
 </configuration>

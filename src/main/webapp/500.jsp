@@ -36,7 +36,7 @@
     <div class="ex-page-content text-center">
         <h1>500</h1>
         <h2 class="font-light">Internal Server Error.</h2><br>
-        <p>出了一个莫名其妙的问题！这真是令人尴尬 <a href="#">联系不存在的支持人员</a></p>
+        <p>出了一个错误！这真是令人尴尬！ <a href="#">联系不存在的支持人员</a></p>
 
         <a class="btn btn-purple waves-effect waves-light" href="/"><i class="fa fa-angle-left"></i>返回首页</a>
         <script type="text/javascript">

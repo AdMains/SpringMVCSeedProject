@@ -34,7 +34,7 @@
 <div class="wrapper-page">
     <div class="ex-page-content text-center">
         <h1>404!</h1>
-        <h2>Sorry, page not found</h2><br>
+        <h2>这个页面不见了！</h2><br>
         <%--<p>You better try our awesome search:</p>--%>
         <%--<div class="row">--%>
         <%--<div class="input-group">--%>
@@ -45,8 +45,7 @@
         <%--</div>--%>
         <%--</div>--%>
         <br>
-        <a class="btn btn-purple waves-effect waves-light" href="/"><i class="fa fa-angle-left"></i> Back to
-            Dashboard</a>
+        <a class="btn btn-purple waves-effect waves-light" href="/"><i class="fa fa-angle-left"></i>返回首页</a>
     </div>
 </div>
 

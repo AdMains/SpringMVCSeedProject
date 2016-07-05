@@ -4,6 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                             http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.springframework.org/schema/context
@@ -11,7 +12,9 @@
                             http://www.springframework.org/schema/tx
                             http://www.springframework.org/schema/tx/spring-tx.xsd
                             http://www.springframework.org/schema/cache
-                            http://www.springframework.org/schema/cache/spring-cache.xsd">
+                            http://www.springframework.org/schema/cache/spring-cache.xsd
+                            http://www.springframework.org/schema/aop
+                            http://www.springframework.org/schema/aop/spring-aop.xsd">
     <context:component-scan base-package="com.zhangzhihao.SpringMVCSeedProject">
         <!--spring配置不扫描以下包-->
         <context:exclude-filter type="annotation"
@@ -95,8 +98,11 @@
 
     <!--配置缓存管理器-->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="ehcache" />
+        <property name="cacheManager" ref="ehcache"/>
     </bean>
     <!--启用缓存注解 注解方式配置@EnableCaching-->
     <cache:annotation-driven cache-manager="cacheManager"/>
+
+    <!--启用AspectJ自动代理-->
+    <aop:aspectj-autoproxy/>
 </beans>
