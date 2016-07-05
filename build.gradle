@@ -6,7 +6,7 @@ apply plugin: "war"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-def SpringVersion = "4.3.1.BUILD-SNAPSHOT"
+def SpringVersion = "4.3.1.RELEASE"
 def SpringBootVersion = "1.3.5.RELEASE"
 def HibernateVersion = "5.2.1.Final"
 def ShiroVersion = "1.2.5"
@@ -17,7 +17,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url "http://repo.spring.io/release" }
-    maven { url "https://repo.spring.io/libs-snapshot" }
+    //maven { url "https://repo.spring.io/libs-snapshot" }
 }
 
 dependencies {
@@ -79,7 +79,7 @@ dependencies {
 
             //sl4j
             //"org.slf4j:slf4j-log4j12:1.7.21",
-            "org.slf4j:slf4j-jdk14:1.7.21",
+            //"org.slf4j:slf4j-jdk14:1.7.21",
             "org.slf4j:jcl-over-slf4j:1.7.21",//jcl-over-slf4j 把 Commons-Logging 桥接到 Slf4J，然后 Logback。
             "ch.qos.logback:logback-core:1.1.7",
             "ch.qos.logback:logback-classic:1.1.7",

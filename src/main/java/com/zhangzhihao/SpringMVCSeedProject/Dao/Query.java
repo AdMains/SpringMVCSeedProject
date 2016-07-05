@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Query
  * 封装JPA CriteriaBuilder查询条件
  */
-@SuppressWarnings({"unused", "unchecked", "WeakerAccess"})
+@SuppressWarnings({"unused", "unchecked", "WeakerAccess", "FieldCanBeLocal"})
 public class Query implements Serializable {
 
     private static final long serialVersionUID = 3366932251068926942L;
@@ -72,6 +72,9 @@ public class Query implements Serializable {
      */
     private Map<ParameterExpression, Object> parameters;
 
+    /**
+     * 子查询
+     */
     private Query subQuery;
 
     /**
