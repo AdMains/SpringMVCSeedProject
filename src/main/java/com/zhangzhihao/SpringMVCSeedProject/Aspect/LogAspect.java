@@ -24,10 +24,10 @@ public class LogAspect {
         //参数
         Object[] args = joinPoint.getArgs();
         //拼接参数
-        String argString = "";
+        StringBuilder argString = new StringBuilder();
         if (args.length > 0)
-            for (int i = 0; i < args.length; i++)
-                argString += args[i];
+            for (Object arg : args)
+                argString.append(arg);
         logger.error("方法" + signature, "参数" + argString, "错误行：" + lineNumber, "时间" + new Date(), "异常内容" + ex.toString());
     }
 }

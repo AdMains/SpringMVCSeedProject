@@ -141,8 +141,8 @@ public class Query implements Serializable {
         TypedQuery typedQuery = entityManager.createQuery(this.createCriteriaQuery());
 
         if (parameters != null)
-            for (ParameterExpression parameter : parameters.keySet())
-                typedQuery.setParameter(parameter, parameters.get(parameter));
+            for (Map.Entry<ParameterExpression, Object> entry : parameters.entrySet())
+                typedQuery.setParameter(entry.getKey(), entry.getValue());
 
         return typedQuery;
     }
