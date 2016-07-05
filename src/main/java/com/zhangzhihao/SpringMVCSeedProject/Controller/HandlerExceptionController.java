@@ -17,7 +17,7 @@ public class HandlerExceptionController {
     @ExceptionHandler({Exception.class})
     public ModelAndView HandlerMethod(Exception ex) {
         logger.error(ex.toString());
-        ModelAndView modelAndView = new ModelAndView("/Error/Exception");
+        ModelAndView modelAndView = new ModelAndView("../../500");
         modelAndView.addObject("MSG", ex.toString());
         Writer writer = new StringWriter();
         ex.printStackTrace(new PrintWriter(writer));
