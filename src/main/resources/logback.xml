@@ -8,7 +8,7 @@
 
     <appender name="db-classic-mysql" class="ch.qos.logback.classic.db.DBAppender">
         <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <driverClass>com.mysql.jdbc.Driver</driverClass>
+            <driverClass>com.mysql.cj.jdbc.Driver</driverClass>
             <url>jdbc:mysql://10.16.155.241:8081/Log?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=false</url>
             <user>root</user>
             <password>root</password>
