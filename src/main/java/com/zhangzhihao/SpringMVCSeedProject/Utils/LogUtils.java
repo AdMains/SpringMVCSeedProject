@@ -6,9 +6,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+/**
+ * 向数据库记录异常信息
+ */
 public class LogUtils {
-    private static Logger logger = LoggerFactory.getLogger(LogUtils.class);
 
+    private static final Logger logger = LoggerFactory.getLogger(LogUtils.class);
+
+    /**
+     * 向数据库记录异常信息
+     *
+     * @param ex 异常
+     */
     public static void LogToDB(Exception ex) {
 
         StackTraceElement stackTraceElement = ex.getStackTrace()[0];

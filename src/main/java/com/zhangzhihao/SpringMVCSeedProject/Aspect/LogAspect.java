@@ -13,7 +13,8 @@ import java.util.Date;
 @Aspect
 @Component
 public class LogAspect {
-    private Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
 
     @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zhangzhihao.SpringMVCSeedProject.*.*.*(..)))")
     public void LogToDB(JoinPoint joinPoint, Throwable ex) {

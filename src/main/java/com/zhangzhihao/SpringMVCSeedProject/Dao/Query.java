@@ -899,7 +899,7 @@ public class Query implements Serializable {
     public Query whereIn(@NotNull final String propertyName,
                          @NotNull final List<ParameterExpression> values) {
         In in = criteriaBuilder.in(from.get(propertyName));
-        values.stream().forEach(in::value);
+        values.forEach(in::value);
         this.predicates.add(in);
         return this;
     }
@@ -917,7 +917,6 @@ public class Query implements Serializable {
         values.stream()
                 .map(this::makeParameter)
                 .collect(Collectors.toList())
-                .stream()
                 .forEach(in::value);
         this.predicates.add(in);
         return this;
@@ -936,7 +935,6 @@ public class Query implements Serializable {
         values.stream()
                 .map(this::makeParameter)
                 .collect(Collectors.toList())
-                .stream()
                 .forEach(inPredicate::value);
         this.predicates.add(inPredicate);
         return this;
@@ -951,7 +949,7 @@ public class Query implements Serializable {
     public Query whereNotIn(@NotNull final String propertyName,
                             @NotNull final List<ParameterExpression> values) {
         In in = criteriaBuilder.in(from.get(propertyName));
-        values.stream().forEach(in::value);
+        values.forEach(in::value);
         this.predicates.add(criteriaBuilder.not(in));
         return this;
     }
@@ -968,7 +966,6 @@ public class Query implements Serializable {
         values.stream()
                 .map(this::makeParameter)
                 .collect(Collectors.toList())
-                .stream()
                 .forEach(in::value);
         this.predicates.add(criteriaBuilder.not(in));
         return this;
@@ -987,7 +984,6 @@ public class Query implements Serializable {
         values.stream()
                 .map(this::makeParameter)
                 .collect(Collectors.toList())
-                .stream()
                 .forEach(inPredicate::value);
         this.predicates.add(criteriaBuilder.not(inPredicate));
         return this;
