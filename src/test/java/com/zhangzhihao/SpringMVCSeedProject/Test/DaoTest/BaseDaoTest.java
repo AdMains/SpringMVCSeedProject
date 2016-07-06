@@ -150,7 +150,7 @@ public class BaseDaoTest extends BaseTest {
     public void getListByPageAndQueryTest() throws Exception {
         Query query = new Query(entityManager);
         query.from(User.class)
-                .whereEqual("authorityType", AuthorityType.College_Level_Admin);
+                .whereEqual("authorityType", AuthorityType.Admin);
         /*TypedQuery typedQuery = query.from(User.class)
                 .whereEqual("authorityType", parameter1)
 				.createTypedQuery()

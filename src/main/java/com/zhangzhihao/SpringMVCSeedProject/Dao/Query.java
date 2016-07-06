@@ -1011,9 +1011,11 @@ public class Query implements Serializable {
 
     /**
      * 深拷贝
+     * 这个方法已弃用，使用<code>SerializationUtils.clone(T object)</code>替代
      *
      * @return 深拷贝得到的新实例
      */
+    @Deprecated
     public Object deepClone() throws Exception {
         // 序列化
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

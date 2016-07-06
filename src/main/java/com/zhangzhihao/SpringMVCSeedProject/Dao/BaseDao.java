@@ -2,6 +2,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Dao;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
+import org.apache.commons.lang3.SerializationUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -186,7 +187,8 @@ public class BaseDao<T> {
 	                                            @NotNull Query query)
 			throws Exception {
 		//获得符合条件的总数目
-		int totalCount = getCountByQuery((Query) query.deepClone());
+		//int totalCount = getCountByQuery((Query) query.deepClone());
+		int totalCount = getCountByQuery(SerializationUtils.clone(query));
 		int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
 				: totalCount / pageSize + 1;
 
