@@ -22,7 +22,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 
-@SuppressWarnings("ALL")
+@SuppressWarnings({"unchecked", "SpringJavaAutowiredMembersInspection"})
 public class BaseDaoTest extends BaseTest {
 
     @Autowired
@@ -116,7 +116,7 @@ public class BaseDaoTest extends BaseTest {
         List<User> userList = userDao.getAll(User.class);
         System.out.println(userList);
         if (userList.size() > 0) {
-            userList.stream().forEach(System.out::println);
+            userList.forEach(System.out::println);
         }
         assertNotNull(userList);
     }
@@ -133,7 +133,7 @@ public class BaseDaoTest extends BaseTest {
                 .setParameter(parameter2, "BaseDao")
                 .getResultList();
         if (resultList != null) {
-            resultList.stream().forEach(System.out::println);
+            resultList.forEach(System.out::println);
         }
     }
 
@@ -141,7 +141,7 @@ public class BaseDaoTest extends BaseTest {
     public void getListByPageTest() {
         List<User> listByPage = userDao.getListByPage(User.class, 2, 2);
         if (listByPage.size() > 0) {
-            listByPage.stream().forEach(System.out::println);
+            listByPage.forEach(System.out::println);
         }
         assertNotNull(listByPage);
     }
@@ -171,7 +171,7 @@ public class BaseDaoTest extends BaseTest {
         //ParameterExpression<String> parameter = query.createParameter(String.class);
 
 		/*TypedQuery typedQuery = query.from(User.class)
-				.whereLike("passWord", parameter)
+                .whereLike("passWord", parameter)
 				.createTypedQuery()
 				.setParameter(parameter, "BaseDao");*/
 
@@ -196,8 +196,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void getCountByQueryTest() {
         Query query = new Query(entityManager);
-		/*ParameterExpression<Enum> parameter = query.createParameter(Enum.class);
-		TypedQuery typedQuery = query.from(User.class)
+        /*ParameterExpression<Enum> parameter = query.createParameter(Enum.class);
+        TypedQuery typedQuery = query.from(User.class)
 				.whereEqual("authorityType", parameter)
 				.createTypedQuery()
 				.setParameter(parameter, AuthorityType.Admin);*/
@@ -219,7 +219,6 @@ public class BaseDaoTest extends BaseTest {
                 .createTypedQuery()
                 .setParameter(parameter, AuthorityType.Admin)
                 .getResultList()
-                .stream()
                 .forEach(System.out::println);
 
     }
@@ -233,7 +232,6 @@ public class BaseDaoTest extends BaseTest {
                 .groupBy("passWord")
                 .createTypedQuery()
                 .getResultList()
-                .stream()
                 .forEach(System.out::println);
 
     }
@@ -250,7 +248,6 @@ public class BaseDaoTest extends BaseTest {
                 .createTypedQuery()
                 .setParameter(parameter, "name")
                 .getResultList()
-                .stream()
                 .forEach(System.out::println);
     }
 
@@ -266,7 +263,6 @@ public class BaseDaoTest extends BaseTest {
                 .createTypedQuery()
                 .setParameter(parameter, "name")
                 .getResultList()
-                .stream()
                 .forEach(System.out::println);
     }
 
@@ -291,14 +287,14 @@ public class BaseDaoTest extends BaseTest {
     public void queryByJpqlTest() {
         String jpql = "select o from User o where o.passWord = ?0 ";
         PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql, "BaseDao");
-        results.getResults().stream().forEach(System.out::println);
+        results.getResults().forEach(System.out::println);
     }
 
     @Test
     public void getListByPageAndJpqlTest() {
         String jpql = "select o from User o where o.userName = ?0 ";
         List<User> users = (List<User>) userDao.queryByJpql(jpql, "admin");
-        users.stream().forEach(System.out::println);
+        users.forEach(System.out::println);
     }
 
     @Test

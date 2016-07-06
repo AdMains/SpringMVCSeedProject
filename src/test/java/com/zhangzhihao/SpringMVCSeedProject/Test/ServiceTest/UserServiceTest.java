@@ -6,6 +6,7 @@ import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
 public class UserServiceTest extends BaseTest {
 	@Autowired
 	private UserService service;

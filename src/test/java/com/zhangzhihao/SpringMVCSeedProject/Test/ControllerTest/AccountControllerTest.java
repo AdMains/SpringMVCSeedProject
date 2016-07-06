@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
+@SuppressWarnings("SpringJavaAutowiredMembersInspection")
 public class AccountControllerTest extends BaseTest {
 
 	@Autowired

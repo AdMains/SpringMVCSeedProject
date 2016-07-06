@@ -80,21 +80,19 @@ public class LinkQueryTest extends BaseTest {
         TypedQuery typeQuery = entityManager.createQuery(query);
         typeQuery
                 .getResultList()
-                .stream()
                 .forEach(System.out::println);
     }
 
     @Test
-    public void QueryTest(){
+    public void QueryTest() {
         Query query = new Query(User.class, entityManager);
         query
                 .whereIsNotNull("userName")
                 .join("bankCard")
-                .whereEqual(query.getFrom().get("user").get("userName"),"admin")
-                .whereNotEqual("cardNumber","test")
+                .whereEqual(query.getFrom().get("user").get("userName"), "admin")
+                .whereNotEqual("cardNumber", "test")
                 .createTypedQuery()
                 .getResultList()
-                .stream()
                 .forEach(System.out::println);
     }
 }

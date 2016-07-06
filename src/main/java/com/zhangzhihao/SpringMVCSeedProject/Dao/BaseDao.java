@@ -68,7 +68,7 @@ public class BaseDao<T> {
 	 *                  失败会抛异常
 	 */
 	public void saveAll(@NotNull final List<T> modelList) {
-		modelList.stream().forEach(entityManager::persist);
+		modelList.forEach(entityManager::persist);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class BaseDao<T> {
 	 *                  失败会抛异常
 	 */
 	public void deleteAll(@NotNull final List<T> modelList) {
-		modelList.stream().forEach(this::delete);
+		modelList.forEach(this::delete);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class BaseDao<T> {
 	 *                  失败会抛出异常
 	 */
 	public void saveOrUpdateAll(@NotNull final List<T> modelList) {
-		modelList.stream().forEach(entityManager::merge);
+		modelList.forEach(entityManager::merge);
 	}
 
 	/**
