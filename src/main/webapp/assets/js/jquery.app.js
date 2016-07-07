@@ -77,7 +77,7 @@
                 //得到要去往的页面地址 $(this).attr('href')
                 $.ajax({
                     type: 'GET', //提交的类型
-                    url: $(this).attr('href'),//提交地址
+                    url: this.getAttribute("url"),//提交地址
                     success: function(msg){ //回调方法
                         $.ajaxSetup({
                             async:false
@@ -98,7 +98,7 @@
                 //得到要去往的页面地址 $(this).attr('href')
                 $.ajax({
                     type: 'GET', //提交的类型
-                    url: $(this).attr('href'),//提交地址
+                    url: this.getAttribute("url"),//提交地址
                     //data: 'name=John&location=Boston',//参数
                     success: function(msg){ //回调方法
                         $.ajaxSetup({
