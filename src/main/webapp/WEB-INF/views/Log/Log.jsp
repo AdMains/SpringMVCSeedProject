@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- Page-Title -->
 <div class="row">
     <div class="col-sm-12">
         <h4 class="pull-left page-title">日志</h4>
         <ol class="breadcrumb pull-right">
-            <li><a href="#">回到首页</a></li>
+            <li><a href="/">回到首页</a></li>
             <li class="active">日志</li>
         </ol>
     </div>
@@ -14,7 +15,7 @@
 <div class="col-lg-4">
     <div class="panel panel-border panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">Pie chart</h3>
+            <h3 class="panel-title">异常统计</h3>
         </div>
         <!-- 展示canvas -->
         <div class="panel-body">
@@ -35,106 +36,91 @@
     </div>
 </div>
 
-
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Contextual Table</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="active">
+                            <td>1</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                        </tr>
+                        <tr class="success">
+                            <td>3</td>
+                            <td>Column content</td>
+                            <td>Column content</td>
+                            <td>Column content</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Column content</td>
+                            <td>Column content</td>
+                            <td>Column content</td>
+                        </tr>
+                        <tr class="danger">
+                            <td>9</td>
+                            <td>Column content</td>
+                            <td>Column content</td>
+                            <td>Column content</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-border panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Responsive Table</h3>
+                <h3 class="panel-title">详细信息</h3>
             </div>
             <div class="panel-body table-rep-plugin">
-                <div class="btn-toolbar">
-                    <div class="btn-group focus-btn-group">
-                        <button class="btn btn-default">
-                            <span class="glyphicon glyphicon-screenshot">
-
-                            </span> Focus
-                        </button>
-                    </div>
-                    <div class="btn-group dropdown-btn-group pull-right">
-                        <button class="btn btn-default">Display all</button>
-                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Display <span
-                                class="caret">
-
-                        </span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-1"
-                                                            id="toggle-tech-companies-1-col-1"
-                                                            value="tech-companies-1-col-1"> <label
-                                    for="toggle-tech-companies-1-col-1">Last Trade</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-2"
-                                                            id="toggle-tech-companies-1-col-2"
-                                                            value="tech-companies-1-col-2"> <label
-                                    for="toggle-tech-companies-1-col-2">Trade Time</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-3"
-                                                            id="toggle-tech-companies-1-col-3"
-                                                            value="tech-companies-1-col-3"> <label
-                                    for="toggle-tech-companies-1-col-3">Change</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-4"
-                                                            id="toggle-tech-companies-1-col-4"
-                                                            value="tech-companies-1-col-4"> <label
-                                    for="toggle-tech-companies-1-col-4">Prev Close</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-5"
-                                                            id="toggle-tech-companies-1-col-5"
-                                                            value="tech-companies-1-col-5"> <label
-                                    for="toggle-tech-companies-1-col-5">Open</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-6"
-                                                            id="toggle-tech-companies-1-col-6"
-                                                            value="tech-companies-1-col-6"> <label
-                                    for="toggle-tech-companies-1-col-6">Bid</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-7"
-                                                            id="toggle-tech-companies-1-col-7"
-                                                            value="tech-companies-1-col-7"> <label
-                                    for="toggle-tech-companies-1-col-7">Ask</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-8"
-                                                            id="toggle-tech-companies-1-col-8"
-                                                            value="tech-companies-1-col-8"> <label
-                                    for="toggle-tech-companies-1-col-8">1y Target Est</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-9"
-                                                            id="toggle-tech-companies-1-col-9"
-                                                            value="tech-companies-1-col-9"> <label
-                                    for="toggle-tech-companies-1-col-9">Lorem</label></li>
-                            <li class="checkbox-row"><input type="checkbox" name="toggle-tech-companies-1-col-10"
-                                                            id="toggle-tech-companies-1-col-10"
-                                                            value="tech-companies-1-col-10"> <label
-                                    for="toggle-tech-companies-1-col-10">Ipsum</label></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="table-responsive" data-pattern="priority-columns">
-                    <table id="tech-companies-1" class="table table-small-font table-bordered table-striped">
+                <div class="table-responsive">
+                    <table class="table table-small-font table-bordered table-striped table-hover">
                         <thead>
                         <tr>
-                            <th>Company</th>
-                            <th data-priority="1">Last Trade</th>
-                            <th data-priority="3">Trade Time</th>
-                            <th data-priority="1">Change</th>
-                            <th data-priority="3">Prev Close</th>
-                            <th data-priority="3">Open</th>
-                            <th data-priority="6">Bid</th>
-                            <th data-priority="6">Ask</th>
-                            <th data-priority="6">1y Target Est</th>
-                            <th data-priority="6">Lorem</th>
-                            <th data-priority="6">Ipsum</th>
+                            <th width='5%'>event_id</th>
+                            <th width='5%'>时间</th>
+                            <th width='5%'>信息</th>
+                            <th width='5%'>logger_name</th>
+                            <th width='20%'>参数0</th>
+                            <th width='20%'>参数1</th>
+                            <th width='20%'>参数2</th>
+                            <th width='20%'>参数3</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th>GOOG <span class="co-name">Google Inc.</span></th>
-                            <td>597.74</td>
-                            <td>12:12PM</td>
-                            <td>14.81 (2.54%)</td>
-                            <td>582.93</td>
-                            <td>597.95</td>
-                            <td>597.73 x 100</td>
-                            <td>597.91 x 300</td>
-                            <td>731.10</td>
-                            <td colspan="2">Spanning cell</td>
-                        </tr>
-
+                        <c:forEach items="${list}" var="Log" varStatus="vs">
+                            <tr>
+                                <th><span class="co-name">${Log.event_id}</span></th>
+                                <td>${Log.timestmp}</td>
+                                <td>${Log.formatted_message}</td>
+                                <td>${Log.logger_name}</td>
+                                <td>${Log.arg0}</td>
+                                <td>${Log.arg1}</td>
+                                <td>${Log.arg2}</td>
+                                <td>${Log.arg3}</td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -145,30 +131,19 @@
 </div>
 <!-- end row -->
 
-<!-- flot Chart -->
-<script src="/assets/plugins/flot-chart/jquery.flot.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.time.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.tooltip.min.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.resize.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.pie.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.selection.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.stack.js"></script>
-<script src="/assets/plugins/flot-chart/jquery.flot.crosshair.js"></script>
-
-<%--<script src="/assets/js/rwd-table.min.js"></script>--%>
 <script src="/assets/js/Chart.min.js"></script>
 
 <script type="text/javascript">
     // 设置参数
     var data = {
         labels: [
-            "Red",
-            "Blue",
-            "Yellow"
+            "Controller异常",
+            "自定义类异常",
+            "其他异常"
         ],
         datasets: [
             {
-                data: [300, 50, 100],
+                data: [${LogUtilsCount}, ${LogAspectCount}, ${otherCount}],
                 backgroundColor: [
                     "#FF6384",
                     "#36A2EB",
@@ -192,12 +167,9 @@
     });
 
 
-
-
-
     var barData = {
-        labels : ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"],
-        datasets : [
+        labels: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+        datasets: [
             {
                 label: "异常",
                 fillColor: "rgba(109,179,63,0.5)",

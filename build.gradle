@@ -47,6 +47,9 @@ dependencies {
             "commons-fileupload:commons-fileupload:1.3.2",
             "org.apache.commons:commons-lang3:3.4",//深拷贝
 
+            //jstl
+            "javax.servlet:jstl:1.2",
+
             // JSON
             // "com.alibaba:fastjson:1.2.6",
             "com.fasterxml.jackson.core:jackson-core:${JacksonVersion}",
