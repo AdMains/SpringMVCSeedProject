@@ -15,8 +15,11 @@
 <script>
     paceOptions = {
         initialRate: 0.7,
-        minTime: 1750,
-        maxProgressPerFrame: 1
+        minTime: 1000,
+        maxProgressPerFrame: 1,
+        restartOnRequestAfter:true,
+        restartOnPushState:true,
+        ajax:true
     }
 </script>
 <script src="assets/js/pace.min.js"></script>
