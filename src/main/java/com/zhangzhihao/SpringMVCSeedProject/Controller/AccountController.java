@@ -52,7 +52,7 @@ public class AccountController {
 		assert LoginUser != null;
 		if (LoginUser.getPassWord().equals(Password.trim())) {
 			session.setAttribute("User", LoginUser);
-			return "redirect:/MustLogin";
+			return "redirect:/MustLogin";//为防止重复提交数据，使用重定向视图
 
 		} else {
 			return "/Account/Login";

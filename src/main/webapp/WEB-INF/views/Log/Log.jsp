@@ -47,10 +47,14 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>1</th>
-                            <th>2</th>
-                            <th>3</th>
+                            <th>event_id</th>
+                            <th>时间</th>
+                            <th>信息</th>
+                            <th>logger_name</th>
+                            <th>参数0</th>
+                            <th>参数1</th>
+                            <th>参数2</th>
+                            <th>参数3</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -93,9 +97,9 @@
             <div class="panel-heading">
                 <h3 class="panel-title">详细信息</h3>
             </div>
-            <div class="panel-body table-rep-plugin">
+            <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-small-font table-bordered table-striped table-hover">
+                    <table class="table table-small-font table-bordered table-striped table-hover" width="100%">
                         <thead>
                         <tr>
                             <th width='5%'>event_id</th>

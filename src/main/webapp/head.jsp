@@ -11,6 +11,21 @@
 <script src="assets/js/modernizr.min.js"></script>
 <script src="assets/js/jquery.min.js"></script>
 
+<%--进度条--%>
+<script>
+    paceOptions = {
+        initialRate: 0.7,
+        minTime: 1750,
+        maxProgressPerFrame: 1
+    }
+</script>
+<script src="assets/js/pace.min.js"></script>
+<link href="assets/css/PaceJSMinimalTheme.css" rel="stylesheet">
+<script type="text/javascript">
+    Pace.on("done", function(){
+        $(".cover").fadeOut(500);
+    });
+</script>
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
