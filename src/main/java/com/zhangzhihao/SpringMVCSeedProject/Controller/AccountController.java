@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
+
 @SuppressWarnings("JavaDoc")
 @Controller
 @RequestMapping("/Account")
@@ -46,7 +48,7 @@ public class AccountController {
 			try {
 				LoginUser = userService.getById(userName);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LogToDB(e);
 			}
 		}
 		assert LoginUser != null;

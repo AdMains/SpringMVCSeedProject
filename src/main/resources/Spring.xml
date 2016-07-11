@@ -30,14 +30,14 @@
         <property name="password" value="${jdbc.password}"/>
         <property name="driverClass" value="${jdbc.driverClass}"/>
         <property name="jdbcUrl" value="${jdbc.connectionURL}"/>
-        <property name="checkoutTimeout" value="30000"/>
-        <property name="idleConnectionTestPeriod" value="10"/>
-        <property name="initialPoolSize" value="5"/>
-        <property name="maxIdleTime" value="30"/>
-        <property name="maxPoolSize" value="50"/>
-        <property name="minPoolSize" value="5"/>
-        <property name="maxStatements" value="5"/>
-        <property name="autoCommitOnClose" value="true"/>
+        <property name="checkoutTimeout" value="${jdbc.checkoutTimeout}"/>
+        <property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"/>
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+        <property name="maxIdleTime" value="${jdbc.maxIdleTime}"/>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
+        <property name="maxStatements" value="${jdbc.maxStatements}"/>
+        <property name="autoCommitOnClose" value="${jdbc.autoCommitOnClose}"/>
     </bean>
     <!-- jpa Entity Factory 配置 -->
     <bean id="entityManagerFactory"
