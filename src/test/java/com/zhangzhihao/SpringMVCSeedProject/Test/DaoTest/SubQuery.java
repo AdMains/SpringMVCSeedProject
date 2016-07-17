@@ -3,9 +3,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
 
 import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
 import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
-import com.zhangzhihao.SpringMVCSeedProject.Model.BankCard;
-import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
-import com.zhangzhihao.SpringMVCSeedProject.Model.User;
+import com.zhangzhihao.SpringMVCSeedProject.Model.*;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +18,10 @@ import javax.persistence.criteria.Subquery;
 
 @SuppressWarnings({"unchecked", "SpringJavaAutowiredMembersInspection"})
 public class SubQuery extends BaseTest {
-    /*  // create CriteriaQuery instance, with root Employee
-        CriteriaQuery<Employee> q = cb.createQuery(Employee.class);
-        Root<Employee> emp = q.from(Employee.class);
-        // create Subquery instance, with root Employee
-        Subquery<Employee> sq = q.subquery(Employee.class);
-        Root<Employee> spouseEmp = sq.from(Employee.class);
-        // the subquery references the root of the containing query
-        sq.where(cb.equal(spouseEmp, emp.get(Employee_.spouse)))
-                .select(spouseEmp);
-        // an exists condition is applied to the subquery result:
-        q.where(cb.exists(sq));
-        q.select(emp).distinct(true);*/
     @Autowired
     private BaseDao<User> userDao;
+
+
 
     @Autowired
     private BaseDao<Teacher> teacherDao;
@@ -70,5 +58,6 @@ public class SubQuery extends BaseTest {
         User singleResult = (User) subQuery.createTypedQuery().getSingleResult();
         query.whereEqual("passWord", singleResult.getUserName()).createTypedQuery().getResultList().forEach(System.out::println);
     }
+
 
 }

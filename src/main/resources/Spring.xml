@@ -89,6 +89,21 @@
     <!-- 配置支持基于注解式事务配置 注解方式配置@EnableTransactionManager -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
+    <!-- 2. 配置事务属性, 需要事务管理器 -->
+    <!--<tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>-->
+
+    <!--3. 配置事务切点, 并把切点和事务属性关联起来 -->
+    <!--<aop:config>
+        <aop:pointcut expression="execution(* com.zhangzhihao.SpringMVCSeedProject.Dao.*.*(..))"
+                      id="txPointcut"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>-->
+
     <!--配置ehcache-->
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="shared" value="true"/>
@@ -105,4 +120,31 @@
 
     <!--启用AspectJ自动代理-->
     <aop:aspectj-autoproxy/>
+
+    <!--安全管理器-->
+    <bean id="securityManager"
+          class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="shiroDbRealm"/>
+    </bean>
+
+    <!-- 項目自定义的Realm -->
+    <bean id="shiroDbRealm" class="com.zhangzhihao.SpringMVCSeedProject.Shiro.ShiroRealm"/>
+
+    <!-- Shiro Filter -->
+    <bean id="shiroFilter"
+          class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/Account/Login"/>
+        <property name="successUrl" value="/"/>
+        <property name="unauthorizedUrl" value="/"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /Account/** = anon
+                /login = anon
+                /assets/** = anon
+                /app/** = anon
+                /** = authc
+            </value>
+        </property>
+    </bean>
 </beans>

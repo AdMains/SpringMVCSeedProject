@@ -90,10 +90,10 @@ dependencies {
             "ch.qos.logback:logback-classic:1.1.7",
 
             //shiro
-            //"org.apache.shiro:shiro-core:${ShiroVersion}",
-            //"org.apache.shiro:shiro-spring:${ShiroVersion}",
-            //"org.apache.shiro:shiro-web:${ShiroVersion}",
-            //"org.apache.shiro:shiro-ehcache:${ShiroVersion}",
+            "org.apache.shiro:shiro-core:${ShiroVersion}",
+            "org.apache.shiro:shiro-spring:${ShiroVersion}",
+            "org.apache.shiro:shiro-web:${ShiroVersion}",
+            "org.apache.shiro:shiro-ehcache:${ShiroVersion}",
 
             //Groovy
             "org.codehaus.groovy:groovy:2.4.7",

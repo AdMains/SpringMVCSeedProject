@@ -34,13 +34,13 @@
     </bean>
 
     <!--注册拦截器-->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <bean class="com.zhangzhihao.SpringMVCSeedProject.Interceptor.AuthInterceptor"/>
     </mvc:interceptors>
 
     <mvc:interceptors>
         <bean class="com.zhangzhihao.SpringMVCSeedProject.Interceptor.AuthorityByRole"/>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 
     <!--直接访问“/” 时会跳转的目录-->
     <mvc:view-controller path="/" view-name="forward:/Account/Login"/>

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -19,6 +20,7 @@ import java.util.List;
  * @param <T> 实体类型
  */
 @SuppressWarnings({"unchecked", "unused", "SpringJavaAutowiredMembersInspection"})
+@Transactional
 class BaseService<T> {
     private final Logger logger = LoggerFactory.getLogger(BaseService.class);
     @Autowired
