@@ -1,4 +1,4 @@
-package com.zhangzhihao.SpringMVCSeedProject.Shiro;
+package com.zhangzhihao.SpringMVCSeedProject.Dao;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Model.Permission;
@@ -20,14 +20,16 @@ import java.util.stream.Collectors;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
+/**
+ * Realm是专用于安全框架的DAO
+ */
 public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
 
     /**
-     * Retrieves the AuthorizationInfo for the given principals from the underlying data store.  When returning
-     * an instance from this method, you might want to consider using an instance of
+     * 授权访问
      * {@link SimpleAuthorizationInfo SimpleAuthorizationInfo}, as it is suitable in most cases.
      *
      * @param principals the primary identifying principals of the AuthorizationInfo that should be retrieved.
@@ -74,8 +76,7 @@ public class ShiroRealm extends AuthorizingRealm {
     }
 
     /**
-     * Retrieves authentication data from an implementation-specific datasource (RDBMS, LDAP, etc) for the given
-     * authentication token.
+     * 登录认证
      * <p/>
      * For most datasources, this means just 'pulling' authentication data for an associated subject/user and nothing
      * more and letting Shiro do the rest.  But in some systems, this method could actually perform EIS specific

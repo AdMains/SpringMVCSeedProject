@@ -124,11 +124,11 @@
     <!--安全管理器-->
     <bean id="securityManager"
           class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="shiroDbRealm"/>
+        <property name="realm" ref="shiroRealm"/>
     </bean>
 
     <!-- 項目自定义的Realm -->
-    <bean id="shiroDbRealm" class="com.zhangzhihao.SpringMVCSeedProject.Shiro.ShiroRealm"/>
+    <bean id="shiroRealm" class="com.zhangzhihao.SpringMVCSeedProject.Dao.ShiroRealm"/>
 
     <!-- Shiro Filter -->
     <bean id="shiroFilter"

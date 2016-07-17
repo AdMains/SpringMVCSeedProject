@@ -13,7 +13,7 @@ public class MustLoginController {
      */
     //@AuthByRole()
     //@Auth
-    @RequiresRoles("1")
+    @RequiresRoles("administrator")
     //@RequiresAuthentication  需要登录
     @RequestMapping("/MustLogin")
     public String MustLogin(){
