@@ -16,7 +16,7 @@
           p:prefix="/WEB-INF/views/"
           p:suffix=".jsp"/>
 
-    <mvc:annotation-driven/>
+    <!--<mvc:annotation-driven/>-->
     <!--打开default-servlet-handler在springMVC找不到对应的映射时会采用默认映射-->
     <mvc:default-servlet-handler/>
 
@@ -44,4 +44,39 @@
 
     <!--直接访问“/” 时会跳转的目录-->
     <mvc:view-controller path="/" view-name="forward:/Account/Login"/>
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="false">
+            <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/plain;charset=UTF-8"/>
+            </bean>
+            <!--避免IE执行AJAX时,返回JSON出现下载文件-->
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/plain;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 开启Shiro注解的Spring配置方式的beans。在lifecycleBeanPostProcessor之后运行 -->
+    <bean
+            class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+            depends-on="lifecycleBeanPostProcessor" />
+    <bean
+            class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+
+    <bean id="lifecycleBeanPostProcessor"
+          class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+    <!-- shiro为集成spring -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">/system/error</prop>
+            </props>
+        </property>
+    </bean>
+
 </beans>
