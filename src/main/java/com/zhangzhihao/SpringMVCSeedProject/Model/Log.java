@@ -6,10 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "logging_event")
-public class Log {
+public class Log implements Serializable{
+    private static final long serialVersionUID =468468487400228L;
     private String timestmp;
     private String formatted_message;
     private String logger_name;

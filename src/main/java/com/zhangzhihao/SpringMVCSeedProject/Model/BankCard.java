@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BankCard implements Serializable {
+    private static final long serialVersionUID = 61774758654560228L;
     @Id
     @NotNull
     private String cardNumber;

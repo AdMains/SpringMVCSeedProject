@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Course implements Serializable {
+    private static final long serialVersionUID = 7768578674897400228L;
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "increment")

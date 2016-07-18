@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "Teacher")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Teacher implements Serializable {
+    private static final long serialVersionUID = 647657865874500228L;
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "increment")

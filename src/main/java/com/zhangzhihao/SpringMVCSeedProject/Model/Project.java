@@ -12,6 +12,7 @@ import java.util.List;
 @Table
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Project implements Serializable {
+    private static final long serialVersionUID = 7417435745786587568L;
     @Id
     @NotNull
     private String projectId;

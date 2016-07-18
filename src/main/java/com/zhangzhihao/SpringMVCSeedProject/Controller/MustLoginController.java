@@ -13,7 +13,9 @@ public class MustLoginController {
      */
     //@AuthByRole()
     //@Auth
-    @RequiresRoles("administrator")
+    @RequiresRoles("administrator") //需要administrator Role
+    //@RequiresPermissions("user:create") 需要user:create权限
+    //@RequiresGuest 要求当前用户是一个访客
     //@RequiresAuthentication  需要登录
     @RequestMapping("/MustLogin")
     public String MustLogin(){
