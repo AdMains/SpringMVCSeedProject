@@ -5,27 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <link rel="shortcut icon" href="/assets/images/show.png">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/assets/images/show.png">
 
     <title>登录</title>
 
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/core.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/icons.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/components.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/pages.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/menu.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/responsive.css" rel="stylesheet" type="text/css">
-
-    <script src="/assets/js/modernizr.min.js"></script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="/assets/js/html5shiv.js"></script>
-    <script src="/assets/js/respond.min.js"></script>
-    <![endif]-->
-
+    <%@ include file="/head.jsp" %>
     <script type="text/javascript">
         function reloadValidateCode(){
             $("#validateCodeImg").attr("src","/Account/validateCode?data=" + new Date() + Math.floor(Math.random()*24));
@@ -45,7 +29,7 @@
 
 
         <div class="panel-body">
-            <form class="form-horizontal m-t-20" action="/Account/Login" method="post">
+            <form class="form-horizontal m-t-20" action="${pageContext.request.contextPath}/Account/Login" method="post">
 
                 <div class="form-group">
                     <div class="col-xs-12">
@@ -69,7 +53,7 @@
                     <div class=" col-xs-6">
                         <div class="">
                             <div class="">
-                                <img id="validateCodeImg" src="/Account/validateCode" />&nbsp;&nbsp;<a href="#" onclick="javascript:reloadValidateCode();">看不清？</a>
+                                <img id="validateCodeImg" src="${pageContext.request.contextPath}/Account/validateCode" />&nbsp;&nbsp;<a href="#" onclick="javascript:reloadValidateCode();">看不清？</a>
                             </div>
                         </div>
                     </div>
@@ -107,24 +91,7 @@
     </div>
 </div>
 
-
-<script>
-    var resizefunc = [];
-</script>
-
-<!-- Main  -->
-<script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/bootstrap.min.js"></script>
-<script src="/assets/js/detect.js"></script>
-<script src="/assets/js/fastclick.js"></script>
-<script src="/assets/js/jquery.slimscroll.js"></script>
-<script src="/assets/js/jquery.blockUI.js"></script>
-<script src="/assets/js/waves.js"></script>
-<script src="/assets/js/wow.min.js"></script>
-<script src="/assets/js/jquery.nicescroll.js"></script>
-<script src="/assets/js/jquery.scrollTo.min.js"></script>
-
-<script src="/assets/js/jquery.app.js"></script>
+<%@ include file="/script.jsp" %>
 
 </body>
 </html>
