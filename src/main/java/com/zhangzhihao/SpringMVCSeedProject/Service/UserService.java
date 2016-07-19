@@ -39,23 +39,23 @@ public class UserService extends BaseService<User> {
 
 
     /**
-     * 更新或保存对象
+     * 更新或保存对象的PassWord
      *
      * @param model 需要更新的对象
      *              失败会抛出异常
      */
-    public void update(@NotNull User model) throws Exception {
+    public void updatePassWord(@NotNull User model) throws Exception {
         model.setPassWord(getSHA_1(model.getPassWord()));
         super.saveOrUpdate(model);
     }
 
     /**
-     * 批量更新或保存对象
+     * 批量更新或保存对象的PassWord
      *
      * @param modelList 需要更新或保存的对象
      *                  失败会抛出异常
      */
-    public void updateAll(@NotNull List<User> modelList) throws Exception {
+    public void updateAllPassWord(@NotNull List<User> modelList) throws Exception {
         modelList.forEach(
                 model->model.setPassWord(
                         getSHA_1(model.getPassWord())
@@ -64,30 +64,25 @@ public class UserService extends BaseService<User> {
         super.saveOrUpdateAll(modelList);
     }
 
-
     /**
-     * 更新或保存对象；
-     * 因为涉及密码加密的逻辑问题，这个方法在userService中已废弃，其它实体正常使用
+     * 更新或保存对象，不允许通过此方法修改密码！
      *
      * @param model 需要更新的对象
      *              失败会抛出异常
      */
-    @Deprecated
     @Override
     public void saveOrUpdate(@NotNull User model) throws Exception {
-        throw new Exception("因为涉及密码加密的逻辑问题，这个方法在userService中已废弃，其它实体正常使用");
+        super.saveOrUpdate(model);
     }
 
     /**
-     * 批量更新或保存对象；
-     * 因为涉及密码加密的逻辑问题，这个方法在userService中已废弃，其它实体正常使用
+     * 批量更新或保存对象，不允许通过此方法修改密码！
      *
      * @param modelList 需要更新或保存的对象
      *                  失败会抛出异常
      */
-    @Deprecated
     @Override
     public void saveOrUpdateAll(@NotNull List<User> modelList) throws Exception {
-        throw new Exception("因为涉及密码加密的逻辑问题，这个方法在userService中已废弃，其它实体正常使用");
+        super.saveOrUpdateAll(modelList);
     }
 }
