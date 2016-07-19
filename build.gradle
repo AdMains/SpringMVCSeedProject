@@ -15,8 +15,9 @@ def JacksonVersion = "2.7.4"
 
 repositories {
     mavenLocal()
-    maven { url "http://repo.spring.io/release" }
+    maven { url "http://10.16.155.241:8082/nexus/content/repositories/central/" }
     maven { url "http://maven.oschina.net/content/groups/public/" }
+    maven { url "http://repo.spring.io/release" }
     mavenCentral()
     maven { url "https://repo.spring.io/libs-snapshot" }
 }
