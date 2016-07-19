@@ -11,6 +11,18 @@ import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHAUtils.getSHA_256;
 
 @Service
 public class UserService extends BaseService<User> {
+
+    /**
+     * 创建加盐的密码SHA256值
+     *
+     * @param model 用户实体
+     * @return 密码加盐后的实体
+     */
+    public static User makeSHA256PasswordWithSalt(@NotNull User model) {
+        model.setPassWord(getSHA_256(model.getUserName() + model.getPassWord()));
+        return model;
+    }
+
     /**
      * 保存对象
      *
@@ -18,8 +30,7 @@ public class UserService extends BaseService<User> {
      */
     @Override
     public void save(@NotNull User model) throws Exception {
-        model.setPassWord(getSHA_256(model.getUserName()+model.getPassWord()));
-        super.save(model);
+        super.save(makeSHA256PasswordWithSalt(model));
     }
 
     /**
@@ -31,9 +42,7 @@ public class UserService extends BaseService<User> {
     @Override
     public void saveAll(@NotNull List<User> modelList) throws Exception {
         modelList.forEach(
-                model -> model.setPassWord(
-                        getSHA_256(model.getUserName()+model.getPassWord())
-                )
+                UserService::makeSHA256PasswordWithSalt
         );
         super.saveAll(modelList);
     }
@@ -46,8 +55,7 @@ public class UserService extends BaseService<User> {
      *              失败会抛出异常
      */
     public void updatePassWord(@NotNull User model) throws Exception {
-        model.setPassWord(getSHA_256(model.getUserName()+model.getPassWord()));
-        super.saveOrUpdate(model);
+        super.saveOrUpdate(makeSHA256PasswordWithSalt(model));
     }
 
     /**
@@ -58,9 +66,7 @@ public class UserService extends BaseService<User> {
      */
     public void updateAllPassWord(@NotNull List<User> modelList) throws Exception {
         modelList.forEach(
-                model -> model.setPassWord(
-                        getSHA_256(model.getUserName()+model.getPassWord())
-                )
+                UserService::makeSHA256PasswordWithSalt
         );
         super.saveOrUpdateAll(modelList);
     }
