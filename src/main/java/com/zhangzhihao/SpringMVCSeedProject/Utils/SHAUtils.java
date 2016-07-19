@@ -15,13 +15,17 @@ public class SHAUtils {
         return baseSHA(inStr, "SHA-256");
     }
 
+    public static String getMD5(@NotNull final String inStr) {
+        return baseSHA(inStr, "MD5");
+    }
+
     private static String baseSHA(@NotNull final String inStr, @NotNull final String messageDigestInstance) {
         MessageDigest md = null;
         String outStr = null;
         try {
             md = MessageDigest.getInstance(messageDigestInstance);
             byte[] digest = md.digest(inStr.getBytes("UTF-8"));
-            outStr = bytetoString(digest);
+            outStr = byteToString(digest);
         } catch (Exception ex) {
             LogToDB(ex);
         }
@@ -29,18 +33,18 @@ public class SHAUtils {
     }
 
 
-    public static String bytetoString(@NotNull final byte[] digest) {
-        String str = "";
+    public static String byteToString(@NotNull final byte[] digest) {
+        StringBuilder str = new StringBuilder();
         String tempStr = "";
 
-        for (int i = 0; i < digest.length; i++) {
-            tempStr = (Integer.toHexString(digest[i] & 0xff));
+        for (byte aDigest : digest) {
+            tempStr = (Integer.toHexString(aDigest & 0xff));
             if (tempStr.length() == 1) {
-                str = str + "0" + tempStr;
+                str.append("0").append(tempStr);
             } else {
-                str = str + tempStr;
+                str.append(tempStr);
             }
         }
-        return str.toLowerCase();
+        return str.toString().toLowerCase();
     }
 }

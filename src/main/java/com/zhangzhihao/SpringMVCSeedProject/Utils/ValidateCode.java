@@ -64,7 +64,7 @@ public class ValidateCode {
         if (length <= 0)
             return "";
 
-        StringBuffer code = new StringBuffer();
+        StringBuilder code = new StringBuilder();
         int i = 0;
         Random r = new Random();
 
@@ -74,7 +74,7 @@ public class ValidateCode {
             case TYPE_NUM_ONLY:
                 while (i < length) {
                     int t = r.nextInt(10);
-                    if (exChars == null || exChars.indexOf(t + "") < 0) {// 排除特殊字符
+                    if (exChars == null || !exChars.contains(t + "")) {// 排除特殊字符
                         code.append(t);
                         i++;
                     }
@@ -196,18 +196,18 @@ public class ValidateCode {
         // g.setColor(isSimpleColor?Color.BLACK:Color.WHITE);
 
         // 字体大小为图片高度的80%
-        int fsize = (int) (height * 0.8);
-        int fx = height - fsize;
-        int fy = fsize;
+        int fontSize = (int) (height * 0.8);
+        int fx = height - fontSize;
+        int fy = fontSize;
 
-        g.setFont(new Font("Default", Font.PLAIN, fsize));
+        g.setFont(new Font("Default", Font.PLAIN, fontSize));
 
         // 写验证码字符
         for (int i = 0; i < textCode.length(); i++) {
             fy = randomLocation ? (int) ((Math.random() * 0.3 + 0.6) * height) : fy;// 每个字符高低是否随机
             g.setColor(foreColor == null ? getRandomColor() : foreColor);
             g.drawString(textCode.charAt(i) + "", fx, fy);
-            fx += fsize * 0.9;
+            fx += fontSize * 0.9;
         }
 
         g.dispose();
@@ -234,21 +234,19 @@ public class ValidateCode {
                                                   int interLine, boolean randomLocation, Color backColor, Color foreColor, Color lineColor) {
 
         String textCode = generateTextCode(type, length, exChars);
-        BufferedImage bim = generateImageCode(textCode, width, height, interLine, randomLocation, backColor, foreColor,
-                lineColor);
 
-        return bim;
+        return generateImageCode(textCode, width, height, interLine, randomLocation, backColor, foreColor,
+                lineColor);
     }
 
     /**
      * 产生随机颜色
      *
-     * @return
+     * @return 颜色
      */
     private static Color getRandomColor() {
         Random r = new Random();
-        Color c = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
-        return c;
+        return new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
     }
 
 }
