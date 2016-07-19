@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHA_1Utils.getSHA_1;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
@@ -57,6 +58,12 @@ public class BaseDaoTest extends BaseTest {
         System.out.println(teacher);
         teacherDao.save(teacher);
         System.out.println(teacher);
+    }
+
+    @Test
+    public void sha1Test() {
+        String sha1 = getSHA_1("admin");
+        assertEquals("d033e22ae348aeb5660fc2140aec35850c4da997", sha1);
     }
 
     @Test

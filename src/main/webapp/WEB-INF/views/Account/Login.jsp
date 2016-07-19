@@ -11,9 +11,15 @@
 
     <%@ include file="/head.jsp" %>
     <script type="text/javascript">
-        function reloadValidateCode(){
-            $("#validateCodeImg").attr("src","/Account/validateCode?data=" + new Date() + Math.floor(Math.random()*24));
+        function reloadValidateCode() {
+            $("#validateCodeImg").attr("src", "/Account/validateCode?data=" + new Date() + Math.floor(Math.random() * 24));
         }
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                //给密码在客户端登录的时候就加密
+                document.getElementById("Password").value = hex_sha1($("#Password").val());
+            });
+        });
     </script>
 
 </head>
@@ -24,36 +30,41 @@
     <div class="panel panel-color panel-primary panel-pages">
         <div class="panel-heading bg-img">
             <div class="bg-overlay"></div>
-            <h3 class="text-center m-t-10 text-white"> 登录到 <strong>XXXX系统</strong> </h3>
+            <h3 class="text-center m-t-10 text-white"> 登录到 <strong>XXXX系统</strong></h3>
         </div>
 
 
         <div class="panel-body">
-            <form class="form-horizontal m-t-20" action="${pageContext.request.contextPath}/Account/Login" method="post">
+            <form class="form-horizontal m-t-20" action="${pageContext.request.contextPath}/Account/Login"
+                  method="post">
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control input-lg" type="text" required=""  name="UserName" placeholder="用户名">
+                        <input class="form-control input-lg" type="text" required="" name="UserName" placeholder="用户名">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control input-lg" type="password" required="" name="Password" placeholder="密码">
+                        <input class="form-control input-lg" type="password" required="" name="Password" id="Password"
+                               placeholder="密码">
                     </div>
                 </div>
 
                 <div class="row form-group">
                     <div class=" col-xs-6">
                         <div class="">
-                            <input class="form-control input-lg" type="text" required="" name="validateCode" placeholder="验证码">
+                            <input class="form-control input-lg" type="text" required="" name="validateCode"
+                                   placeholder="验证码">
                         </div>
                     </div>
 
                     <div class=" col-xs-6">
                         <div class="">
                             <div class="">
-                                <img id="validateCodeImg" src="${pageContext.request.contextPath}/Account/validateCode" />&nbsp;&nbsp;<a href="#" onclick="javascript:reloadValidateCode();">看不清？</a>
+                                <img id="validateCodeImg"
+                                     src="${pageContext.request.contextPath}/Account/validateCode"/>&nbsp;&nbsp;<a
+                                    href="#" onclick="javascript:reloadValidateCode();">看不清？</a>
                             </div>
                         </div>
                     </div>
@@ -73,7 +84,9 @@
 
                 <div class="form-group text-center m-t-40">
                     <div class="col-xs-12">
-                        <button class="btn btn-primary btn-lg w-lg waves-effect waves-light" type="submit">登录</button>
+                        <button class="btn btn-primary btn-lg w-lg waves-effect waves-light" type="submit" id="submit">
+                            登录
+                        </button>
                     </div>
                 </div>
 
@@ -92,6 +105,7 @@
 </div>
 
 <%@ include file="/script.jsp" %>
+<script src="${pageContext.request.contextPath}/assets/js/sha1.js"></script>
 
 </body>
 </html>

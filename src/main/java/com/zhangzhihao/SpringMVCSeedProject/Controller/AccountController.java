@@ -1,7 +1,5 @@
 package com.zhangzhihao.SpringMVCSeedProject.Controller;
 
-import com.zhangzhihao.SpringMVCSeedProject.Service.PermissionService;
-import com.zhangzhihao.SpringMVCSeedProject.Service.RoleService;
 import com.zhangzhihao.SpringMVCSeedProject.Service.UserService;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.ValidateCode;
 import org.apache.commons.lang3.StringUtils;
@@ -34,13 +32,6 @@ import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 public class AccountController {
     @Autowired
     UserService userService;
-
-    @Autowired
-    PermissionService permissionService;
-
-    @Autowired
-    RoleService roleService;
-
 
     @PersistenceContext
     private EntityManager entityManager;

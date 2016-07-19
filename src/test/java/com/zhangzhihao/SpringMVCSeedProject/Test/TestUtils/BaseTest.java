@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:Spring.xml", "classpath:SpringMVC.xml"})
+@ContextConfiguration(locations = {"classpath:Spring.xml"})
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class
