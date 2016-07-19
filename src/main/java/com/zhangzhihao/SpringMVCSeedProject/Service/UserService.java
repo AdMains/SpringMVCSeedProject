@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHA_1Utils.getSHA_1;
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHAUtils.getSHA_256;
+
 
 @Service
 public class UserService extends BaseService<User> {
@@ -17,7 +18,7 @@ public class UserService extends BaseService<User> {
      */
     @Override
     public void save(@NotNull User model) throws Exception {
-        model.setPassWord(getSHA_1(model.getPassWord()));
+        model.setPassWord(getSHA_256(model.getUserName()+model.getPassWord()));
         super.save(model);
     }
 
@@ -30,8 +31,8 @@ public class UserService extends BaseService<User> {
     @Override
     public void saveAll(@NotNull List<User> modelList) throws Exception {
         modelList.forEach(
-                model->model.setPassWord(
-                        getSHA_1(model.getPassWord())
+                model -> model.setPassWord(
+                        getSHA_256(model.getUserName()+model.getPassWord())
                 )
         );
         super.saveAll(modelList);
@@ -45,7 +46,7 @@ public class UserService extends BaseService<User> {
      *              失败会抛出异常
      */
     public void updatePassWord(@NotNull User model) throws Exception {
-        model.setPassWord(getSHA_1(model.getPassWord()));
+        model.setPassWord(getSHA_256(model.getUserName()+model.getPassWord()));
         super.saveOrUpdate(model);
     }
 
@@ -57,8 +58,8 @@ public class UserService extends BaseService<User> {
      */
     public void updateAllPassWord(@NotNull List<User> modelList) throws Exception {
         modelList.forEach(
-                model->model.setPassWord(
-                        getSHA_1(model.getPassWord())
+                model -> model.setPassWord(
+                        getSHA_256(model.getUserName()+model.getPassWord())
                 )
         );
         super.saveOrUpdateAll(modelList);

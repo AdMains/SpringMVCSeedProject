@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHA_1Utils.getSHA_1;
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHAUtils.getSHA_1;
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHAUtils.getSHA_256;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
@@ -64,6 +65,13 @@ public class BaseDaoTest extends BaseTest {
     public void sha1Test() {
         String sha1 = getSHA_1("admin");
         assertEquals("d033e22ae348aeb5660fc2140aec35850c4da997", sha1);
+    }
+
+    @Test
+    public void sha256Test() {
+        String sha256 = getSHA_256("123456123456");
+        //System.out.println(getSHA_256("admin"+"admin"));
+        assertEquals("958d51602bbfbd18b2a084ba848a827c29952bfef170c936419b0922994c0589", sha256);
     }
 
     @Test

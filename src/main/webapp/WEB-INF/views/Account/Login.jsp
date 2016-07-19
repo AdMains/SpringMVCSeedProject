@@ -16,8 +16,7 @@
         }
         $(document).ready(function () {
             $("#submit").click(function () {
-                //给密码在客户端登录的时候就加密
-                document.getElementById("Password").value = hex_sha1($("#Password").val());
+                document.getElementById("Password").value = hex_sha256($("#UserName").val() + $("#Password").val());
             });
         });
     </script>
@@ -40,7 +39,8 @@
 
                 <div class="form-group">
                     <div class="col-xs-12">
-                        <input class="form-control input-lg" type="text" required="" name="UserName" placeholder="用户名">
+                        <input class="form-control input-lg" type="text" required="" name="UserName" id="UserName"
+                               placeholder="用户名">
                     </div>
                 </div>
 
@@ -105,7 +105,7 @@
 </div>
 
 <%@ include file="/script.jsp" %>
-<script src="${pageContext.request.contextPath}/assets/js/sha1.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/sha256.min.js"></script>
 
 </body>
 </html>
