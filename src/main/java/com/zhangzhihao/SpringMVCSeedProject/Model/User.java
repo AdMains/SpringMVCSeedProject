@@ -3,6 +3,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
+import lombok.Data;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Table
+@Data
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User implements Serializable {
 
@@ -56,54 +58,6 @@ public class User implements Serializable {
     public User(String userName, String passWord,  List<Role> roleList) {
         this.userName = userName;
         this.passWord = passWord;
-        this.roleList = roleList;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userName='" + userName + '\'' +
-                ", passWord='" + passWord + '\'' +
-                '}';
-    }
-
-    public AuthorityType getAuthorityType() {
-        return authorityType;
-    }
-
-    public void setAuthorityType(AuthorityType authorityType) {
-        this.authorityType = authorityType;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassWord() {
-        return passWord;
-    }
-
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
-    }
-
-    public BankCard getBankCard() {
-        return bankCard;
-    }
-
-    public void setBankCard(BankCard bankCard) {
-        this.bankCard = bankCard;
-    }
-
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
         this.roleList = roleList;
     }
 }
