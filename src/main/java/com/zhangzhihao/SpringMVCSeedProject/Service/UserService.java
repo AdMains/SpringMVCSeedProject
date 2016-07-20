@@ -19,7 +19,13 @@ public class UserService extends BaseService<User> {
      * @return 密码加盐后的实体
      */
     public static User makeSHA256PasswordWithSalt(@NotNull User model) {
-        model.setPassWord(getSHA_256(model.getUserName() + model.getPassWord()));
+        model.setPassWord(
+                getSHA_256(
+                        getSHA_256(
+                                model.getUserName() + model.getPassWord()
+                        )
+                )
+        );
         return model;
     }
 

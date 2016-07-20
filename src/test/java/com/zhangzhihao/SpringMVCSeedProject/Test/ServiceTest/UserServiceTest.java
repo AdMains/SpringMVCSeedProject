@@ -18,7 +18,7 @@ public class UserServiceTest extends BaseTest {
 	public void makeSHA256PasswordWithSaltTest(){
 		User user=new User("admin","admin");
 		User SHAuser = makeSHA256PasswordWithSalt(user);
-		assertEquals(SHAuser.getPassWord(),"d82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892");
+		assertEquals(SHAuser.getPassWord(),"9cf3e758a497c6274bd066d0b2168432f8a34aad95f63a65677a9a56acec94a7");
 	}
 
 	@Test

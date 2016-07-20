@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.SHAUtils.getSHA_256;
 
 @SuppressWarnings("JavaDoc")
 @Controller
@@ -71,7 +72,7 @@ public class AccountController {
         UsernamePasswordToken token = null;
         try {
             Subject user = SecurityUtils.getSubject();
-            token = new UsernamePasswordToken(UserName.trim(), Password);
+            token = new UsernamePasswordToken(UserName.trim(), getSHA_256(Password));
             if(RememberMe!=null&&RememberMe.equals("on"))
                 token.setRememberMe(true);
             user.login(token);

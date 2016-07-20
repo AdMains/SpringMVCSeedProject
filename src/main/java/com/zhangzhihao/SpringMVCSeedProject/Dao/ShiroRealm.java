@@ -102,7 +102,8 @@ public class ShiroRealm extends AuthorizingRealm {
         }
         if (user != null) {
             return new SimpleAuthenticationInfo(user.getUserName(), user
-                    .getPassWord(), user.toString());
+                    .getPassWord(), user.toString()
+            );
         } else {
             return null;
         }
