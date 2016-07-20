@@ -3,7 +3,10 @@ package com.zhangzhihao.SpringMVCSeedProject.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -16,8 +19,12 @@ import java.util.List;
 
 @Entity
 @Table
-@Data
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+
+@Data
+@ToString(exclude={"bankCard","roleList"})
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 895922977663522702L;
@@ -41,8 +48,6 @@ public class User implements Serializable {
     @JsonIgnore
     private List<Role> roleList;
 
-    public User() {
-    }
 
     public User(String userName, String passWord) {
         this.userName = userName;

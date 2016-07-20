@@ -1,21 +1,18 @@
 package com.zhangzhihao.SpringMVCSeedProject.Aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Aspect
 @Component
+@Slf4j
 public class LogAspect {
-
-    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
-
     @AfterThrowing(throwing = "ex", pointcut = "execution(* com.zhangzhihao.SpringMVCSeedProject.*.*.*(..)))")
     public void LogToDB(JoinPoint joinPoint, Throwable ex) {
         //出错行
@@ -29,6 +26,6 @@ public class LogAspect {
         if (args.length > 0)
             for (Object arg : args)
                 argString.append(arg);
-        logger.error("方法" + signature, "参数" + argString, "错误行：" + lineNumber, "时间" + new Date(), "异常内容" + ex.toString());
+        log.error("方法" + signature, "参数" + argString, "错误行：" + lineNumber, "时间" + new Date(), "异常内容" + ex.toString());
     }
 }

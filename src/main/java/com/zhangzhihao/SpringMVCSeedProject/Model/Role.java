@@ -1,6 +1,9 @@
 package com.zhangzhihao.SpringMVCSeedProject.Model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +13,10 @@ import java.util.List;
 
 @Entity
 @Table
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role implements Serializable {
     private static final long serialVersionUID = 6177417435897400228L;
 
@@ -33,64 +40,4 @@ public class Role implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "PermissionId", referencedColumnName = "id")})
     private List<Permission> permissionList;
 
-    public Role() {
-    }
-
-    public Role(String name, String description, List<User> userList, List<Permission> permissionList) {
-        this.name = name;
-        this.description = description;
-        this.userList = userList;
-        this.permissionList = permissionList;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", userList=" + userList +
-                ", permissionList=" + permissionList +
-                '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
-
-    public List<Permission> getPermissionList() {
-        return permissionList;
-    }
-
-    public void setPermissionList(List<Permission> permissionList) {
-        this.permissionList = permissionList;
-    }
 }

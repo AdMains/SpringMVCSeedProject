@@ -1,5 +1,8 @@
 package com.zhangzhihao.SpringMVCSeedProject.Model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,6 +12,10 @@ import java.util.List;
 
 @Table
 @Entity
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Permission implements Serializable {
     private static final long serialVersionUID = 2683590474689747957L;
 
@@ -31,9 +38,6 @@ public class Permission implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "permissionList")
     private List<Role> roleList;
 
-    public Permission() {
-    }
-
     public Permission(String name, String description, String permission, Permission parent, List<Permission> childrenList, List<Role> roleList) {
         this.name = name;
         this.description = description;
@@ -43,72 +47,4 @@ public class Permission implements Serializable {
         this.roleList = roleList;
     }
 
-    @Override
-    public String toString() {
-        return "Permission{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", permission='" + permission + '\'' +
-                ", parent=" + parent +
-                ", childrenList=" + childrenList +
-                ", roleList=" + roleList +
-                '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    public Permission getParent() {
-        return parent;
-    }
-
-    public void setParent(Permission parent) {
-        this.parent = parent;
-    }
-
-    public List<Permission> getChildrenList() {
-        return childrenList;
-    }
-
-    public void setChildrenList(List<Permission> childrenList) {
-        this.childrenList = childrenList;
-    }
-
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
-    }
 }
