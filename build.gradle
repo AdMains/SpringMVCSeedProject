@@ -117,7 +117,7 @@ dependencies {
             //"org.eclipse.jetty:jetty-webapp:9.3.10.v20160621",
             //"org.eclipse.jetty.http2:http2-server:9.3.10.v20160621",
             //"org.eclipse.jetty:jetty-jsp:9.2.17.v20160517",
-            
+
     )
     testCompile(
             //jUnit
@@ -169,16 +169,16 @@ test {
 
     // listen to standard out and standard error of the test JVM(s)
     onOutput { descriptor, event ->
-        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message)
     }
 
-    jacoco{
+    jacoco {
         destinationFile = file("$buildDir/jacoco/test.exec")
     }
 }
 
 jacocoTestReport {
-    reports{
+    reports {
         xml.enabled false
         csv.enabled false
         html.destination "${buildDir}/jacocoHtml"
@@ -198,5 +198,5 @@ jacocoTestReport {
 //build.dependsOn jacocoTestReport
 
 task integrationTest(type: Test) {
-        include 'test/java/**'
+    include 'test/java/**'
 }
