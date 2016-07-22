@@ -3,6 +3,16 @@ version "1.0-SNAPSHOT"
 
 apply plugin: "java"
 apply plugin: "war"
+apply plugin: "jacoco"
+//apply plugin: "checkstyle"
+//apply plugin: "pmd"
+//apply plugin: "findbugs"
+apply plugin: "idea"
+
+jacoco {
+    //bntoolVersion = "0.7.7.201606060606"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -16,7 +26,7 @@ def JacksonVersion = "2.7.4"
 repositories {
     mavenLocal()
     //依赖下不下来将上面一行取消注释
-    //maven { url "http://10.16.155.241:8082/nexus/content/repositories/central/" }
+    //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
     maven { url "http://maven.oschina.net/content/groups/public/" }
     maven { url "http://repo.spring.io/release" }
     mavenCentral()
@@ -100,9 +110,14 @@ dependencies {
             //Groovy
             "org.codehaus.groovy:groovy:2.4.7",
 
-            //lombok
+            //Lombok
             "org.projectlombok:lombok:1.16.10",
 
+            //Jetty
+            //"org.eclipse.jetty:jetty-webapp:9.3.10.v20160621",
+            //"org.eclipse.jetty.http2:http2-server:9.3.10.v20160621",
+            //"org.eclipse.jetty:jetty-jsp:9.2.17.v20160517",
+            
     )
     testCompile(
             //jUnit
@@ -118,4 +133,70 @@ task copyJars(type: Copy) {
 //让gradle支持中文
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+//checkstyle {
+//    ignoreFailures = true
+//    sourceSets = [sourceSets.main]
+//}
+
+//findbugs {
+//    ignoreFailures = true
+//    sourceSets = [sourceSets.main]
+//}
+
+//pmd {
+//    ruleSets = ["basic", "braces", "design"]
+//    ignoreFailures = true
+//    sourceSets = [sourceSets.main]
+//}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+    //sourceSets sourceSets.main
+}
+
+test {
+    useJUnit()
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+
+    // listen to standard out and standard error of the test JVM(s)
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " produced standard out/err: " + event.message )
+    }
+
+    jacoco{
+        destinationFile = file("$buildDir/jacoco/test.exec")
+    }
+}
+
+jacocoTestReport {
+    reports{
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+
+//    executionData = fileTree(dir: 'build/jacoco', include: '**/*.exec')
+//    reports {
+//        xml.enabled true
+//        html.enabled true
+//        csv.enabled true
+//    }
+//    classDirectories = fileTree(dir: 'build/classes/main', include: '**')
+//    sourceDirectories = fileTree(dir: 'scr/java', include: '**')
+//    additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+}
+
+//build.dependsOn jacocoTestReport
+
+task integrationTest(type: Test) {
+        include 'test/java/**'
 }
