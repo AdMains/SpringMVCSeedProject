@@ -9,10 +9,9 @@ apply plugin: "jacoco"
 //apply plugin: "findbugs"
 apply plugin: "idea"
 
-jacoco {
-    //bntoolVersion = "0.7.7.201606060606"
-    reportsDir = file("$buildDir/customJacocoReportDir")
-}
+//jacoco {
+//    reportsDir = file("$buildDir/customJacocoReportDir")
+//}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -135,30 +134,58 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-//checkstyle {
+//task checkstyle(type: Checkstyle) {
+//    configFile file("/src/main/resources/checkstyle.xml")
+//    source 'src'
+//    include '**/*.java'
+//    //exclude '**/gen/**'
+//
+//    classpath = files()
+//}
+
+//task findbugs(type: FindBugs) {
 //    ignoreFailures = true
-//    sourceSets = [sourceSets.main]
+//    effort = "max"
+//    reportLevel = "high"
+//    //excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
+//    classes = files("$project.buildDir/intermediates/classes/")
+//
+//    source 'src'
+//    include '**/*.java'
+//    //exclude '**/gen/**'
+//
+//    reports {
+//        xml {
+//            destination "$project.buildDir/reports/findbugs/findbugs.xml"
+//            xml.withMessages true
+//        }
+//    }
+//
+//    classpath = files()
 //}
 
 //findbugs {
-//    ignoreFailures = true
+//    ignoreFailures = false
+//    effort = "max"
+//    reportsDir = file("$buildDir/reports/findbugs")
+//    //reportLevel = "high"
 //    sourceSets = [sourceSets.main]
 //}
-
+//
+//findbugsMain {
+//    reports {
+//        html.enabled = true
+//        xml.enabled = false
+//    }
+//}
+//
 //pmd {
 //    ruleSets = ["basic", "braces", "design"]
 //    ignoreFailures = true
 //    sourceSets = [sourceSets.main]
 //}
 
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled true
-        csv.enabled false
-    }
-    //sourceSets sourceSets.main
-}
+
 
 test {
     useJUnit()
@@ -183,19 +210,9 @@ jacocoTestReport {
         csv.enabled false
         html.destination "${buildDir}/jacocoHtml"
     }
-
-//    executionData = fileTree(dir: 'build/jacoco', include: '**/*.exec')
-//    reports {
-//        xml.enabled true
-//        html.enabled true
-//        csv.enabled true
-//    }
-//    classDirectories = fileTree(dir: 'build/classes/main', include: '**')
-//    sourceDirectories = fileTree(dir: 'scr/java', include: '**')
-//    additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
 }
 
-//build.dependsOn jacocoTestReport
+build.dependsOn jacocoTestReport
 
 task integrationTest(type: Test) {
     include 'test/java/**'
