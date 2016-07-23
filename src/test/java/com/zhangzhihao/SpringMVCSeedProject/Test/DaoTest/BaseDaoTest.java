@@ -139,7 +139,7 @@ public class BaseDaoTest extends BaseTest {
 
     @Test
     public void getListByPageTest() {
-        List<User> listByPage = userDao.getListByPage(User.class, 2, 2);
+        List<User> listByPage = (userDao.getListByPage(User.class, 2, 2)).getResults();
         if (listByPage.size() > 0) {
             listByPage.forEach(System.out::println);
         }

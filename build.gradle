@@ -9,10 +9,6 @@ apply plugin: "jacoco"
 //apply plugin: "findbugs"
 apply plugin: "idea"
 
-//jacoco {
-//    reportsDir = file("$buildDir/customJacocoReportDir")
-//}
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 def SpringVersion = "4.3.1.RELEASE"
@@ -143,25 +139,25 @@ tasks.withType(JavaCompile) {
 //    classpath = files()
 //}
 
-//task findbugs(type: FindBugs) {
-//    ignoreFailures = true
+//task customFindbugs(type: FindBugs) {
+//    ignoreFailures = false
 //    effort = "max"
-//    reportLevel = "high"
-//    //excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
-//    classes = files("$project.buildDir/intermediates/classes/")
+//    reportLevel = "low"
+//    classes = files("$project.buildDir/classes")
 //
-//    source 'src'
-//    include '**/*.java'
-//    //exclude '**/gen/**'
+//    // Use this only if you want exclude some errors
+//    //excludeFilter = file("$rootProject.rootDir/config/findbugs/exclude.xml")
+//
+//    source = fileTree('src/main/java/')
+//    classpath = files()
 //
 //    reports {
-//        xml {
-//            destination "$project.buildDir/reports/findbugs/findbugs.xml"
-//            xml.withMessages true
-//        }
+//        xml.enabled = false
+//        xml.withMessages = true
+//        html.enabled = !xml.isEnabled()
+//        xml.destination "$project.buildDir/findbugs/findbugs-output.xml"
+//        html.destination "$project.buildDir/findbugs/findbugs-output.html"
 //    }
-//
-//    classpath = files()
 //}
 
 //findbugs {

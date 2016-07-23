@@ -2,6 +2,7 @@ package com.zhangzhihao.SpringMVCSeedProject.Controller;
 
 import com.zhangzhihao.SpringMVCSeedProject.Model.Log;
 import com.zhangzhihao.SpringMVCSeedProject.Service.LogService;
+import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,8 @@ public class LogController {
         map.put("otherCount", otherCount);
         List<Log> listByPage = null;
         try {
-            listByPage = logService.getListByPage(1, 10);
+            PageResults<Log> logPageResults = logService.getListByPage(1, 10);
+            listByPage=logPageResults.getResults();
         } catch (Exception e) {
             LogToDB(e);
         }

@@ -124,7 +124,7 @@ class BaseService<T> {
      * @param pageSize          每页数量
      * @return 查询结果
      */
-    public List<T> getListByPage(@NotNull final Integer currentPageNumber,
+    public PageResults<T> getListByPage(@NotNull final Integer currentPageNumber,
                                  @NotNull final Integer pageSize)
             throws Exception {
         return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
