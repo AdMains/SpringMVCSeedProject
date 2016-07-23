@@ -99,8 +99,7 @@ public class FileUtils {
             }
         }
         //创建输出流
-        @Cleanup FileOutputStream outStream = new FileOutputStream(uploadFile);
-        try {
+        try (FileOutputStream outStream = new FileOutputStream(uploadFile)) {
             outStream.write(data);
             outStream.flush();
         } catch (Exception e) {
