@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;
 
@@ -149,6 +148,17 @@ public class BaseDao<T> {
                 .getResultList();
     }
 
+    /**
+     * 获得数量 利用Count(*)实现
+     *
+     * @param modelClass 类型，比如User.class
+     * @return 数量
+     */
+    @Transactional(readOnly = true)
+    public int getCount(Class<T> modelClass) {
+        Query query = new Query(modelClass, entityManager);
+        return getCountByQuery(query);
+    }
 
     /**
      * 分页查询
@@ -160,28 +170,14 @@ public class BaseDao<T> {
      */
     @Transactional(readOnly = true)
     public PageResults<T> getListByPage(Class<T> modelClass,
-                                        @NotNull Integer currentPageNumber,
+                                        @NotNull final Integer currentPageNumber,
                                         @NotNull final Integer pageSize) {
-        if (currentPageNumber <= 0 || pageSize <= 0) {
-            return null;
-        }
-        int totalCount = getCount(modelClass);
-        int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
-                : totalCount / pageSize + 1;
-
-        if (currentPageNumber > pageCount && pageCount != 0) {
-            currentPageNumber = pageCount;
-        }
-        Query query = new Query(modelClass, entityManager);
-        TypedQuery typedQuery = query.createTypedQuery();
-        //查看是否要分页
-        if (currentPageNumber > 0 && pageSize > 0) {
-            typedQuery
-                    .setFirstResult((currentPageNumber - 1) * pageSize)
-                    .setMaxResults(pageSize);
-        }
-        List<T> list = typedQuery.getResultList();
-        return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
+        return this.getPageResultsByQuery(
+                pageSize,
+                getCount(modelClass),
+                currentPageNumber,
+                new Query(modelClass, entityManager)
+        );
     }
 
     /**
@@ -193,40 +189,49 @@ public class BaseDao<T> {
      * @return 查询结果
      */
     @Transactional(readOnly = true)
-    public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
-                                                @NotNull Integer pageSize,
-                                                @NotNull Query query)
+    public PageResults<T> getListByPageAndQuery(@NotNull final Integer currentPageNumber,
+                                                @NotNull final Integer pageSize,
+                                                @NotNull final Query query)
             throws Exception {
         //获得符合条件的总数目
         //int totalCount = getCountByQuery((Query) query.deepClone());
         int totalCount = getCountByQuery(SerializationUtils.clone(query));
-        int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
-                : totalCount / pageSize + 1;
-
-        if (currentPageNumber > pageCount && pageCount != 0) {
-            currentPageNumber = pageCount;
-        }
-        TypedQuery typedQuery = query.createTypedQuery();
-        //查看是否要分页
-        if (currentPageNumber > 0 && pageSize > 0) {
-            typedQuery
-                    .setFirstResult((currentPageNumber - 1) * pageSize)
-                    .setMaxResults(pageSize);
-        }
-        List<T> list = typedQuery.getResultList();
-        return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
+        return this.getPageResultsByQuery(pageSize, totalCount, currentPageNumber, query);
     }
 
     /**
-     * 获得数量 利用Count(*)实现
+     * 分页查询的共用方法
      *
-     * @param modelClass 类型，比如User.class
-     * @return 数量
+     * @param pageSize          每页数量
+     * @param totalCount        总数
+     * @param currentPageNumber 当前页
+     * @param query             query
+     * @return 查询结果
      */
     @Transactional(readOnly = true)
-    public int getCount(Class<T> modelClass) {
-        Query query = new Query(modelClass, entityManager);
-        return getCountByQuery(query);
+    private PageResults<T> getPageResultsByQuery(@NotNull final Integer pageSize,
+                                                 @NotNull final Integer totalCount,
+                                                 @NotNull final Integer currentPageNumber,
+                                                 @NotNull final Query query) {
+        PageResults<T> pageResults = new PageResults<>();
+
+        pageResults.initPageResults(pageSize, totalCount, currentPageNumber);
+
+        int FirstResult = 0;
+        if (pageResults.getCurrentPage() == 1) {
+            FirstResult = 0;
+        } else {
+            FirstResult = pageResults.getPreviousPage() * pageSize;
+        }
+
+        List<T> list = query
+                .createTypedQuery()
+                .setFirstResult(FirstResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+        pageResults.setResults(list);
+        return pageResults;
+
     }
 
     /**
@@ -301,32 +306,34 @@ public class BaseDao<T> {
      * @return 查询结果
      */
     @Transactional(readOnly = true)
-    public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
-                                                    @NotNull Integer pageSize,
+    public PageResults<Object> getListByPageAndJpql(@NotNull final Integer currentPageNumber,
+                                                    @NotNull final Integer pageSize,
                                                     @NotNull final String jpql,
                                                     @NotNull final Object... values) {
-        //参数验证
         int totalCount = getCountByJpql(jpql, values);
-        int pageCount = totalCount % pageSize == 0 ? totalCount / pageSize
-                : totalCount / pageSize + 1;
 
-        if (currentPageNumber > pageCount && pageCount != 0) {
-            currentPageNumber = pageCount;
-        }
+        PageResults<Object> pageResults = new PageResults<>();
+
+        pageResults.initPageResults(pageSize, totalCount, currentPageNumber);
 
         javax.persistence.Query query = entityManager.createQuery(jpql);
         for (int i = 0; i < values.length; i++) {
             query.setParameter(i, values[i]);
         }
 
-        //查看是否要分页
-        if (currentPageNumber > 0 && pageSize > 0) {
-            query
-                    .setFirstResult((currentPageNumber - 1) * pageSize)
-                    .setMaxResults(pageSize);
+        int FirstResult = 0;
+        if (pageResults.getCurrentPage() == 1) {
+            FirstResult = 0;
+        } else {
+            FirstResult = pageResults.getPreviousPage() * pageSize;
         }
-        List<Object> list = query.getResultList();
-        return new PageResults<>(currentPageNumber + 1, currentPageNumber, pageSize, totalCount, pageCount, list);
+
+        List<Object> list = query
+                .setFirstResult(FirstResult)
+                .setMaxResults(pageSize)
+                .getResultList();
+        pageResults.setResults(list);
+        return pageResults;
     }
 
     /**

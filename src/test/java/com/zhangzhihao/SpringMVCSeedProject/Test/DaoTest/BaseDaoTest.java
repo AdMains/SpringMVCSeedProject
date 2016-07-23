@@ -139,10 +139,12 @@ public class BaseDaoTest extends BaseTest {
 
     @Test
     public void getListByPageTest() {
-        List<User> listByPage = (userDao.getListByPage(User.class, 2, 2)).getResults();
+        PageResults<User> userPageResults = userDao.getListByPage(User.class, -7, 2);
+        List<User> listByPage = userPageResults.getResults();
         if (listByPage.size() > 0) {
             listByPage.forEach(System.out::println);
         }
+        System.out.println(userPageResults);
         assertNotNull(listByPage);
     }
 
@@ -150,12 +152,13 @@ public class BaseDaoTest extends BaseTest {
     public void getListByPageAndQueryTest() throws Exception {
         Query query = new Query(entityManager);
         query.from(User.class)
-                .whereEqual("authorityType", AuthorityType.Admin);
+                .whereEqual("userName", "admin");
+        //.whereEqual("authorityType", AuthorityType.Admin);
         /*TypedQuery typedQuery = query.from(User.class)
                 .whereEqual("authorityType", parameter1)
 				.createTypedQuery()
 				.setParameter(parameter1, AuthorityType.Admin);*/
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
+        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 3, query);
         System.out.println(listByPageAndQuery);
         List<User> results = listByPageAndQuery.getResults();
         if (!results.isEmpty()) {
