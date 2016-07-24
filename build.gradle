@@ -50,6 +50,9 @@ dependencies {
             //servlet
             "javax.servlet:javax.servlet-api:3.1.0",
 
+            //el
+            "javax.el:javax.el-api:3.0.1-b04",
+
             //apache
             "commons-fileupload:commons-fileupload:1.3.2",
             "org.apache.commons:commons-lang3:3.4",//深拷贝
@@ -109,9 +112,9 @@ dependencies {
             "org.projectlombok:lombok:1.16.10",
 
             //Jetty
-            //"org.eclipse.jetty:jetty-webapp:9.3.10.v20160621",
-            //"org.eclipse.jetty.http2:http2-server:9.3.10.v20160621",
-            //"org.eclipse.jetty:jetty-jsp:9.2.17.v20160517",
+            "org.eclipse.jetty:jetty-webapp:9.3.10.v20160621",
+            "org.eclipse.jetty.http2:http2-server:9.3.10.v20160621",
+            "org.eclipse.jetty:jetty-jsp:9.2.17.v20160517",
 
     )
     testCompile(

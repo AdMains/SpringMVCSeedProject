@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,8 +32,6 @@ public class AccountController {
     @Autowired
     UserService userService;
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
     /**
      * 转向登录界面
@@ -61,7 +57,7 @@ public class AccountController {
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     public String Login(@RequestParam("UserName") String UserName,
                         @RequestParam("Password") String Password,
-                        @RequestParam(value = "RememberMe",required = false) String RememberMe,
+                        @RequestParam(value = "RememberMe", required = false) String RememberMe,
                         HttpSession session,
                         HttpServletRequest request) {
         String code = (String) session.getAttribute("validateCode");
@@ -73,7 +69,7 @@ public class AccountController {
         try {
             Subject user = SecurityUtils.getSubject();
             token = new UsernamePasswordToken(UserName.trim(), getSHA_256(Password));
-            if(RememberMe!=null&&RememberMe.equals("on"))
+            if (RememberMe != null && RememberMe.equals("on"))
                 token.setRememberMe(true);
             user.login(token);
             return "redirect:/";
@@ -104,7 +100,7 @@ public class AccountController {
     }
 
     @RequestMapping("/LogOut")
-    public void LogOut(){
+    public void LogOut() {
         SecurityUtils.getSubject().logout();
     }
 }
