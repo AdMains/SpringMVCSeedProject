@@ -8,7 +8,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,7 +52,7 @@ public class AccountController {
      * @return
      */
     @SuppressWarnings("ConstantConditions")
-    @Cacheable("springCache")
+    //@Cacheable("springCache")
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     public String Login(@RequestParam("UserName") String UserName,
                         @RequestParam("Password") String Password,
