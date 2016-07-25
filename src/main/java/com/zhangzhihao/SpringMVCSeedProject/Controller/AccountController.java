@@ -61,7 +61,9 @@ public class AccountController {
                         HttpServletRequest request) {
         String code = (String) session.getAttribute("validateCode");
         String submitCode = WebUtils.getCleanParam(request, "validateCode");
-        if (StringUtils.isEmpty(submitCode) || !StringUtils.equals(code.toLowerCase(), submitCode.toLowerCase())) {
+        if (code == null || StringUtils.isEmpty(submitCode) || !StringUtils.equals(code.toLowerCase(), submitCode.toLowerCase())) {
+            //登陆失败清除session的验证码，以防暴力破解
+            session.removeAttribute("validateCode");
             return "redirect:/Account/Login";
         }
         UsernamePasswordToken token = null;
@@ -78,6 +80,8 @@ public class AccountController {
                 token.clear();
             }
             return "redirect:/Account/Login";
+        } finally {
+            session.removeAttribute("validateCode");
         }
     }
 
