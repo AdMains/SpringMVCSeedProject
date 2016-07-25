@@ -4,9 +4,17 @@ os:
   - linux
 jdk:
   - oraclejdk8
+  - oraclejdk9
+matrix:
+  allow_failures:
+    - jdk: oraclejdk9
 script:
+- java -version
+- ./gradlew -version
+- ./gradlew clean check
 - gradle assemble
 install:
+- ./gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.1-20160725000019+0000-bin.zip
 - /bin/true
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
