@@ -20,13 +20,11 @@ public class Launcher {
         HttpConnectionFactory http1 = new HttpConnectionFactory(config);
 
         // HTTP/2 cleartext support.
-        HTTP2CServerConnectionFactory http2c = new HTTP2CServerConnectionFactory(config);
+        HTTP2CServerConnectionFactory http2 = new HTTP2CServerConnectionFactory(config);
 
-        ServerConnector connector = new ServerConnector(server, http1, http2c);
+        ServerConnector connector = new ServerConnector(server, http1, http2);
         connector.setPort(8080);
         server.addConnector(connector);
-
-        // Here configure contexts / servlets / etc.
 
         // 设置在JVM退出时关闭Jetty的钩子。
         server.setStopAtShutdown(true);

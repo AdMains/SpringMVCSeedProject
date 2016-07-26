@@ -1,4 +1,4 @@
-# SpringMVCSeedProject [![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject.svg?branch=master)](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject)
+# SpringMVCSeedProject
 
     Seed Project For SpringMVC
 
