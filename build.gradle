@@ -23,8 +23,8 @@ repositories {
     //依赖下不下来将上面一行取消注释
     //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
     maven { url "http://maven.oschina.net/content/groups/public/" }
-    maven { url "http://repo.spring.io/release" }
     mavenCentral()
+    maven { url "http://repo.spring.io/release" }
     maven { url "https://repo.spring.io/libs-snapshot" }
 }
 
