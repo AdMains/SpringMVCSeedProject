@@ -1,4 +1,4 @@
-# SpringMVCSeedProject
+# SpringMVCSeedProject [![Build Status](http://210.31.198.175:8080/jenkins/job/SpringMVCSeedProject/badge/icon)](https://github.com/izhangzhihao/SpringMVCSeedProject)
 
     Seed Project For SpringMVC
 
