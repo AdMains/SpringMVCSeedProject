@@ -20,8 +20,10 @@ def JacksonVersion = "2.7.4"
 
 repositories {
     mavenLocal()
-    //依赖下不下来将上面一行取消注释
+    //内网nexus私服地址
     maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
+    //外网nexus私服地址
+    //maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
     maven { url "http://maven.oschina.net/content/groups/public/" }
     mavenCentral()
     maven { url "http://repo.spring.io/release" }
