@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.ParameterExpression;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -269,6 +270,48 @@ public class BaseDaoTest extends BaseTest {
     }
 
     /**
+     * 对saveOrUpdateAll的单元测试
+     */
+    @Test
+    public void saveOrUpdateAll_SaveTest() {
+        List<User> userList = asList(getRandomUser()
+                , getRandomUser()
+                , getRandomUser()
+        );
+        userDao.saveOrUpdateAll(userList);
+    }
+
+    /**
+     * 对saveOrUpdateAll的单元测试
+     */
+    @Test
+    public void saveOrUpdateAll_UpdateTest() {
+        List<User> userList = asList(getRandomUser()
+                , getRandomUser()
+                , getRandomUser()
+        );
+        userDao.saveAll(userList);
+        userDao.saveOrUpdateAll(userList);
+    }
+
+    /**
+     * 对saveOrUpdateAll的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = NullPointerException.class)
+    public void saveOrUpdateAll_NullTest() {
+        userDao.saveOrUpdateAll(null);
+    }
+
+    /**
+     * 对saveOrUpdateAll的单元测试
+     */
+    @Test
+    public void saveOrUpdateAll_NullListTest() {
+        userDao.saveOrUpdateAll(new ArrayList<>());
+    }
+
+    /**
      * 对getById的单元测试
      */
     @Test
@@ -401,7 +444,9 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void getCountByJpqlTest() {
-        //TODO
+        String jpql = "select COUNT(o) from User o where o.userName = ?0 ";
+        int result = userDao.getCountByJpql(jpql, "admin");
+        assertEquals(result, 1);
     }
 
     /**
@@ -419,7 +464,9 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void executeJpqlTest() {
-        //TODO
+        String jpql = "update User u set u.passWord=?0 where u.userName = ?1 ";
+        int result = userDao.executeJpql(jpql, "admin", "admin");
+        assertEquals(result, 1);
     }
 
     /**
