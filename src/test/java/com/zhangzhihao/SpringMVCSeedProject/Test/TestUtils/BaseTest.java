@@ -1,5 +1,7 @@
 package com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils;
 
+import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
+import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -10,6 +12,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.StringUtils.getRandomUUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -24,5 +28,9 @@ public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Test
     public void NullTest() {
 
+    }
+
+    public static User getRandomUser() {
+        return new User(getRandomUUID(), getRandomUUID(), AuthorityType.Admin);
     }
 }

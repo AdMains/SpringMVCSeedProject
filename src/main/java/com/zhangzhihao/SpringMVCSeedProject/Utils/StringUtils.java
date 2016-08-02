@@ -1,6 +1,8 @@
 package com.zhangzhihao.SpringMVCSeedProject.Utils;
 
 
+import java.util.UUID;
+
 public class StringUtils {
     /**
      * 是Null或""吗？
@@ -8,9 +10,14 @@ public class StringUtils {
      * @param value 需要判断的对象
      * @return 是Null或""吗？
      */
-    private boolean isNullOrEmpty(final Object value) {
+    public static boolean isNullOrEmpty(final Object value) {
         if (value instanceof String)
             return "".equals(value);
         return value == null;
     }
+
+    public static String getRandomUUID() {
+        return UUID.randomUUID().toString();
+    }
+
 }

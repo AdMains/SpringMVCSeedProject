@@ -16,8 +16,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.ParameterExpression;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.StringUtils.getRandomUUID;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
@@ -34,83 +34,282 @@ public class BaseDaoTest extends BaseTest {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * 对contains的单元测试
+     */
     @Test
-    public void containsTest() {
-        User user = new User(UUID.randomUUID().toString(), UUID.randomUUID().toString(), AuthorityType.School_Level_Admin);
-        boolean contains = userDao.contains(user);
-        assertFalse(contains);
+    public void containsExistTest() {
+        User user = getRandomUser();
+        userDao.save(user);
+        assertTrue(userDao.contains(user));
     }
 
+    /**
+     * 对contains的单元测试
+     */
     @Test
-    public void detachTest() {
-        User user = new User(UUID.randomUUID().toString(), UUID.randomUUID().toString(), AuthorityType.School_Level_Admin);
+    public void containsNotExistTest() {
+        User user = getRandomUser();
+        assertFalse(userDao.contains(user));
+    }
+
+    /**
+     * 对contains的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void containsNullTest() {
+        userDao.contains(null);
+    }
+
+    /**
+     * 对detach的单元测试
+     */
+    @Test
+    public void detachExistTest() {
+        User user = getRandomUser();
         userDao.save(user);
         userDao.detach(user);
         boolean contains = userDao.contains(user);
         assertFalse(contains);
     }
 
+    /**
+     * 对detach的单元测试
+     */
     @Test
-    public void saveTest() {
-        userDao.save(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
-        Teacher teacher = new Teacher("name", "BaseDao");
-        System.out.println(teacher);
-        teacherDao.save(teacher);
-        System.out.println(teacher);
+    public void detachNotExistTest() {
+        User user = getRandomUser();
+        userDao.detach(user);
     }
 
-    @Test
-    public void deleteTest() {
-        userDao.save(new User("66666", UUID.randomUUID().toString(), AuthorityType.Admin));
-        userDao.deleteById(User.class, "66666");
+    /**
+     * 对detach的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void detachNullTest() {
+        userDao.detach(null);
     }
 
+    /**
+     * 对save的单元测试
+     */
     @Test
-    public void deleteAllTest() {
-        List<User> all = userDao.getAll(User.class);
-        userDao.deleteAll(all);
+    public void saveNewTest() {
+        userDao.save(getRandomUser());
     }
 
+    /**
+     * 对save的单元测试
+     */
     @Test
-    public void updateTest() {
-        User user = userDao.getById(User.class, "admin");
-        if (user == null) {
-            userDao.save(new User("admin", "admin", AuthorityType.Admin));
-        }
-        user = userDao.getById(User.class, "admin");
-        user.setAuthorityType(AuthorityType.School_Level_Admin);
+    public void saveExistTest() {
+        final User user = getRandomUser();
+        userDao.save(user);
+        userDao.save(user);
+    }
+
+    /**
+     * 对save的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void saveNullTest() {
+        userDao.save(null);
+    }
+
+    /**
+     * 对saveAll的单元测试
+     */
+    @Test
+    public void saveAllNewTest() {
+        List<User> userList = asList(getRandomUser()
+                , getRandomUser()
+                , getRandomUser()
+        );
+        userDao.saveAll(userList);
+    }
+
+    /**
+     * 对saveAll的单元测试
+     */
+    @Test
+    public void saveAllExistTest() {
+        List<User> userList = asList(getRandomUser()
+                , getRandomUser()
+                , getRandomUser()
+        );
+        userDao.saveAll(userList);
+        userDao.saveAll(userList);
+    }
+
+    /**
+     * 对saveAll的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void saveAllNullTest() {
+        userDao.saveAll(null);
+    }
+
+    /**
+     * 对delete的单元测试
+     */
+    @Test
+    public void deleteExistTest() {
+        User user = getRandomUser();
+        userDao.save(user);
+        userDao.delete(user);
+    }
+
+    /**
+     * 对delete的单元测试
+     */
+    @Test
+    public void deleteNotExistTest() {
+        userDao.delete(getRandomUser());
+    }
+
+    /**
+     * 对delete的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteNullTest() {
+        userDao.delete(null);
+    }
+
+    /**
+     * 对delete的单元测试
+     */
+    @Test
+    public void deleteAllExistTest() {
+        List<User> userList = asList(getRandomUser()
+                , getRandomUser()
+                , getRandomUser()
+        );
+        userDao.saveAll(userList);
+        userDao.deleteAll(userList);
+    }
+
+    /**
+     * 对delete的单元测试
+     */
+    @Test
+    public void deleteAllNotExistTest() {
+        List<User> userList = asList(getRandomUser()
+                , getRandomUser()
+                , getRandomUser()
+        );
+        userDao.deleteAll(userList);
+    }
+
+    /**
+     * 对delete的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteAllNullTest() {
+        userDao.deleteAll(null);
+    }
+
+    /**
+     * 对deleteById的单元测试
+     */
+    public void deleteByExistIdTest() {
+        User user = getRandomUser();
+        userDao.save(user);
+        userDao.deleteById(User.class, user.getUserName());
+    }
+
+    /**
+     * 对deleteById的单元测试
+     */
+    public void deleteByNotExistIdTest() {
+        userDao.deleteById(User.class, getRandomUUID());
+    }
+
+    /**
+     * 对deleteById的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteByNullIdTest() {
+        userDao.deleteById(User.class, null);
+    }
+
+    /**
+     * 对saveOrUpdate的单元测试
+     */
+    @Test
+    public void saveOrUpdate_SaveTest() {
+        User user = getRandomUser();
         userDao.saveOrUpdate(user);
     }
 
+    /**
+     * 对saveOrUpdate的单元测试
+     */
     @Test
-    public void saveOrUpdateTest() {
-        User user = userDao.getById(User.class, "admin");
-        if (user == null) {
-            user = new User("admin", "admin", AuthorityType.Admin);
-            userDao.save(user);
-        }
-        user.setAuthorityType(AuthorityType.Admin);
+    public void saveOrUpdate_UpdateTest() {
+        User user = getRandomUser();
+        userDao.save(user);
+        user.setPassWord("changed!");
         userDao.saveOrUpdate(user);
-
-        userDao.saveOrUpdate(new User(UUID.randomUUID().toString(), "BaseDao", AuthorityType.Admin));
     }
 
+    /**
+     * 对saveOrUpdate的单元测试
+     */
+    @SuppressWarnings("ConstantConditions")
+    @Test(expected = IllegalArgumentException.class)
+    public void saveOrUpdate_NullTest() {
+        userDao.saveOrUpdate(null);
+    }
+
+    /**
+     * 对getById的单元测试
+     */
     @Test
-    public void getByIntegerIdTest() {
+    public void getByExistIntegerIdTest() {
         Teacher teacher = new Teacher("name", "password");
         teacherDao.save(teacher);
         assertEquals(teacher.getId(), teacherDao.getById(Teacher.class, teacher.getId()).getId());
     }
 
+    /**
+     * 对getById的单元测试
+     */
     @Test
-    public void getByStringIdTest() {
-        String username = UUID.randomUUID().toString();
-        User admin = new User(username, "password", AuthorityType.Admin);
-        userDao.save(admin);
-        User byId = userDao.getById(User.class, username);
-        assertEquals(byId.getUserName(), username);
+    public void getByNotExistIntegerIdTest() {
+        Teacher byId = teacherDao.getById(Teacher.class, new Random().nextInt());
+        assertNull(byId);
     }
 
+    /**
+     * 对getById的单元测试
+     */
+    @Test
+    public void getByExistStringIdTest() {
+        User admin = getRandomUser();
+        userDao.save(admin);
+        User byId = userDao.getById(User.class, admin.getUserName());
+        assertEquals(byId, admin);
+    }
+
+    /**
+     * 对getById的单元测试
+     */
+    @Test
+    public void getByNotExistStringIdTest() {
+        User byId = userDao.getById(User.class, getRandomUUID());
+        assertNull(byId);
+    }
+
+    /**
+     * 对getAll的单元测试
+     */
     @Test
     public void getAllTest() {
         List<User> userList = userDao.getAll(User.class);
@@ -121,6 +320,32 @@ public class BaseDaoTest extends BaseTest {
         assertNotNull(userList);
     }
 
+    /**
+     * 对getCount的单元测试
+     */
+    @Test
+    public void getCountTest() {
+        int count = userDao.getCount(User.class);
+        System.out.println(count);
+    }
+
+    /**
+     * 对getListByPage的单元测试
+     */
+    @Test
+    public void getListByPageTest() {
+        PageResults<User> userPageResults = userDao.getListByPage(User.class, -7, 2);
+        List<User> listByPage = userPageResults.getResults();
+        if (listByPage.size() > 0) {
+            listByPage.forEach(System.out::println);
+        }
+        System.out.println(userPageResults);
+        assertNotNull(listByPage);
+    }
+
+    /**
+     * 对getAllByQuery的单元测试
+     */
     @Test
     public void getAllByQueryTest() {
         Query query = new Query(User.class, entityManager);
@@ -137,15 +362,82 @@ public class BaseDaoTest extends BaseTest {
         }
     }
 
+
+    /**
+     * 对getCountByQuery的单元测试
+     */
     @Test
-    public void getListByPageTest() {
-        PageResults<User> userPageResults = userDao.getListByPage(User.class, -7, 2);
-        List<User> listByPage = userPageResults.getResults();
-        if (listByPage.size() > 0) {
-            listByPage.forEach(System.out::println);
-        }
-        System.out.println(userPageResults);
-        assertNotNull(listByPage);
+    public void getCountByQueryTest() {
+        Query query = new Query(entityManager);
+        query.from(User.class)
+                .whereEqual("authorityType", AuthorityType.College_Level_Admin);
+        int countByQuery = userDao.getCountByQuery(query);
+        System.out.println(countByQuery);
+    }
+
+    /**
+     * 对executeSql的单元测试
+     */
+    @Test
+    public void executeSqlTest() {
+        String sql = "insert into Teacher (id,name,password) values (?,?,?)";
+        Random random = new Random();
+        int i = teacherDao.executeSql(sql, random.nextInt(), "admin", "admin");//这里数据库名要和大小写一致！！！
+        assertEquals(1, i);
+    }
+
+    /**
+     * 对queryByJpql的单元测试
+     */
+    @Test
+    public void queryByJpqlTest() {
+        String jpql = "select o from User o where o.passWord = ?0 ";
+        PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql, "BaseDao");
+        results.getResults().forEach(System.out::println);
+    }
+
+    /**
+     * 对getCountByJpql的单元测试
+     */
+    @Test
+    public void getCountByJpqlTest() {
+        //TODO
+    }
+
+    /**
+     * 对getListByPageAndJpql的单元测试
+     */
+    @Test
+    public void getListByPageAndJpqlTest() {
+        String jpql = "select o from User o where o.userName = ?0 ";
+        List<User> users = (List<User>) userDao.queryByJpql(jpql, "admin");
+        users.forEach(System.out::println);
+    }
+
+    /**
+     * 对executeJpql的单元测试
+     */
+    @Test
+    public void executeJpqlTest() {
+        //TODO
+    }
+
+    /**
+     * 对refresh的单元测试
+     */
+    @Test
+    public void refreshExistTest() {
+        User randomUser = getRandomUser();
+        userDao.save(randomUser);
+        userDao.refresh(randomUser);
+    }
+
+    /**
+     * 对refresh的单元测试
+     */
+    @Test
+    public void refreshNotExistTest() {
+        userDao.refresh(getRandomUser());
     }
 
     @Test
@@ -190,26 +482,6 @@ public class BaseDaoTest extends BaseTest {
         assertNotNull(results);
     }
 
-    @Test
-    public void getCountTest() {
-        int count = userDao.getCount(User.class);
-        System.out.println(count);
-    }
-
-    @Test
-    public void getCountByQueryTest() {
-        Query query = new Query(entityManager);
-        /*ParameterExpression<Enum> parameter = query.createParameter(Enum.class);
-        TypedQuery typedQuery = query.from(User.class)
-				.whereEqual("authorityType", parameter)
-				.createTypedQuery()
-				.setParameter(parameter, AuthorityType.Admin);*/
-        query.from(User.class)
-                .whereEqual("authorityType", AuthorityType.College_Level_Admin);
-
-        int countByQuery = userDao.getCountByQuery(query);
-        System.out.println(countByQuery);
-    }
 
     @Test
     public void getStatisticsByQueryTest() {
@@ -286,26 +558,5 @@ public class BaseDaoTest extends BaseTest {
                 .forEach(System.out::println);
     }
 
-    @Test
-    public void queryByJpqlTest() {
-        String jpql = "select o from User o where o.passWord = ?0 ";
-        PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql, "BaseDao");
-        results.getResults().forEach(System.out::println);
-    }
-
-    @Test
-    public void getListByPageAndJpqlTest() {
-        String jpql = "select o from User o where o.userName = ?0 ";
-        List<User> users = (List<User>) userDao.queryByJpql(jpql, "admin");
-        users.forEach(System.out::println);
-    }
-
-    @Test
-    public void executeSqlTest() {
-        String sql = "insert into Teacher (id,name,password) values (?,?,?)";
-        Random random = new Random();
-        int i = teacherDao.executeSql(sql, random.nextInt(), "admin", "admin");//这里数据库名要和大小写一致！！！
-        assertEquals(1, i);
-    }
 
 }
