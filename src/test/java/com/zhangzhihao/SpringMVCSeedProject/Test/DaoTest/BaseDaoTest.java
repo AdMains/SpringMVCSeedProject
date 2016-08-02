@@ -57,7 +57,7 @@ public class BaseDaoTest extends BaseTest {
      * 对contains的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void containsNullTest() {
         userDao.contains(null);
     }
@@ -87,7 +87,7 @@ public class BaseDaoTest extends BaseTest {
      * 对detach的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void detachNullTest() {
         userDao.detach(null);
     }
@@ -148,7 +148,7 @@ public class BaseDaoTest extends BaseTest {
      * 对saveAll的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void saveAllNullTest() {
         userDao.saveAll(null);
     }
@@ -196,7 +196,7 @@ public class BaseDaoTest extends BaseTest {
     /**
      * 对delete的单元测试
      */
-    @Test
+    @Test(expected = Exception.class)
     public void deleteAllNotExistTest() {
         List<User> userList = asList(getRandomUser()
                 , getRandomUser()
@@ -209,7 +209,7 @@ public class BaseDaoTest extends BaseTest {
      * 对delete的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void deleteAllNullTest() {
         userDao.deleteAll(null);
     }
@@ -425,7 +425,7 @@ public class BaseDaoTest extends BaseTest {
     /**
      * 对refresh的单元测试
      */
-    @Test
+    @Test(expected = Exception.class)
     public void refreshExistTest() {
         User randomUser = getRandomUser();
         userDao.save(randomUser);
@@ -435,7 +435,7 @@ public class BaseDaoTest extends BaseTest {
     /**
      * 对refresh的单元测试
      */
-    @Test
+    @Test(expected = Exception.class)
     public void refreshNotExistTest() {
         userDao.refresh(getRandomUser());
     }
