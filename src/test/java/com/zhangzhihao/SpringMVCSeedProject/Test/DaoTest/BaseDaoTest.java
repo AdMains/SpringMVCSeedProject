@@ -455,8 +455,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void getListByPageAndJpqlTest() {
         String jpql = "select o from User o where o.userName = ?0 ";
-        List<User> users = (List<User>) userDao.queryByJpql(jpql, "admin");
-        users.forEach(System.out::println);
+        PageResults<Object> pageResults = userDao.getListByPageAndJpql(1, 5, jpql, "admin");
+        assertNotNull(pageResults);
     }
 
     /**
@@ -506,6 +506,15 @@ public class BaseDaoTest extends BaseTest {
         assertNotNull(results);
     }
 
+    @Test
+    public void getPageResultsByQueryTest() throws Exception {
+        Query query = new Query(entityManager);
+        query.from(User.class)
+                .whereEqual("userName", "admin");
+        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 5, query);
+        List<User> results = listByPageAndQuery.getResults();
+        assertNotNull(results);
+    }
 
     @Test
     public void getListByPageAndQueryTest2() throws Exception {
