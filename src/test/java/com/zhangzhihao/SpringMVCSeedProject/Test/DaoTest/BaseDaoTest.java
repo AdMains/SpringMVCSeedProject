@@ -60,7 +60,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = Exception.class)
     public void containsNullTest() {
-        assertFalse(userDao.contains(null));
+        userDao.contains(null);
     }
 
     /**
