@@ -58,9 +58,9 @@ public class BaseDaoTest extends BaseTest {
      * 对contains的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = Exception.class)
+    @Test
     public void containsNullTest() {
-        userDao.contains(null);
+        assertFalse(userDao.contains(null));
     }
 
     /**
