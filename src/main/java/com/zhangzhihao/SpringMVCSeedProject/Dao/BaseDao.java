@@ -353,6 +353,9 @@ public class BaseDao<T> {
 
     /**
      * refresh 刷新实体状态
+     * 若在加载某个Entity实例之后，而数据库因另一个操作而发生变动，
+     * 可以使用refresh()方法，将数据库的更改加载到Entity实例中，
+     * 若Entity先前有了更改，则会被覆盖
      *
      * @param model 实体
      */
@@ -360,6 +363,12 @@ public class BaseDao<T> {
         entityManager.refresh(model);
     }
 
+    /**
+     * 使用flush()方法，强制EntityManager中管理的所有Entity对应的数据库与实体状态同步
+     */
+    public void flush() {
+        entityManager.flush();
+    }
 
 }
 

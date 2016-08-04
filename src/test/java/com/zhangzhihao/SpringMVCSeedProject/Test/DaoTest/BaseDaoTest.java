@@ -58,7 +58,7 @@ public class BaseDaoTest extends BaseTest {
      * 对contains的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test
+    @Test(expected = Exception.class)
     public void containsNullTest() {
         assertFalse(userDao.contains(null));
     }
@@ -88,7 +88,7 @@ public class BaseDaoTest extends BaseTest {
      * 对detach的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
+    @Test(expected = Exception.class)
     public void detachNullTest() {
         userDao.detach(null);
     }
@@ -298,7 +298,7 @@ public class BaseDaoTest extends BaseTest {
      * 对saveOrUpdateAll的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = NullPointerException.class)
+    @Test(expected = Exception.class)
     public void saveOrUpdateAll_NullTest() {
         userDao.saveOrUpdateAll(null);
     }
@@ -542,5 +542,13 @@ public class BaseDaoTest extends BaseTest {
     @Test(expected = Exception.class)
     public void refreshNotExistTest() {
         userDao.refresh(getRandomUser());
+    }
+
+    /**
+     * 对flush的单元测试
+     */
+    @Test
+    public void flushTest() {
+        userDao.flush();
     }
 }
