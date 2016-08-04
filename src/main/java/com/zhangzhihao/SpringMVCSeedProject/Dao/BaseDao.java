@@ -369,6 +369,5 @@ public class BaseDao<T> {
     public void flush() {
         entityManager.flush();
     }
-
 }
 

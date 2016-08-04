@@ -29,6 +29,25 @@ class BaseService<T> {
     }
 
     /**
+     * 这个实体是否存在在数据库
+     *
+     * @param model 实体
+     * @return 是否存在
+     */
+    public boolean contains(@NotNull final T model) {
+        return baseDao.contains(model);
+    }
+
+    /**
+     * 使实体变为不受管理的状态
+     *
+     * @param model 实体
+     */
+    public void detach(@NotNull final T model) {
+        baseDao.detach(model);
+    }
+
+    /**
      * 保存对象
      *
      * @param model 需要添加的对象
@@ -116,6 +135,16 @@ class BaseService<T> {
         return baseDao.getAll(modelClass);
     }
 
+    /**
+     * 获得数量 利用Count(*)实现
+     *
+     * @param modelClass 类型，比如User.class
+     * @return 数量
+     */
+    @Transactional(readOnly = true)
+    public int getCount(Class<T> modelClass) {
+        return baseDao.getCount(modelClass);
+    }
 
     /**
      * 分页查询
@@ -125,7 +154,7 @@ class BaseService<T> {
      * @return 查询结果
      */
     public PageResults<T> getListByPage(@NotNull final Integer currentPageNumber,
-                                 @NotNull final Integer pageSize)
+                                        @NotNull final Integer pageSize)
             throws Exception {
         return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
     }
@@ -227,10 +256,20 @@ class BaseService<T> {
 
     /**
      * refresh 刷新实体状态
+     * 若在加载某个Entity实例之后，而数据库因另一个操作而发生变动，
+     * 可以使用refresh()方法，将数据库的更改加载到Entity实例中，
+     * 若Entity先前有了更改，则会被覆盖
      *
      * @param model 实体
      */
-    public void refresh(@NotNull T model) throws Exception {
+    public void refresh(@NotNull T model) {
         baseDao.refresh(model);
+    }
+
+    /**
+     * 使用flush()方法，强制EntityManager中管理的所有Entity对应的数据库与实体状态同步
+     */
+    public void flush() {
+        baseDao.flush();
     }
 }
