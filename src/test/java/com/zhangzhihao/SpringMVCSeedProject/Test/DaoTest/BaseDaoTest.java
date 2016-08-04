@@ -387,6 +387,53 @@ public class BaseDaoTest extends BaseTest {
     }
 
     /**
+     * 对getListByPageAndQuery的单元测试
+     */
+    @Test
+    public void getListByPageAndQueryTest() throws Exception {
+        Query query = new Query(entityManager);
+        query.from(User.class)
+                .whereEqual("userName", "admin");
+        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 3, query);
+        System.out.println(listByPageAndQuery);
+        List<User> results = listByPageAndQuery.getResults();
+        if (!results.isEmpty()) {
+            results.forEach(System.out::println);
+        }
+        assertNotNull(results);
+    }
+
+    /**
+     * 对getListByPageAndQuery的单元测试
+     */
+    @Test
+    public void getListByPageAndQueryTest2() throws Exception {
+        Query query = new Query(entityManager);
+
+        query.from(User.class)
+                .whereIsNotNull("userName");
+
+        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 5, query);
+        List<User> results = listByPageAndQuery.getResults();
+        System.out.println(listByPageAndQuery);
+        assertNotNull(results);
+    }
+
+    /**
+     * 对getPageResultsByQuery的单元测试
+     */
+    @Test
+    public void getPageResultsByQueryTest() throws Exception {
+        Query query = new Query(entityManager);
+        query.from(User.class)
+                .whereEqual("userName", "admin");
+        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 5, query);
+        List<User> results = listByPageAndQuery.getResults();
+        assertNotNull(results);
+    }
+
+
+    /**
      * 对getAllByQuery的单元测试
      */
     @Test
@@ -440,6 +487,16 @@ public class BaseDaoTest extends BaseTest {
     }
 
     /**
+     * 对queryByJpql的单元测试
+     */
+    @Test
+    public void queryByJpqlTest2() {
+        String jpql = "select o from User o where 1=1 ";
+        PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql);
+        results.getResults().forEach(System.out::println);
+    }
+
+    /**
      * 对getCountByJpql的单元测试
      */
     @Test
@@ -486,133 +543,4 @@ public class BaseDaoTest extends BaseTest {
     public void refreshNotExistTest() {
         userDao.refresh(getRandomUser());
     }
-
-    @Test
-    public void getListByPageAndQueryTest() throws Exception {
-        Query query = new Query(entityManager);
-        query.from(User.class)
-                .whereEqual("userName", "admin");
-        //.whereEqual("authorityType", AuthorityType.Admin);
-        /*TypedQuery typedQuery = query.from(User.class)
-                .whereEqual("authorityType", parameter1)
-				.createTypedQuery()
-				.setParameter(parameter1, AuthorityType.Admin);*/
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 3, query);
-        System.out.println(listByPageAndQuery);
-        List<User> results = listByPageAndQuery.getResults();
-        if (!results.isEmpty()) {
-            results.forEach(System.out::println);
-        }
-        assertNotNull(results);
-    }
-
-    @Test
-    public void getPageResultsByQueryTest() throws Exception {
-        Query query = new Query(entityManager);
-        query.from(User.class)
-                .whereEqual("userName", "admin");
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 5, query);
-        List<User> results = listByPageAndQuery.getResults();
-        assertNotNull(results);
-    }
-
-    @Test
-    public void getListByPageAndQueryTest2() throws Exception {
-        Query query = new Query(entityManager);
-        //ParameterExpression<String> parameter = query.createParameter(String.class);
-
-		/*TypedQuery typedQuery = query.from(User.class)
-                .whereLike("passWord", parameter)
-				.createTypedQuery()
-				.setParameter(parameter, "BaseDao");*/
-
-        query.from(User.class)
-                .whereLike("passWord", "BaseDao");
-
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
-        List<User> results = listByPageAndQuery.getResults();
-        System.out.println(listByPageAndQuery);
-        if (!results.isEmpty()) {
-            results.forEach(System.out::println);
-        }
-        assertNotNull(results);
-    }
-
-
-    @Test
-    public void getStatisticsByQueryTest() {
-        Query query = new Query(entityManager);
-        ParameterExpression<Enum> parameter = query.createParameter(Enum.class);
-        query.from(User.class)
-                .whereNotEqual("authorityType", parameter)
-                .whereIsNotNull("userName")
-                .groupBy("passWord")
-                .createTypedQuery()
-                .setParameter(parameter, AuthorityType.Admin)
-                .getResultList()
-                .forEach(System.out::println);
-
-    }
-
-    @Test
-    public void getStatisticsByQueryTestSuccess() {
-        Query query = new Query(entityManager);
-        query.from(User.class)
-                .whereNotEqual("authorityType", AuthorityType.Admin)
-                .whereIsNotNull("userName")
-                .groupBy("passWord")
-                .createTypedQuery()
-                .getResultList()
-                .forEach(System.out::println);
-
-    }
-
-    @Test
-    public void getStatisticsByQueryTest2() {
-        Query query = new Query(entityManager);
-        ParameterExpression parameter = query.createParameter(String.class);
-        query.from(Teacher.class)
-                .selectMax("id")
-                .whereNotEqual("name", parameter)
-                .whereIsNotNull("name")
-                .groupBy("passWord")
-                .createTypedQuery()
-                .setParameter(parameter, "name")
-                .getResultList()
-                .forEach(System.out::println);
-    }
-
-    @Test
-    public void getStatisticsByQueryTest3() {
-        Query query = new Query(entityManager);
-        ParameterExpression parameter = query.createParameter(String.class);
-        query.from(Teacher.class)
-                .selectMax("id")
-                .whereNotEqual("name", parameter)
-                .whereIsNotNull("name")
-                .groupBy("passWord")
-                .createTypedQuery()
-                .setParameter(parameter, "name")
-                .getResultList()
-                .forEach(System.out::println);
-    }
-
-    @Test
-    public void getStatisticsByQueryTest4() {
-        Query query = new Query(entityManager);
-        ParameterExpression parameter = query.createParameter(Enum.class);
-        ParameterExpression parameter2 = query.createParameter(Enum.class);
-        ParameterExpression parameter3 = query.createParameter(Enum.class);
-        query.from(User.class)
-                .select()
-                .whereIn("authorityType", asList(parameter, parameter2, parameter3))
-                .createTypedQuery()
-                .setParameter(parameter, AuthorityType.Teacher)
-                .setParameter(parameter2, AuthorityType.Expert)
-                .setParameter(parameter3, AuthorityType.College_Level_Admin)
-                .getResultList()
-                .forEach(System.out::println);
-    }
-
-
 }
