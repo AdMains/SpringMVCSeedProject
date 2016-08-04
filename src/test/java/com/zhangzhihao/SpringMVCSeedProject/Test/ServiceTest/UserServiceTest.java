@@ -33,7 +33,7 @@ public class UserServiceTest extends BaseTest {
      * 对makeSHA256PasswordWithSalt的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void makeSHA256PasswordWithSaltNullTest() {
         makeSHA256PasswordWithSalt(null);
     }
@@ -60,7 +60,7 @@ public class UserServiceTest extends BaseTest {
      * 对save的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void saveNullTest() throws Exception {
         service.save(null);
     }
@@ -97,7 +97,7 @@ public class UserServiceTest extends BaseTest {
      * 对saveAll的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void saveAllNullTest() throws Exception {
         service.saveAll(null);
     }
@@ -127,7 +127,7 @@ public class UserServiceTest extends BaseTest {
      * 对updatePassWord的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void updatePassWordNullTest() throws Exception {
         service.updatePassWord(null);
     }
@@ -165,7 +165,7 @@ public class UserServiceTest extends BaseTest {
      * 对updateAllPassWord的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void updateAllPassWordNullTest() throws Exception {
         service.updateAllPassWord(null);
     }
@@ -194,7 +194,7 @@ public class UserServiceTest extends BaseTest {
      * 对saveOrUpdate的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void saveOrUpdate_NullTest() throws Exception {
         service.saveOrUpdate(null);
     }
@@ -228,7 +228,7 @@ public class UserServiceTest extends BaseTest {
      * 对saveOrUpdateAll的单元测试
      */
     @SuppressWarnings("ConstantConditions")
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void saveOrUpdateAll_NullTest() throws Exception {
         service.saveOrUpdateAll(null);
     }
