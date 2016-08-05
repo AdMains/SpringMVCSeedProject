@@ -128,7 +128,7 @@
     </bean>
 
     <!-- 項目自定义的Realm -->
-    <bean id="shiroRealm" class="com.zhangzhihao.SpringMVCSeedProject.Dao.ShiroRealm"/>
+    <bean id="shiroRealm" class="com.zhangzhihao.SpringMVCSeedProject.Repository.ShiroRealm"/>
 
     <!-- Shiro Filter -->
     <bean id="shiroFilter"

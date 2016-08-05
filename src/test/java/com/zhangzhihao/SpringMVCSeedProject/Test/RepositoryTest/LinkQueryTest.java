@@ -1,8 +1,8 @@
-package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
+package com.zhangzhihao.SpringMVCSeedProject.Test.RepositoryTest;
 
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.BaseRepository;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Model.BankCard;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
@@ -24,13 +24,13 @@ import java.util.Random;
 @SuppressWarnings({"unchecked", "SpringJavaAutowiredMembersInspection"})
 public class LinkQueryTest extends BaseTest {
     @Autowired
-    private BaseDao<User> userDao;
+    private BaseRepository<User> userRepository;
 
     @Autowired
-    private BaseDao<Teacher> teacherDao;
+    private BaseRepository<Teacher> teacherRepository;
 
     @Autowired
-    private BaseDao<BankCard> bankCardDao;
+    private BaseRepository<BankCard> bankCardRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -38,7 +38,7 @@ public class LinkQueryTest extends BaseTest {
     //@Test
     public void addUser() {
         User user = new User("admin", "admin", AuthorityType.Admin);
-        userDao.save(user);
+        userRepository.save(user);
     }
 
     //@Test
@@ -47,7 +47,7 @@ public class LinkQueryTest extends BaseTest {
         for (int i = 0; i < 100; i++) {
             userList.add(new User(i + "", i + "", AuthorityType.Admin));
         }
-        userDao.saveAll(userList);
+        userRepository.saveAll(userList);
         List<BankCard> bankCardList = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
@@ -56,16 +56,16 @@ public class LinkQueryTest extends BaseTest {
             bankCardList.add(currentCard);
             currentUser.setBankCard(currentCard);
         }
-        userDao.saveOrUpdateAll(userList);
-        bankCardDao.saveOrUpdateAll(bankCardList);
+        userRepository.saveOrUpdateAll(userList);
+        bankCardRepository.saveOrUpdateAll(bankCardList);
     }
 
     //@Test
     public void addBankCard() {
-        User admin = userDao.getById(User.class, "admin");
+        User admin = userRepository.getById(User.class, "admin");
         BankCard bankCard = new BankCard("8888", "建行", admin.getUserName(), admin);
-        userDao.saveOrUpdate(admin);
-        bankCardDao.saveOrUpdate(bankCard);
+        userRepository.saveOrUpdate(admin);
+        bankCardRepository.saveOrUpdate(bankCard);
     }
 
     @Test

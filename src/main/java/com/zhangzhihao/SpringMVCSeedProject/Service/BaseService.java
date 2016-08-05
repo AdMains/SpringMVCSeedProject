@@ -1,8 +1,8 @@
 package com.zhangzhihao.SpringMVCSeedProject.Service;
 
 
-import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.BaseRepository;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional
 class BaseService<T> {
     @Autowired
-    private BaseDao<T> baseDao;
+    private BaseRepository<T> baseRepository;
     private Class<T> modelClass;
 
     BaseService() {
@@ -36,7 +36,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public boolean contains(@NotNull final T model) {
-        return baseDao.contains(model);
+        return baseRepository.contains(model);
     }
 
     /**
@@ -45,7 +45,7 @@ class BaseService<T> {
      * @param model 实体
      */
     public void detach(@NotNull final T model) {
-        baseDao.detach(model);
+        baseRepository.detach(model);
     }
 
     /**
@@ -54,7 +54,7 @@ class BaseService<T> {
      * @param model 需要添加的对象
      */
     public void save(@NotNull final T model) throws Exception {
-        baseDao.save(model);
+        baseRepository.save(model);
     }
 
     /**
@@ -64,7 +64,7 @@ class BaseService<T> {
      *                  失败会抛异常
      */
     public void saveAll(@NotNull final List<T> modelList) throws Exception {
-        baseDao.saveAll(modelList);
+        baseRepository.saveAll(modelList);
     }
 
     /**
@@ -74,7 +74,7 @@ class BaseService<T> {
      *              失败会抛异常
      */
     public void delete(@NotNull final T model) throws Exception {
-        baseDao.delete(model);
+        baseRepository.delete(model);
     }
 
     /**
@@ -84,7 +84,7 @@ class BaseService<T> {
      *                  失败会抛异常
      */
     public void deleteAll(@NotNull final List<T> modelList) throws Exception {
-        baseDao.deleteAll(modelList);
+        baseRepository.deleteAll(modelList);
     }
 
     /**
@@ -94,7 +94,7 @@ class BaseService<T> {
      *           失败抛出异常
      */
     public void deleteById(@NotNull final Serializable id) throws Exception {
-        baseDao.deleteById(modelClass, id);
+        baseRepository.deleteById(modelClass, id);
     }
 
     /**
@@ -104,7 +104,7 @@ class BaseService<T> {
      *              失败会抛出异常
      */
     public void saveOrUpdate(@NotNull final T model) throws Exception {
-        baseDao.saveOrUpdate(model);
+        baseRepository.saveOrUpdate(model);
     }
 
     /**
@@ -114,7 +114,7 @@ class BaseService<T> {
      *                  失败会抛出异常
      */
     public void saveOrUpdateAll(@NotNull final List<T> modelList) throws Exception {
-        baseDao.saveOrUpdateAll(modelList);
+        baseRepository.saveOrUpdateAll(modelList);
     }
 
     /**
@@ -125,7 +125,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public T getById(@NotNull final Serializable id) throws Exception {
-        return baseDao.getById(modelClass, id);
+        return baseRepository.getById(modelClass, id);
     }
 
     /**
@@ -135,7 +135,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public List<T> getAll() throws Exception {
-        return baseDao.getAll(modelClass);
+        return baseRepository.getAll(modelClass);
     }
 
     /**
@@ -146,7 +146,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public int getCount(Class<T> modelClass) {
-        return baseDao.getCount(modelClass);
+        return baseRepository.getCount(modelClass);
     }
 
     /**
@@ -160,7 +160,7 @@ class BaseService<T> {
     public PageResults<T> getListByPage(@NotNull final Integer currentPageNumber,
                                         @NotNull final Integer pageSize)
             throws Exception {
-        return baseDao.getListByPage(modelClass, currentPageNumber, pageSize);
+        return baseRepository.getListByPage(modelClass, currentPageNumber, pageSize);
     }
 
     /**
@@ -176,7 +176,7 @@ class BaseService<T> {
                                                 @NotNull Integer pageSize,
                                                 @NotNull Query query)
             throws Exception {
-        return baseDao.getListByPageAndQuery(currentPageNumber, pageSize, query);
+        return baseRepository.getListByPageAndQuery(currentPageNumber, pageSize, query);
     }
 
     /**
@@ -186,7 +186,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public int getCount() throws Exception {
-        return baseDao.getCount(modelClass);
+        return baseRepository.getCount(modelClass);
     }
 
     /**
@@ -197,7 +197,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public int getCountByQuery(@NotNull final Query query) throws Exception {
-        return baseDao.getCountByQuery(query);
+        return baseRepository.getCountByQuery(query);
     }
 
     /**
@@ -209,7 +209,7 @@ class BaseService<T> {
      */
     public int executeSql(@NotNull final String sql, @NotNull final Object... values)
             throws Exception {
-        return baseDao.executeSql(sql, values);
+        return baseRepository.executeSql(sql, values);
     }
 
     /**
@@ -221,7 +221,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
-        return baseDao.queryByJpql(jpql, values);
+        return baseRepository.queryByJpql(jpql, values);
     }
 
     /**
@@ -232,7 +232,7 @@ class BaseService<T> {
      */
     @Transactional(readOnly = true)
     public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
-        return baseDao.getCountByJpql(jpql, values);
+        return baseRepository.getCountByJpql(jpql, values);
     }
 
 
@@ -250,7 +250,7 @@ class BaseService<T> {
                                                     @NotNull Integer pageSize,
                                                     @NotNull final String jpql,
                                                     @NotNull Object... values) {
-        return baseDao.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
+        return baseRepository.getListByPageAndJpql(currentPageNumber, pageSize, jpql, values);
     }
 
     /**
@@ -261,7 +261,7 @@ class BaseService<T> {
      * @return 受影响的行数
      */
     public int executeJpql(@NotNull final String jpql, @NotNull final Object... values) {
-        return baseDao.executeJpql(jpql, values);
+        return baseRepository.executeJpql(jpql, values);
     }
 
     /**
@@ -273,13 +273,13 @@ class BaseService<T> {
      * @param model 实体
      */
     public void refresh(@NotNull T model) {
-        baseDao.refresh(model);
+        baseRepository.refresh(model);
     }
 
     /**
      * 使用flush()方法，强制EntityManager中管理的所有Entity对应的数据库与实体状态同步
      */
     public void flush() {
-        baseDao.flush();
+        baseRepository.flush();
     }
 }

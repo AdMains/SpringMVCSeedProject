@@ -1,8 +1,8 @@
-package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
+package com.zhangzhihao.SpringMVCSeedProject.Test.RepositoryTest;
 
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.BaseRepository;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
@@ -22,10 +22,10 @@ import static org.junit.Assert.assertNotNull;
 public class QueryTest extends BaseTest {
 
     @Autowired
-    private BaseDao<User> userDao;
+    private BaseRepository<User> userRepository;
 
     @Autowired
-    private BaseDao<Teacher> teacherDao;
+    private BaseRepository<Teacher> teacherRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -35,7 +35,7 @@ public class QueryTest extends BaseTest {
         Query query = new Query(entityManager);
         query.from(User.class)
                 .whereEqual("authorityType", AuthorityType.Admin)
-                .whereLike("passWord", "BaseDao")
+                .whereLike("passWord", "BaseRepository")
                 .createTypedQuery()
                 .getResultList()
                 .forEach(System.out::println);
@@ -49,7 +49,7 @@ public class QueryTest extends BaseTest {
 				.createTypedQuery();*/
         query.from(User.class)
                 .whereEqual("authorityType", AuthorityType.School_Level_Admin);
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
+        PageResults<User> listByPageAndQuery = userRepository.getListByPageAndQuery(2, 3, query);
         System.out.println(listByPageAndQuery);
         List<User> results = listByPageAndQuery.getResults();
         if (!results.isEmpty()) {
@@ -64,12 +64,12 @@ public class QueryTest extends BaseTest {
         Query query = new Query(entityManager);
 
 		/*TypedQuery typedQuery = query.from(User.class)
-				.whereLike("passWord", "BaseDao")
+				.whereLike("passWord", "BaseRepository")
 				.createTypedQuery();*/
         query.from(User.class)
                 .whereEqual("authorityType", AuthorityType.School_Level_Admin);
 
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 3, query);
+        PageResults<User> listByPageAndQuery = userRepository.getListByPageAndQuery(2, 3, query);
         List<User> results = listByPageAndQuery.getResults();
         System.out.println(listByPageAndQuery);
         if (!results.isEmpty()) {
@@ -86,7 +86,7 @@ public class QueryTest extends BaseTest {
 				.createTypedQuery();*/
         query.from(User.class)
                 .whereEqual("authorityType", AuthorityType.Admin);
-        int countByQuery = userDao.getCountByQuery(query);
+        int countByQuery = userRepository.getCountByQuery(query);
         System.out.println(countByQuery);
     }
 
@@ -108,7 +108,7 @@ public class QueryTest extends BaseTest {
         Query query = new Query(entityManager);
         query.from(User.class)
                 .whereNotEqual("authorityType", AuthorityType.Admin)
-                .whereEqual("passWord", "BaseDao")
+                .whereEqual("passWord", "BaseRepository")
                 .whereIsNotNull("userName")
                 .groupBy("passWord")
                 .createTypedQuery()
@@ -163,7 +163,7 @@ public class QueryTest extends BaseTest {
                 .select()
                 .whereValueNotIn("authorityType", asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
                 .whereIsNotNull("passWord")
-                .whereNotEqual("passWord", "BaseDao")
+                .whereNotEqual("passWord", "BaseRepository")
                 .whereNotEqual("userName", "test")
                 .createTypedQuery()
                 .getResultList()
@@ -177,7 +177,7 @@ public class QueryTest extends BaseTest {
                 .selectCount()
                 .whereValueNotIn("authorityType", asList(AuthorityType.Teacher, AuthorityType.Expert, AuthorityType.College_Level_Admin))
                 .whereIsNotNull("passWord")
-                .whereNotEqual("passWord", "BaseDao")
+                .whereNotEqual("passWord", "BaseRepository")
                 .whereNotEqual("userName", "test")
                 .createTypedQuery()
                 .getResultList()

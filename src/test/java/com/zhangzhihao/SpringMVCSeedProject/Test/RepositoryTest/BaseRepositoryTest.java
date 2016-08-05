@@ -1,9 +1,9 @@
-package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
+package com.zhangzhihao.SpringMVCSeedProject.Test.RepositoryTest;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.BaseRepository;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Teacher;
 import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
@@ -24,13 +24,13 @@ import static org.junit.Assert.*;
 
 
 @SuppressWarnings({"unchecked", "SpringJavaAutowiredMembersInspection"})
-public class BaseDaoTest extends BaseTest {
+public class BaseRepositoryTest extends BaseTest {
 
     @Autowired
-    private BaseDao<User> userDao;
+    private BaseRepository<User> userRepository;
 
     @Autowired
-    private BaseDao<Teacher> teacherDao;
+    private BaseRepository<Teacher> teacherRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -41,8 +41,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void containsExistTest() {
         User user = getRandomUser();
-        userDao.save(user);
-        assertTrue(userDao.contains(user));
+        userRepository.save(user);
+        assertTrue(userRepository.contains(user));
     }
 
     /**
@@ -51,7 +51,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void containsNotExistTest() {
         User user = getRandomUser();
-        assertFalse(userDao.contains(user));
+        assertFalse(userRepository.contains(user));
     }
 
     /**
@@ -60,7 +60,7 @@ public class BaseDaoTest extends BaseTest {
     /*@SuppressWarnings("ConstantConditions")
     @Test
     public void containsNullTest() {
-        assertFalse(userDao.contains(null));
+        assertFalse(userRepository.contains(null));
     }*/
 
     /**
@@ -69,9 +69,9 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void detachExistTest() {
         User user = getRandomUser();
-        userDao.save(user);
-        userDao.detach(user);
-        boolean contains = userDao.contains(user);
+        userRepository.save(user);
+        userRepository.detach(user);
+        boolean contains = userRepository.contains(user);
         assertFalse(contains);
     }
 
@@ -81,7 +81,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void detachNotExistTest() {
         User user = getRandomUser();
-        userDao.detach(user);
+        userRepository.detach(user);
     }
 
     /**
@@ -90,7 +90,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = Exception.class)
     public void detachNullTest() {
-        userDao.detach(null);
+        userRepository.detach(null);
     }
 
     /**
@@ -98,7 +98,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void saveNewTest() {
-        userDao.save(getRandomUser());
+        userRepository.save(getRandomUser());
     }
 
     /**
@@ -107,8 +107,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void saveExistTest() {
         final User user = getRandomUser();
-        userDao.save(user);
-        userDao.save(user);
+        userRepository.save(user);
+        userRepository.save(user);
     }
 
     /**
@@ -117,7 +117,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = IllegalArgumentException.class)
     public void saveNullTest() {
-        userDao.save(null);
+        userRepository.save(null);
     }
 
     /**
@@ -129,7 +129,7 @@ public class BaseDaoTest extends BaseTest {
                 , getRandomUser()
                 , getRandomUser()
         );
-        userDao.saveAll(userList);
+        userRepository.saveAll(userList);
     }
 
     /**
@@ -141,8 +141,8 @@ public class BaseDaoTest extends BaseTest {
                 , getRandomUser()
                 , getRandomUser()
         );
-        userDao.saveAll(userList);
-        userDao.saveAll(userList);
+        userRepository.saveAll(userList);
+        userRepository.saveAll(userList);
     }
 
     /**
@@ -151,7 +151,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = Exception.class)
     public void saveAllNullTest() {
-        userDao.saveAll(null);
+        userRepository.saveAll(null);
     }
 
     /**
@@ -160,8 +160,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void deleteExistTest() {
         User user = getRandomUser();
-        userDao.save(user);
-        userDao.delete(user);
+        userRepository.save(user);
+        userRepository.delete(user);
     }
 
     /**
@@ -169,7 +169,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void deleteNotExistTest() {
-        userDao.delete(getRandomUser());
+        userRepository.delete(getRandomUser());
     }
 
     /**
@@ -178,7 +178,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = IllegalArgumentException.class)
     public void deleteNullTest() {
-        userDao.delete(null);
+        userRepository.delete(null);
     }
 
     /**
@@ -190,8 +190,8 @@ public class BaseDaoTest extends BaseTest {
                 , getRandomUser()
                 , getRandomUser()
         );
-        userDao.saveAll(userList);
-        userDao.deleteAll(userList);
+        userRepository.saveAll(userList);
+        userRepository.deleteAll(userList);
     }
 
     /**
@@ -203,7 +203,7 @@ public class BaseDaoTest extends BaseTest {
                 , getRandomUser()
                 , getRandomUser()
         );
-        userDao.deleteAll(userList);
+        userRepository.deleteAll(userList);
     }
 
     /**
@@ -212,7 +212,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = Exception.class)
     public void deleteAllNullTest() {
-        userDao.deleteAll(null);
+        userRepository.deleteAll(null);
     }
 
     /**
@@ -220,15 +220,15 @@ public class BaseDaoTest extends BaseTest {
      */
     public void deleteByExistIdTest() {
         User user = getRandomUser();
-        userDao.save(user);
-        userDao.deleteById(User.class, user.getUserName());
+        userRepository.save(user);
+        userRepository.deleteById(User.class, user.getUserName());
     }
 
     /**
      * 对deleteById的单元测试
      */
     public void deleteByNotExistIdTest() {
-        userDao.deleteById(User.class, getRandomUUID());
+        userRepository.deleteById(User.class, getRandomUUID());
     }
 
     /**
@@ -237,7 +237,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = IllegalArgumentException.class)
     public void deleteByNullIdTest() {
-        userDao.deleteById(User.class, null);
+        userRepository.deleteById(User.class, null);
     }
 
     /**
@@ -246,7 +246,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void saveOrUpdate_SaveTest() {
         User user = getRandomUser();
-        userDao.saveOrUpdate(user);
+        userRepository.saveOrUpdate(user);
     }
 
     /**
@@ -255,9 +255,9 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void saveOrUpdate_UpdateTest() {
         User user = getRandomUser();
-        userDao.save(user);
+        userRepository.save(user);
         user.setPassWord("changed!");
-        userDao.saveOrUpdate(user);
+        userRepository.saveOrUpdate(user);
     }
 
     /**
@@ -266,7 +266,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = IllegalArgumentException.class)
     public void saveOrUpdate_NullTest() {
-        userDao.saveOrUpdate(null);
+        userRepository.saveOrUpdate(null);
     }
 
     /**
@@ -278,7 +278,7 @@ public class BaseDaoTest extends BaseTest {
                 , getRandomUser()
                 , getRandomUser()
         );
-        userDao.saveOrUpdateAll(userList);
+        userRepository.saveOrUpdateAll(userList);
     }
 
     /**
@@ -290,8 +290,8 @@ public class BaseDaoTest extends BaseTest {
                 , getRandomUser()
                 , getRandomUser()
         );
-        userDao.saveAll(userList);
-        userDao.saveOrUpdateAll(userList);
+        userRepository.saveAll(userList);
+        userRepository.saveOrUpdateAll(userList);
     }
 
     /**
@@ -300,7 +300,7 @@ public class BaseDaoTest extends BaseTest {
     @SuppressWarnings("ConstantConditions")
     @Test(expected = Exception.class)
     public void saveOrUpdateAll_NullTest() {
-        userDao.saveOrUpdateAll(null);
+        userRepository.saveOrUpdateAll(null);
     }
 
     /**
@@ -308,7 +308,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void saveOrUpdateAll_NullListTest() {
-        userDao.saveOrUpdateAll(new ArrayList<>());
+        userRepository.saveOrUpdateAll(new ArrayList<>());
     }
 
     /**
@@ -317,8 +317,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void getByExistIntegerIdTest() {
         Teacher teacher = new Teacher("name", "password");
-        teacherDao.save(teacher);
-        assertEquals(teacher.getId(), teacherDao.getById(Teacher.class, teacher.getId()).getId());
+        teacherRepository.save(teacher);
+        assertEquals(teacher.getId(), teacherRepository.getById(Teacher.class, teacher.getId()).getId());
     }
 
     /**
@@ -326,7 +326,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void getByNotExistIntegerIdTest() {
-        Teacher byId = teacherDao.getById(Teacher.class, new Random().nextInt());
+        Teacher byId = teacherRepository.getById(Teacher.class, new Random().nextInt());
         assertNull(byId);
     }
 
@@ -336,8 +336,8 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void getByExistStringIdTest() {
         User admin = getRandomUser();
-        userDao.save(admin);
-        User byId = userDao.getById(User.class, admin.getUserName());
+        userRepository.save(admin);
+        User byId = userRepository.getById(User.class, admin.getUserName());
         assertEquals(byId, admin);
     }
 
@@ -346,7 +346,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void getByNotExistStringIdTest() {
-        User byId = userDao.getById(User.class, getRandomUUID());
+        User byId = userRepository.getById(User.class, getRandomUUID());
         assertNull(byId);
     }
 
@@ -355,7 +355,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void getAllTest() {
-        List<User> userList = userDao.getAll(User.class);
+        List<User> userList = userRepository.getAll(User.class);
         System.out.println(userList);
         if (userList.size() > 0) {
             userList.forEach(System.out::println);
@@ -368,7 +368,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void getCountTest() {
-        int count = userDao.getCount(User.class);
+        int count = userRepository.getCount(User.class);
         System.out.println(count);
     }
 
@@ -377,7 +377,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void getListByPageTest() {
-        PageResults<User> userPageResults = userDao.getListByPage(User.class, -7, 2);
+        PageResults<User> userPageResults = userRepository.getListByPage(User.class, -7, 2);
         List<User> listByPage = userPageResults.getResults();
         if (listByPage.size() > 0) {
             listByPage.forEach(System.out::println);
@@ -394,7 +394,7 @@ public class BaseDaoTest extends BaseTest {
         Query query = new Query(entityManager);
         query.from(User.class)
                 .whereEqual("userName", "admin");
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 3, query);
+        PageResults<User> listByPageAndQuery = userRepository.getListByPageAndQuery(1, 3, query);
         System.out.println(listByPageAndQuery);
         List<User> results = listByPageAndQuery.getResults();
         if (!results.isEmpty()) {
@@ -413,7 +413,7 @@ public class BaseDaoTest extends BaseTest {
         query.from(User.class)
                 .whereIsNotNull("userName");
 
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(2, 5, query);
+        PageResults<User> listByPageAndQuery = userRepository.getListByPageAndQuery(2, 5, query);
         List<User> results = listByPageAndQuery.getResults();
         System.out.println(listByPageAndQuery);
         assertNotNull(results);
@@ -427,7 +427,7 @@ public class BaseDaoTest extends BaseTest {
         Query query = new Query(entityManager);
         query.from(User.class)
                 .whereEqual("userName", "admin");
-        PageResults<User> listByPageAndQuery = userDao.getListByPageAndQuery(1, 5, query);
+        PageResults<User> listByPageAndQuery = userRepository.getListByPageAndQuery(1, 5, query);
         List<User> results = listByPageAndQuery.getResults();
         assertNotNull(results);
     }
@@ -445,7 +445,7 @@ public class BaseDaoTest extends BaseTest {
                 .whereLike("passWord", parameter2)
                 .createTypedQuery()
                 .setParameter(parameter1, AuthorityType.College_Level_Admin)
-                .setParameter(parameter2, "BaseDao")
+                .setParameter(parameter2, "BaseRepository")
                 .getResultList();
         if (resultList != null) {
             resultList.forEach(System.out::println);
@@ -461,7 +461,7 @@ public class BaseDaoTest extends BaseTest {
         Query query = new Query(entityManager);
         query.from(User.class)
                 .whereEqual("authorityType", AuthorityType.College_Level_Admin);
-        int countByQuery = userDao.getCountByQuery(query);
+        int countByQuery = userRepository.getCountByQuery(query);
         System.out.println(countByQuery);
     }
 
@@ -472,7 +472,7 @@ public class BaseDaoTest extends BaseTest {
     public void executeSqlTest() {
         String sql = "insert into Teacher (id,name,password) values (?,?,?)";
         Random random = new Random();
-        int i = teacherDao.executeSql(sql, random.nextInt(), "admin", "admin");//这里数据库名要和大小写一致！！！
+        int i = teacherRepository.executeSql(sql, random.nextInt(), "admin", "admin");//这里数据库名要和大小写一致！！！
         assertEquals(1, i);
     }
 
@@ -482,7 +482,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void queryByJpqlTest() {
         String jpql = "select o from User o where o.passWord = ?0 ";
-        PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql, "BaseDao");
+        PageResults<Object> results = userRepository.getListByPageAndJpql(2, 5, jpql, "BaseRepository");
         results.getResults().forEach(System.out::println);
     }
 
@@ -492,7 +492,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void queryByJpqlTest2() {
         String jpql = "select o from User o where 1=1 ";
-        PageResults<Object> results = userDao.getListByPageAndJpql(2, 5, jpql);
+        PageResults<Object> results = userRepository.getListByPageAndJpql(2, 5, jpql);
         results.getResults().forEach(System.out::println);
     }
 
@@ -502,7 +502,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void getCountByJpqlTest() {
         String jpql = "select COUNT(o) from User o where o.userName = ?0 ";
-        int result = userDao.getCountByJpql(jpql, "admin");
+        int result = userRepository.getCountByJpql(jpql, "admin");
         assertEquals(result, 1);
     }
 
@@ -512,7 +512,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void getListByPageAndJpqlTest() {
         String jpql = "select o from User o where o.userName = ?0 ";
-        PageResults<Object> pageResults = userDao.getListByPageAndJpql(1, 5, jpql, "admin");
+        PageResults<Object> pageResults = userRepository.getListByPageAndJpql(1, 5, jpql, "admin");
         assertNotNull(pageResults);
     }
 
@@ -522,7 +522,7 @@ public class BaseDaoTest extends BaseTest {
     @Test
     public void executeJpqlTest() {
         String jpql = "update User u set u.passWord=?0 where u.userName = ?1 ";
-        int result = userDao.executeJpql(jpql, "admin", "admin");
+        int result = userRepository.executeJpql(jpql, "admin", "admin");
         assertEquals(result, 1);
     }
 
@@ -532,8 +532,8 @@ public class BaseDaoTest extends BaseTest {
     @Test(expected = Exception.class)
     public void refreshExistTest() {
         User randomUser = getRandomUser();
-        userDao.save(randomUser);
-        userDao.refresh(randomUser);
+        userRepository.save(randomUser);
+        userRepository.refresh(randomUser);
     }
 
     /**
@@ -541,7 +541,7 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test(expected = Exception.class)
     public void refreshNotExistTest() {
-        userDao.refresh(getRandomUser());
+        userRepository.refresh(getRandomUser());
     }
 
     /**
@@ -549,6 +549,6 @@ public class BaseDaoTest extends BaseTest {
      */
     @Test
     public void flushTest() {
-        userDao.flush();
+        userRepository.flush();
     }
 }

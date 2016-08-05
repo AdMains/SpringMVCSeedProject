@@ -1,4 +1,4 @@
-package com.zhangzhihao.SpringMVCSeedProject.Dao;
+package com.zhangzhihao.SpringMVCSeedProject.Repository;
 
 
 import lombok.Getter;

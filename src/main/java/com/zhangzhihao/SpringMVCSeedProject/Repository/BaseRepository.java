@@ -1,4 +1,4 @@
-package com.zhangzhihao.SpringMVCSeedProject.Dao;
+package com.zhangzhihao.SpringMVCSeedProject.Repository;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
@@ -25,7 +25,7 @@ import java.util.List;
 // propagation = Propagation.REQUIRES_NEW,加上注释的这句单元测试不会回滚，事务失效
 @Repository
 @Primary
-public class BaseDao<T> {
+public class BaseRepository<T> {
 
     //获取到和当前事务关联的 EntityManager 对象
     //实际上是获得EntityManager的代理对象，是线程安全的

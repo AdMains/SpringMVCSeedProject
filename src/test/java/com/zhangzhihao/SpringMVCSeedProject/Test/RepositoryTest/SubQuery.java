@@ -1,8 +1,8 @@
-package com.zhangzhihao.SpringMVCSeedProject.Test.DaoTest;
+package com.zhangzhihao.SpringMVCSeedProject.Test.RepositoryTest;
 
 
-import com.zhangzhihao.SpringMVCSeedProject.Dao.BaseDao;
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.BaseRepository;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Model.*;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Test;
@@ -19,15 +19,15 @@ import javax.persistence.criteria.Subquery;
 @SuppressWarnings({"unchecked", "SpringJavaAutowiredMembersInspection"})
 public class SubQuery extends BaseTest {
     @Autowired
-    private BaseDao<User> userDao;
+    private BaseRepository<User> userRepository;
 
 
 
     @Autowired
-    private BaseDao<Teacher> teacherDao;
+    private BaseRepository<Teacher> teacherRepository;
 
     @Autowired
-    private BaseDao<BankCard> bankCardDao;
+    private BaseRepository<BankCard> bankCardRepository;
 
     @PersistenceContext
     private EntityManager entityManager;

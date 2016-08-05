@@ -1,4 +1,4 @@
-package com.zhangzhihao.SpringMVCSeedProject.Dao;
+package com.zhangzhihao.SpringMVCSeedProject.Repository;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.Model.Permission;

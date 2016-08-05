@@ -1,8 +1,8 @@
 package com.zhangzhihao.SpringMVCSeedProject.Service;
 
 
-import com.zhangzhihao.SpringMVCSeedProject.Dao.Query;
 import com.zhangzhihao.SpringMVCSeedProject.Model.Log;
+import com.zhangzhihao.SpringMVCSeedProject.Repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
