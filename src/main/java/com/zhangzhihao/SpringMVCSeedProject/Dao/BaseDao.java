@@ -39,6 +39,7 @@ public class BaseDao<T> {
      * @param model 实体
      * @return 是否存在
      */
+    @Transactional(readOnly = true)
     public boolean contains(@NotNull final T model) {
         return entityManager.contains(model);
     }

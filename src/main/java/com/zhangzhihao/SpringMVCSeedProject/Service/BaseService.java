@@ -34,6 +34,7 @@ class BaseService<T> {
      * @param model 实体
      * @return 是否存在
      */
+    @Transactional(readOnly = true)
     public boolean contains(@NotNull final T model) {
         return baseDao.contains(model);
     }
@@ -122,6 +123,7 @@ class BaseService<T> {
      * @param id 主键(Serializable)
      * @return model
      */
+    @Transactional(readOnly = true)
     public T getById(@NotNull final Serializable id) throws Exception {
         return baseDao.getById(modelClass, id);
     }
@@ -131,6 +133,7 @@ class BaseService<T> {
      *
      * @return List
      */
+    @Transactional(readOnly = true)
     public List<T> getAll() throws Exception {
         return baseDao.getAll(modelClass);
     }
@@ -153,6 +156,7 @@ class BaseService<T> {
      * @param pageSize          每页数量
      * @return 查询结果
      */
+    @Transactional(readOnly = true)
     public PageResults<T> getListByPage(@NotNull final Integer currentPageNumber,
                                         @NotNull final Integer pageSize)
             throws Exception {
@@ -167,6 +171,7 @@ class BaseService<T> {
      * @param query             封装的查询条件
      * @return 查询结果
      */
+    @Transactional(readOnly = true)
     public PageResults<T> getListByPageAndQuery(@NotNull Integer currentPageNumber,
                                                 @NotNull Integer pageSize,
                                                 @NotNull Query query)
@@ -179,6 +184,7 @@ class BaseService<T> {
      *
      * @return 数量
      */
+    @Transactional(readOnly = true)
     public int getCount() throws Exception {
         return baseDao.getCount(modelClass);
     }
@@ -189,6 +195,7 @@ class BaseService<T> {
      * @param query 查询条件
      * @return 数量
      */
+    @Transactional(readOnly = true)
     public int getCountByQuery(@NotNull final Query query) throws Exception {
         return baseDao.getCountByQuery(query);
     }
@@ -212,6 +219,7 @@ class BaseService<T> {
      * @param values 参数列表
      * @return 受影响的行数
      */
+    @Transactional(readOnly = true)
     public Object queryByJpql(@NotNull final String jpql, @NotNull final Object... values) {
         return baseDao.queryByJpql(jpql, values);
     }
@@ -222,6 +230,7 @@ class BaseService<T> {
      * @param jpql jpql查询条件
      * @return 数量
      */
+    @Transactional(readOnly = true)
     public int getCountByJpql(@NotNull final String jpql, @NotNull final Object... values) {
         return baseDao.getCountByJpql(jpql, values);
     }
@@ -236,6 +245,7 @@ class BaseService<T> {
      * @param values            jpql参数
      * @return 查询结果
      */
+    @Transactional(readOnly = true)
     public PageResults<Object> getListByPageAndJpql(@NotNull Integer currentPageNumber,
                                                     @NotNull Integer pageSize,
                                                     @NotNull final String jpql,
