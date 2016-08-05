@@ -217,7 +217,7 @@ public class BaseDao<T> {
 
         pageResults.initPageResults(pageSize, totalCount, currentPageNumber);
 
-        int FirstResult = 0;
+        int FirstResult;
         if (pageResults.getCurrentPage() == 1) {
             FirstResult = 0;
         } else {
@@ -321,7 +321,7 @@ public class BaseDao<T> {
             query.setParameter(i, values[i]);
         }
 
-        int FirstResult = 0;
+        int FirstResult;
         if (pageResults.getCurrentPage() == 1) {
             FirstResult = 0;
         } else {
