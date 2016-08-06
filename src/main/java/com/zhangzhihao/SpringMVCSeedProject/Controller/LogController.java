@@ -1,14 +1,14 @@
 package com.zhangzhihao.SpringMVCSeedProject.Controller;
 
-import com.zhangzhihao.SpringMVCSeedProject.Model.Log;
 import com.zhangzhihao.SpringMVCSeedProject.Service.LogService;
-import com.zhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
@@ -25,23 +25,46 @@ public class LogController {
      * @return 日志统计界面
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String LogPage(Map<String, Object> map) {
-        Long LogUtilsCount = logService.getExceptionCountByCaller_filename("LogUtils.java");//Controller出了异常
-        Long LogAspectCount = logService.getExceptionCountByCaller_filename("LogAspect.java");//自定义类异常
-        Long otherCount = logService.getExceptionCount() - LogAspectCount - LogUtilsCount;
-        map.put("LogUtilsCount", LogUtilsCount);
-        map.put("LogAspectCount", LogAspectCount);
-        map.put("otherCount", otherCount);
-        List<Log> listByPage = null;
-        try {
-            PageResults<Log> logPageResults = logService.getListByPage(1, 10);
-            listByPage=logPageResults.getResults();
-        } catch (Exception e) {
-            LogToDB(e);
-        }
-        map.put("list",listByPage);
+    public String logPage() {
         return "Log/Log";
     }
 
+    /**
+     * 获得日志的错误信息，日志条数
+     * @return json数据
+     */
+    @RequestMapping("/getLogInfo")
+    @ResponseBody
+    public Map<String,Long> getLogInfo(){
+        Map<String,Long> map=new HashMap<>();
+        Long LogUtilsCount = logService.getExceptionCountByCallerFilename("LogUtils.java");//Controller出了异常
+        Long LogAspectCount = logService.getExceptionCountByCallerFilename("LogAspect.java");//自定义类异常
+        long totalCount = logService.getExceptionCount();
+        Long otherCount = totalCount - LogAspectCount - LogUtilsCount;
+        map.put("totalCount", totalCount);
+        map.put("LogUtilsCount", LogUtilsCount);
+        map.put("LogAspectCount", LogAspectCount);
+        map.put("otherCount", otherCount);
+        return map;
+    }
+
+    /**
+     * 日志分页查询
+     *
+     * @param pageNumber 页码
+     * @param pageSize   每页大小
+     * @return json数据
+     */
+    @RequestMapping(value = "/getLogByPage", method = RequestMethod.GET)
+    @ResponseBody
+    public Object getLogByPage(@RequestParam int pageNumber,
+                                  @RequestParam int pageSize) {
+        try {
+            return logService.getListByPage(pageNumber, pageSize);
+        } catch (Exception e) {
+            LogToDB(e);
+            return "";
+        }
+    }
 
 }
