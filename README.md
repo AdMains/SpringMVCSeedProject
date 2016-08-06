@@ -13,7 +13,6 @@
     '/src/main/resources/'路径下面的 
     MyBatis.xml generatorConfig.xml Hibernate.cfg.xml logback.xml 均未使用，只是作为配置文件模板，以备以后查询
 
-# 不想写XML？
-    试试SpringMVCWithJavaConfig [![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCWithJavaConfig.svg?branch=master)](https://github.com/izhangzhihao/SpringMVCWithJavaConfig)
+# 不想写XML？试试SpringMVCWithJavaConfig [![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCWithJavaConfig.svg?branch=master)](https://github.com/izhangzhihao/SpringMVCWithJavaConfig)
     没有Spring.xml,没有SpringMVC.xml,连web.xml也没有，通过类型安全的JavaConfig配置SpringMVC应用
 
