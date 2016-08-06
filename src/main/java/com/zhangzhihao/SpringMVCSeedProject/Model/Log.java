@@ -17,8 +17,12 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Log implements Serializable{
-    private static final long serialVersionUID =468468487400228L;
+public class Log implements Serializable {
+    private static final long serialVersionUID = 468468487400228L;
+    @Id
+    @GeneratedValue(generator = "generator")
+    @GenericGenerator(name = "generator", strategy = "increment")
+    private Long event_id;
     private String timestmp;
     private String formatted_message;
     private String logger_name;
@@ -33,8 +37,4 @@ public class Log implements Serializable{
     private String caller_class;
     private String caller_method;
     private String caller_line;
-    @Id
-    @GeneratedValue(generator = "generator")
-    @GenericGenerator(name = "generator", strategy = "increment")
-    private Long event_id;
 }

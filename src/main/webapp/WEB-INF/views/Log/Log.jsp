@@ -16,48 +16,59 @@
                             var listResults = data["results"];
 
                             var pagination = $("#pagination");
+                            pagination.empty();
                             var previousPage = data["previousPage"];
                             var currentPage = data["currentPage"];
                             var pageCount = data["pageCount"];
                             var nextPage = data["nextPage"];
                             //拼接上一页
                             if (previousPage < 1 || previousPage >= currentPage) {//上一页不可达
-                                pagination.append("<li class='disabled'><a href='#'>&laquo;</a></li>");
+                                pagination.append("<li class='disabled paging'><a pageNumber='1'>&laquo;</a></li>");
                             } else {
-                                pagination.append("<li><a href='#' pageNumber=" + previousPage + ">&laquo;</a></li>");
+                                pagination.append("<li class='paging'><a pageNumber=" + previousPage + ">&laquo;</a></li>");
                             }
 
                             //拼接页码
                             for (var page = 1; page <= pageCount; page++) {
                                 if (page == currentPage) {
-                                    pagination.append("<li class='active'><a href='#' pageNumber=" + page + ">" + page + "</a></li>")
+                                    pagination.append("<li class='active paging'><a pageNumber=" + page + ">" + page + "</a></li>")
                                 } else {
-                                    pagination.append("<li><a href='#' pageNumber=" + page + ">" + page + "</a></li>")
+                                    pagination.append("<li class='paging'><a pageNumber=" + page + ">" + page + "</a></li>")
                                 }
                             }
 
                             //拼接下一页
                             if (nextPage < 1 || nextPage <= currentPage) {//下一页不可达
-                                pagination.append("<li class='disabled'><a href='#'>&raquo;</a></li>");
+                                pagination.append("<li class='disabled paging'><a pageNumber=" + nextPage + ">&raquo;</a></li>");
                             } else {
-                                pagination.append("<li><a href='#' pageNumber=" + nextPage + ">&raquo;</a></li>");
+                                pagination.append("<li class='paging'><a pageNumber=" + nextPage + ">&raquo;</a></li>");
                             }
 
+                            $(".paging").click(function() {
+                                var selectedPageNumber = this.getElementsByTagName("a")[0].getAttribute("pageNumber");
+                                //console.lg(this.getElementsByTagName("a")[0].innerHTML);
+                                Paging(selectedPageNumber,10);
+                            });
 
+                            $("#LogTableBody").empty();
                             for (var j = 0; j < data["totalCount"]; j++) {
                                 var result = listResults[j];
-                                //noinspection JSUnresolvedVariable
-                                $("#LogTableBody")
-                                        .append("<tr>")
-                                        .append("<th><span class='co-name'>" + result.event_id + "</span></th>")
-                                        .append("<td>" + result.timestmp + "</td>")
-                                        .append("<td>" + result.formatted_message + "</td>")
-                                        .append("<td>" + result.logger_name + "</td>")
-                                        .append("<td>" + result.arg0 + "</td>")
-                                        .append("<td>" + result.arg1 + "</td>")
-                                        .append("<td>" + result.arg2 + "</td>")
-                                        .append("<td>" + result.arg3 + "</td>")
-                                        .append("</tr>");
+                                try{
+                                    //noinspection JSUnresolvedVariable
+                                    $("#LogTableBody")
+                                            .append("<tr>")
+                                            .append("<th><span class='co-name'>" + result.event_id + "</span></th>")
+                                            .append("<td>" + result.timestmp + "</td>")
+                                            .append("<td>" + result.formatted_message + "</td>")
+                                            .append("<td>" + result.logger_name + "</td>")
+                                            .append("<td>" + result.arg0 + "</td>")
+                                            .append("<td>" + result.arg1 + "</td>")
+                                            .append("<td>" + result.arg2 + "</td>")
+                                            .append("<td>" + result.arg3 + "</td>")
+                                            .append("</tr>");
+                                }catch(e){
+                                    console.log(e);
+                                }
                             }
 
                         },
