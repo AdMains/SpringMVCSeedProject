@@ -5,6 +5,7 @@
 <script type="text/javascript">
     $(document).ready(
             function () {
+                var sizePerPage = 10;//每页多少条
                 function Paging(pageNumber, pageSize) {
                     $.ajax({
                         type: "Get",
@@ -44,16 +45,16 @@
                                 pagination.append("<li class='paging'><a pageNumber=" + nextPage + ">&raquo;</a></li>");
                             }
 
-                            $(".paging").click(function() {
+                            $(".paging").click(function () {
                                 var selectedPageNumber = this.getElementsByTagName("a")[0].getAttribute("pageNumber");
                                 //console.lg(this.getElementsByTagName("a")[0].innerHTML);
-                                Paging(selectedPageNumber,10);
+                                Paging(selectedPageNumber, sizePerPage);
                             });
 
                             $("#LogTableBody").empty();
                             for (var j = 0; j < data["totalCount"]; j++) {
                                 var result = listResults[j];
-                                try{
+                                try {
                                     //noinspection JSUnresolvedVariable
                                     $("#LogTableBody")
                                             .append("<tr>")
@@ -66,7 +67,7 @@
                                             .append("<td>" + result.arg2 + "</td>")
                                             .append("<td>" + result.arg3 + "</td>")
                                             .append("</tr>");
-                                }catch(e){
+                                } catch (e) {
                                     console.log(e);
                                 }
                             }
@@ -79,7 +80,7 @@
                 }
 
                 //页面加载时自动填充第一页，每页十条
-                Paging(1, 10);
+                Paging(1, sizePerPage);
             }
     );
 </script>
@@ -213,6 +214,7 @@
 
 <script src="${pageContext.request.contextPath}/assets/js/Chart.min.js"></script>
 
+<%--suppress JSUnusedAssignment --%>
 <script type="text/javascript">
     var infoData;
     $.ajax({
@@ -239,7 +241,6 @@
         ],
         datasets: [
             {
-                <%--data: [${LogUtilsCount}, ${LogAspectCount}, ${otherCount}],--%>
                 data: [infoData["LogUtilsCount"], infoData["LogAspectCount"], infoData["otherCount"]],
                 backgroundColor: [
                     "#FF6384",
