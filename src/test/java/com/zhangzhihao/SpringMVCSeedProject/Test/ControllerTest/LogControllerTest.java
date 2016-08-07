@@ -15,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -24,18 +25,28 @@ public class LogControllerTest extends BaseTest {
 
     @Before
     public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(logController).setViewResolvers(viewResolver).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(logController)
+                .setViewResolvers(viewResolver)
+                .build();
     }
 
 
+    /**
+     * 日志页面测试
+     */
     @Test
     public void logPageTest() throws Exception {
         mockMvc.perform(get("/Log/"))
                 .andDo(print())
                 .andExpect(status().is(200))
-                .andExpect(view().name("Log/Log"));
+                .andExpect(view().name("Log/Log"))
+                .andExpect(forwardedUrl("/WEB-INF/views/Log/Log.jsp"));
     }
 
+    /**
+     * 返回日志信息测试
+     */
     @Test
     public void getLogInfoTest() throws Exception {
         String contentAsString = mockMvc
@@ -57,6 +68,9 @@ public class LogControllerTest extends BaseTest {
                 , map.get("totalCount"));
     }
 
+    /**
+     * 日志分页测试
+     */
     @Test
     public void getLogByPageTest() throws Exception {
         String contentAsString = mockMvc
