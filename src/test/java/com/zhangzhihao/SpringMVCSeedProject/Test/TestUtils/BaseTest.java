@@ -12,6 +12,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.StringUtils.getRandomUUID;
 
@@ -24,6 +25,14 @@ import static com.zhangzhihao.SpringMVCSeedProject.Utils.StringUtils.getRandomUU
 })
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
     protected MockMvc mockMvc;
+
+    protected InternalResourceViewResolver viewResolver;
+
+    public BaseTest() {
+        viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/views/");
+        viewResolver.setSuffix(".jsp");
+    }
 
     @Test
     public void NullTest() {

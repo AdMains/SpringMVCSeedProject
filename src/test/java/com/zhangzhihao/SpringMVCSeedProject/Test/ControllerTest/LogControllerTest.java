@@ -8,13 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -24,22 +24,23 @@ public class LogControllerTest extends BaseTest {
 
     @Before
     public void setup() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/views/");
-        viewResolver.setSuffix(".jsp");
         mockMvc = MockMvcBuilders.standaloneSetup(logController).setViewResolvers(viewResolver).build();
     }
+
 
     @Test
     public void logPageTest() throws Exception {
         mockMvc.perform(get("/Log/"))
+                .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(view().name("Log/Log"));
     }
 
     @Test
     public void getLogInfoTest() throws Exception {
-        String contentAsString = mockMvc.perform(get("/Log/getLogInfo"))
+        String contentAsString = mockMvc
+                .perform(get("/Log/getLogInfo"))
+                .andDo(print())
                 .andExpect(status().is(200))
                 .andReturn()
                 .getResponse()
@@ -59,10 +60,12 @@ public class LogControllerTest extends BaseTest {
     @Test
     public void getLogByPageTest() throws Exception {
         String contentAsString = mockMvc
-                .perform(get("/Log/getLogByPage")
-                        .param("pageNumber", "2")
-                        .param("pageSize", "10")
+                .perform(
+                        get("/Log/getLogByPage")
+                                .param("pageNumber", "2")
+                                .param("pageSize", "10")
                 )
+                .andDo(print())
                 .andExpect(status().is(200))
                 .andReturn()
                 .getResponse()
@@ -84,7 +87,7 @@ public class LogControllerTest extends BaseTest {
 
         int i = totalCount % pageSize;
         if (i == 0) {
-            assertEquals(totalCount / pageSize , pageCount);
+            assertEquals(totalCount / pageSize, pageCount);
         } else {
             assertEquals(totalCount / pageSize + 1, pageCount);
         }

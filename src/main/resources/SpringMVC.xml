@@ -53,7 +53,7 @@
             </bean>
             <!--避免IE执行AJAX时,返回JSON出现下载文件-->
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="supportedMediaTypes" value="text/plain;charset=UTF-8"/>
+                <property name="supportedMediaTypes" value="application/json;charset=UTF-8"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>

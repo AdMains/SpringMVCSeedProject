@@ -38,7 +38,7 @@ public class LogController {
      * 获得日志的错误信息，日志条数
      * @return json数据
      */
-    @RequestMapping("/getLogInfo")
+    @RequestMapping(value = "/getLogInfo",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Long> getLogInfo(){
         Map<String,Long> map=new HashMap<>();
