@@ -19,6 +19,11 @@ public class LogController {
     @Autowired
     private LogService logService;
 
+    /*@Inject
+    public LogController(LogService logService){
+        Assert.assertNotNull(logService,"logService不可为Null！");
+        this.logService=logService;
+    }*/
     /**
      * 日志统计界面
      *

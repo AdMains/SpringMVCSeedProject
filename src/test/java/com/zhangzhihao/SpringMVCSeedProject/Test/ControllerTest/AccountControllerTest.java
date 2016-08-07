@@ -6,6 +6,7 @@ import com.zhangzhihao.SpringMVCSeedProject.Model.User;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -19,11 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 public class AccountControllerTest extends BaseTest {
 
+	@Autowired
 	private AccountController controller;
-
-	public AccountControllerTest(){
-		controller=new AccountController();
-	}
 
 	@Before
 	public void setup() {

@@ -5,6 +5,7 @@ import com.zhangzhihao.SpringMVCSeedProject.Controller.MustLoginController;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -14,12 +15,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class MustLoginControllerTest extends BaseTest{
 
+    @Autowired
+    private MustLoginController mustLoginController;
+
     @Before
     public void setup() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
-        mockMvc = MockMvcBuilders.standaloneSetup(new MustLoginController()).setViewResolvers(viewResolver).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(mustLoginController).setViewResolvers(viewResolver).build();
     }
 
     @Test

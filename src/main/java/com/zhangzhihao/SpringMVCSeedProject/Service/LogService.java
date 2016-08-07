@@ -30,8 +30,4 @@ public class LogService extends BaseService<Log> {
                 .createTypedQuery()
                 .getSingleResult();
     }
-
-    /*public List<Log> getListByPage(){
-
-    }*/
 }
