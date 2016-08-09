@@ -15,17 +15,19 @@
                             http://www.springframework.org/schema/cache/spring-cache.xsd
                             http://www.springframework.org/schema/aop
                             http://www.springframework.org/schema/aop/spring-aop.xsd">
-    <context:component-scan base-package="com.zhangzhihao.SpringMVCSeedProject">
-        <!--spring配置不扫描以下包-->
-        <context:exclude-filter type="annotation"
-                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
-        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
-    </context:component-scan>
 
-    <!--启用AspectJ自动代理-->
-    <aop:aspectj-autoproxy/>
+    <!--配置ehcache-->
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="shared" value="true"/>
+        <property name="acceptExisting" value="true"/>
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
 
-    <import resource="Spring-JPA.xml"/>
-    <import resource="Spring-EhCache.xml"/>
-    <import resource="Spring-Shiro.xml"/>
+    <!--配置缓存管理器-->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcache"/>
+    </bean>
+    <!--启用缓存注解 注解方式配置@EnableCaching-->
+    <cache:annotation-driven cache-manager="cacheManager"/>
+
 </beans>
