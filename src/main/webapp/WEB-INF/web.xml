@@ -87,6 +87,7 @@
 
 
     <!-- Shiro filter -->
+    <!-- 通常会将其放置到最前面(即其他filter-mapping前面),以保证它是过滤器链中第一个起作用的 -->
     <filter>
         <filter-name>shiroFilter</filter-name>
         <filter-class>
