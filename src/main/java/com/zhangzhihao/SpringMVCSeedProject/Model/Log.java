@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -22,13 +19,15 @@ public class Log implements Serializable {
     @Id
     @GeneratedValue(generator = "generator")
     @GenericGenerator(name = "generator", strategy = "increment")
-    private Long event_id;
+    private Integer event_id;
+    @Column(columnDefinition="MEDIUMTEXT")
     private String timestmp;
+    @Column(columnDefinition="TEXT")
     private String formatted_message;
     private String logger_name;
     private String level_string;
     private String thread_name;
-    private Integer reference_flag;
+    private Short reference_flag;
     private String caller_filename;
     private String arg0;
     private String arg1;

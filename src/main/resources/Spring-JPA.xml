@@ -42,7 +42,7 @@
                 <!--生产环境关闭show sql，format sql-->
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.format_sql">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.hbm2ddl.auto">validate</prop><!--validate update-->
                 <prop key="cache.use_second_level_cache">true</prop>
                 <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.SingletonEhCacheRegionFactory
                 </prop>

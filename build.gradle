@@ -15,7 +15,7 @@ def SpringVersion = "4.3.1.RELEASE"
 def SpringBootVersion = "1.3.6.RELEASE"
 def HibernateVersion = "5.2.1.Final"
 def ShiroVersion = "1.2.6"
-def JacksonVersion = "2.7.4"
+def JacksonVersion = "2.8.1"
 
 
 repositories {
@@ -60,10 +60,9 @@ dependencies {
             "org.apache.commons:commons-lang3:3.4",//深拷贝
 
             //jstl
-            "javax.servlet:jstl:1.2",
+            //"javax.servlet:jstl:1.2",
 
             // JSON
-            // "com.alibaba:fastjson:1.2.6",
             "com.fasterxml.jackson.core:jackson-core:${JacksonVersion}",
             "com.fasterxml.jackson.core:jackson-databind:${JacksonVersion}",
             "com.fasterxml.jackson.core:jackson-annotations:${JacksonVersion}",
@@ -90,6 +89,9 @@ dependencies {
 
             //jUnit
             "junit:junit:4.12",
+
+            //Mockito
+            //"org.mockito:mockito-core:2.0.99-beta",
 
             //@NotNull
             "org.jetbrains:annotations:15.0",
