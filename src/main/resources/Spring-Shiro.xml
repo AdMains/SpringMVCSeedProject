@@ -9,11 +9,53 @@
     <bean id="securityManager"
           class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="shiroRealm"/>
-
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <!--<property name="sessionManager" ref="sessionManager"/>-->
+        <!--<property name="cacheManager" ref="cacheManager"/>-->
     </bean>
 
     <!-- 項目自定义的Realm -->
     <bean id="shiroRealm" class="com.zhangzhihao.SpringMVCSeedProject.Repository.ShiroRealm"/>
+
+    <!--cookie-->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- cookie有效期30天 -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <!-- rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位）-->
+        <property name="cipherKey"
+                  value="#{T(org.apache.shiro.codec.Base64).decode('5AvVhmFLUs0KTA3Kprsdag==')}"/>
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <bean id="sessionDAO"
+          class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO"/>
+
+    <!--session管理器-->
+    <bean id="sessionManager"
+          class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionDAO" ref="sessionDAO"/>
+    </bean>
+
+    <!--缓存管理器-->
+    <!--<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManager" ref="ehCacheManager"/> &lt;!&ndash;Spring-EhCache.xml&ndash;&gt;
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <bean id="ehCacheManager" class="net.sf.ehcache.CacheManager"/>-->
+
+    <!-- 会话验证调度器 -->
+    <!--<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+        &lt;!&ndash; 间隔多少时间检查，不配置是60分钟 &ndash;&gt;
+        <property name="interval" value="${session.validate.timespan}"/>
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>-->
+
 
     <!-- Shiro Filter -->
     <bean id="shiroFilter"
@@ -32,5 +74,5 @@
             </value>
         </property>
     </bean>
-    
+
 </beans>
