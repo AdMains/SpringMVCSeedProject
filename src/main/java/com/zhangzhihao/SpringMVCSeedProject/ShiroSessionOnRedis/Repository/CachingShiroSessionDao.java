@@ -66,6 +66,9 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         return session;
     }
 
+    /**
+     * 从Redis中读取，但不重置Redis中缓存过期时间
+     */
     public Session doReadSessionWithoutExpire(Serializable sessionId) {
         Session session = null;
         try {

@@ -11,8 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
-
 
 @SuppressWarnings("unused")
 @Slf4j
@@ -38,38 +36,28 @@ public class ShiroSessionRepository {
      * 保存session
      */
     public void saveSession(@NotNull final Session session) {
-        try {
-            getRedisTemplate().opsForValue()
-                    .set(
-                            buildRedisSessionKey(
-                                    session.getId()
-                            )
-                            , session
-                            , redisShiroSessionTimeout
-                            , TimeUnit.SECONDS);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("save session error");
-        }
+        getRedisTemplate().opsForValue()
+                .set(
+                        buildRedisSessionKey(
+                                session.getId()
+                        )
+                        , session
+                        , redisShiroSessionTimeout
+                        , TimeUnit.SECONDS);
     }
 
     /**
      * 更新session
      */
     public void updateSession(@NotNull final Session session) {
-        try {
-            getRedisTemplate().boundValueOps(
-                    buildRedisSessionKey(
-                            session.getId()
-                    )
-            ).set(session
-                    , redisShiroSessionTimeout
-                    , TimeUnit.SECONDS
-            );
-        } catch (Exception e) {
-            LogToDB(e);
-            log.error("update session error");
-        }
+        getRedisTemplate().boundValueOps(
+                buildRedisSessionKey(
+                        session.getId()
+                )
+        ).set(session
+                , redisShiroSessionTimeout
+                , TimeUnit.SECONDS
+        );
     }
 
 
@@ -88,12 +76,7 @@ public class ShiroSessionRepository {
      * 删除session
      */
     public void deleteSession(@NotNull final Serializable id) {
-        try {
-            getRedisTemplate().delete(buildRedisSessionKey(id));
-        } catch (Exception e) {
-            LogToDB(e);
-            log.error("delete session error");
-        }
+        getRedisTemplate().delete(buildRedisSessionKey(id));
     }
 
 
@@ -102,12 +85,7 @@ public class ShiroSessionRepository {
      */
     public Session getSession(@NotNull final Serializable id) {
         Session session = null;
-        try {
-            session = getRedisTemplate().boundValueOps(buildRedisSessionKey(id)).get();
-        } catch (Exception e) {
-            LogToDB(e);
-            log.error("get session error");
-        }
+        session = getRedisTemplate().boundValueOps(buildRedisSessionKey(id)).get();
         return session;
     }
 
