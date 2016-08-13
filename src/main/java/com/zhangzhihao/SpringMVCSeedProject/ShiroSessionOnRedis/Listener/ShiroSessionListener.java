@@ -2,7 +2,7 @@ package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Listener;
 
 
 import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionService;
-import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.CachingShiroSessionDao;
+import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.CachingShiroSessionDao;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;

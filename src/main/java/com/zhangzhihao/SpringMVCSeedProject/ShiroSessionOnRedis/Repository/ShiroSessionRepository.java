@@ -1,4 +1,4 @@
-package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service;
+package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository;
 
 
 import lombok.Getter;

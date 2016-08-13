@@ -88,11 +88,11 @@
           p:shiroSessionService-ref="shiroSessionService"/>
 
     <bean id="cachingShiroSessionDao"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.CachingShiroSessionDao"
+          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.CachingShiroSessionDao"
           p:sessionRepository-ref="shiroSessionRepository"/>
 
     <bean id="shiroSessionRepository"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionRepository"
+          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.ShiroSessionRepository"
           p:redisTemplate-ref="redisTemplate"/>
 
     <bean id="shiroSessionService"
