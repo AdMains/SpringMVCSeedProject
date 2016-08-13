@@ -78,6 +78,7 @@ public abstract class AbstractSession extends SimpleSession implements Serializa
             //如果3s内访问 则不更新session,否则需要更新远端过期时间
             if( (last - now) / 1000 >= 3 ){
                 //发送通知
+                //TODO
             }
 
 

@@ -4,14 +4,12 @@ package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Listener;
 import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionService;
 import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.CachingShiroSessionDao;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class ShiroSessionListener implements SessionListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(ShiroSessionListener.class);
 
     @Setter
     private ShiroSessionService shiroSessionService;
@@ -22,21 +20,21 @@ public class ShiroSessionListener implements SessionListener {
     @Override
     public void onStart(Session session) {
         // 会话创建时触发
-        logger.debug("session {} onStart", session.getId());
+        log.info("session {} onStart", session.getId());
     }
 
     @Override
     public void onStop(Session session) {
         sessionDao.delete(session);
-        shiroSessionService.sendUncacheSessionMessage(session.getId());
-        logger.debug("session {} onStop", session.getId());
+        shiroSessionService.sendUnCacheSessionMessage(session.getId());
+        log.info("session {} onStop", session.getId());
     }
 
     @Override
     public void onExpiration(Session session) {
         sessionDao.delete(session);
-        shiroSessionService.sendUncacheSessionMessage(session.getId());
-        logger.debug("session {} onExpiration", session.getId());
+        shiroSessionService.sendUnCacheSessionMessage(session.getId());
+        log.info("session {} onExpiration", session.getId());
     }
 
 }

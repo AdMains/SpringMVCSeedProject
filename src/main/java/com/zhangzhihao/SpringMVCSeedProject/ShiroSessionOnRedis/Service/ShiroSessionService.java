@@ -4,43 +4,45 @@ package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service;
 import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.CachingShiroSessionDao;
 import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.ShiroSession;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.util.*;
 
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
+
 /**
  * 直接操作Session属性，不会被保存
  * 封装Session属性相关操作 Session属性发生改变时保存到Redis中并通知其它节点清空本地EhCache缓存
  */
+@SuppressWarnings("unused")
+@Slf4j
 public class ShiroSessionService extends ShiroSessionMessageListener {
-
-    private Logger logger = LoggerFactory.getLogger(ShiroSessionService.class);
 
     @Setter
     private CachingShiroSessionDao sessionDao;
 
     @Setter
-    private RedisTemplate<String,Serializable> redisTemplate;
+    private RedisTemplate<String, Serializable> redisTemplate;
 
     @Setter
-    private String uncacheChannel = "shiro.session.uncache";
+    private String unCacheChannel = "shiro.session.uncache";
 
-    public void sendUncacheSessionMessage(Serializable sessionId){
+    public void sendUnCacheSessionMessage(Serializable sessionId) {
         String nodeId = ManagementFactory.getRuntimeMXBean().getName();
-        ShiroSessionMessage.MessageBody messageBody = new ShiroSessionMessage.MessageBody(sessionId,nodeId);
-        redisTemplate.convertAndSend(uncacheChannel, messageBody);
+        ShiroSessionMessage.MessageBody messageBody = new ShiroSessionMessage.MessageBody(sessionId, nodeId);
+        redisTemplate.convertAndSend(unCacheChannel, messageBody);
     }
 
 
     public ShiroSession getSession() {
-        return (ShiroSession) this.sessionDao.doReadSessionWithoutExpire(SecurityUtils.getSubject()
-                .getSession().getId());
+        return (ShiroSession) this.sessionDao.doReadSessionWithoutExpire(
+                SecurityUtils.getSubject().getSession().getId()
+        );
     }
 
 
@@ -49,7 +51,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setId(id);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage( session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public void setStopTimestamp(Date stopTimestamp) {
@@ -57,7 +59,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setStopTimestamp(stopTimestamp);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage( session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public void setExpired(boolean expired) {
@@ -65,7 +67,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setExpired(expired);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage( session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public void setTimeout(long timeout) {
@@ -73,7 +75,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setTimeout(timeout);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage(session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public void setHost(String host) {
@@ -81,8 +83,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setHost(host);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-
-        sendUncacheSessionMessage(session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public void setAttributes(Map<Object, Object> attributes) {
@@ -90,7 +91,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setAttributes(attributes);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage( session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public Map<Object, Object> getAttributes() {
@@ -102,7 +103,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         session.setAttribute(key, value);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage(session.getId());
+        sendUnCacheSessionMessage(session.getId());
     }
 
     public Object getAttribute(Object key) {
@@ -118,7 +119,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         Object res = session.removeAttribute(key);
         this.sessionDao.update(session);
         // 通过发布消息通知其他节点取消本地对session的缓存
-        sendUncacheSessionMessage( session.getId());
+        sendUnCacheSessionMessage(session.getId());
         return res;
     }
 
@@ -161,7 +162,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
                 try {
                     sessionDao.doDelete(session);
                 } catch (Exception e) {
-
+                    LogToDB(e);
                 }
             }
         }
@@ -178,19 +179,20 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         if (CollectionUtils.isNotEmpty(activeSession)) {
             sessions.addAll(activeSession);
         }*/
-        if (ehCacheActiveSession.size()>0) {
+        if (ehCacheActiveSession.size() > 0) {
             sessions.addAll(ehCacheActiveSession);
         }
-        if (activeSession.size()>0) {
+        if (activeSession.size() > 0) {
             sessions.addAll(activeSession);
         }
         for (Session session : sessions) {
             try {
-                sessionDao.uncache(session.getId());
+                sessionDao.unCache(session.getId());
             } catch (Exception e) {
+                LogToDB(e);
             }
         }
-        logger.info("flushEhCache Project EhCacheActiveSessions {} ", sessionDao.getEhCacheActiveSessions().size());
+        log.info("flushEhCache Project EhCacheActiveSessions {} ", sessionDao.getEhCacheActiveSessions().size());
     }
 
     public void flushAll() {
@@ -200,6 +202,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
                 try {
                     sessionDao.delete(session);
                 } catch (Exception e) {
+                    LogToDB(e);
                 }
             }
         }
@@ -207,8 +210,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
 
     @Override
     public void onMessage(ShiroSessionMessage message) {
-
-        logger.debug("channel {} , message {} ", message.getChannel(), message.msgBody);
-        sessionDao.uncache(message.msgBody.sessionId);
+        log.debug("channel {} , message {} ", message.getChannel(), message.msgBody);
+        sessionDao.unCache(message.msgBody.sessionId);
     }
 }

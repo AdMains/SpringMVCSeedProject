@@ -7,42 +7,36 @@ import java.io.Serializable;
 import java.util.Collection;
 
 
+@SuppressWarnings("unused")
 public interface ShiroSessionRepository {
 
     /**
      * 保存会话
-     * @param session
      */
     void saveSession(Session session);
 
     /**
-     * 保存会话
-     * @param session
+     * 更新会话
      */
     void updateSession(Session session);
 
     /**
      * 刷新缓存重新计算过期时间
-     * @param sessionId
      */
     void refreshSession(Serializable sessionId);
 
     /**
      * 删除会话
-     * @param sessionId
      */
     void deleteSession(Serializable sessionId);
 
     /**
      * 获取会话
-     * @param sessionId
-     * @return
      */
     Session getSession(Serializable sessionId);
 
     /**
-     * 获取所会话
-     * @return
+     * 获取所有会话
      */
     Collection<Session> getAllSessions();
 }

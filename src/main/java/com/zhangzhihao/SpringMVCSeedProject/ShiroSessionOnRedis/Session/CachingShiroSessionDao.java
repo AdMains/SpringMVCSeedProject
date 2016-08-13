@@ -3,22 +3,20 @@ package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session;
 
 import com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionRepository;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+@Slf4j
 public class CachingShiroSessionDao extends CachingSessionDAO {
-
-    private static final Logger logger = LoggerFactory.getLogger(CachingShiroSessionDao.class);
 
     @Setter
     private ShiroSessionRepository sessionRepository;
@@ -50,21 +48,21 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      */
     @Override
     protected Session doReadSession(Serializable sessionId) {
-        logger.debug("begin doReadSession {} ", sessionId);
+        log.debug("begin doReadSession {} ", sessionId);
         Session session = null;
         try {
 
 
             session = sessionRepository.getSession(sessionId);
             if (session!=null) {
-//                logger.info("sessionId {} ttl {}: ", sessionId, jedisCluster.ttl(key));
+//                log.info("sessionId {} ttl {}: ", sessionId, jedisCluster.ttl(key));
                 // 重置Redis中缓存过期时间
                 sessionRepository.refreshSession(sessionId);
 
-                logger.info("sessionId {} name {} 被读取", sessionId, session.getClass().getName());
+                log.info("sessionId {} name {} 被读取", sessionId, session.getClass().getName());
             }
         } catch (Exception e) {
-            logger.warn("读取Session失败", e);
+            log.warn("读取Session失败", e);
         }
         return session;
     }
@@ -74,7 +72,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         try {
             session = sessionRepository.getSession(sessionId);
         } catch (Exception e) {
-            logger.warn("读取Session失败", e);
+            log.warn("读取Session失败", e);
         }
         return session;
     }
@@ -97,9 +95,9 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
 //                    , valueSerializer.serialize(session));
 
             sessionRepository.saveSession(session);
-            logger.info("sessionId {} name {} 被创建", sessionId, session.getClass().getName());
+            log.info("sessionId {} name {} 被创建", sessionId, session.getClass().getName());
         } catch (Exception e) {
-            logger.warn("创建Session失败", e);
+            log.warn("创建Session失败", e);
         }
         return sessionId;
     }
@@ -115,7 +113,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
                 return;
             }
         } catch (Exception e) {
-            logger.error("ValidatingSession error");
+            log.error("ValidatingSession error");
         }
         try {
             if (session instanceof ShiroSession) {
@@ -133,12 +131,12 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
 
                 //发送广播
 //                jedisUtil.publish("shiro.session.uncache", session.getId());
-                logger.debug("sessionId {} name {} 被更新", session.getId(), session.getClass().getName());
+                log.debug("sessionId {} name {} 被更新", session.getId(), session.getClass().getName());
             } else {
-                logger.debug("sessionId {} name {} 更新失败", session.getId(), session.getClass().getName());
+                log.debug("sessionId {} name {} 更新失败", session.getId(), session.getClass().getName());
             }
         } catch (Exception e) {
-            logger.warn("更新Session失败", e);
+            log.warn("更新Session失败", e);
         }
     }
 
@@ -147,26 +145,26 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      */
     @Override
     public void doDelete(Session session) {
-        logger.debug("begin doDelete {} ", session);
+        log.debug("begin doDelete {} ", session);
         try {
 
             sessionRepository.deleteSession(session.getId());
 
-            this.uncache(session.getId());
-            logger.debug("shiro session id {} 被删除", session.getId());
+            this.unCache(session.getId());
+            log.debug("shiro session id {} 被删除", session.getId());
         } catch (Exception e) {
-            logger.warn("删除Session失败", e);
+            log.warn("删除Session失败", e);
         }
     }
 
     /**
      * 删除cache中缓存的Session
      */
-    public void uncache(Serializable sessionId) {
+    public void unCache(Serializable sessionId) {
         try {
             Session session = super.getCachedSession(sessionId);
             super.uncache(session);
-            logger.debug("删除本地 cache中缓存的Session id {} 的缓存失效", sessionId);
+            log.debug("删除本地 cache中缓存的Session id {} 的缓存失效", sessionId);
         } catch (Exception e) {
             e.printStackTrace();
         }
