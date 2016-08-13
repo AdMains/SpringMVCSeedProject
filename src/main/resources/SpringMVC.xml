@@ -67,8 +67,7 @@
         <property name="securityManager" ref="securityManager" />
     </bean>
 
-    <bean id="lifecycleBeanPostProcessor"
-          class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
 
     <!-- shiro为集成spring -->
     <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">

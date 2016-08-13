@@ -3,11 +3,12 @@
     Seed Project For SpringMVC
 
 # 主要的后端架构：
-    Spring + Spring MVC + JPA  + Hibernate + Apache Shiro
+    Spring + Spring MVC + JPA  + Hibernate + Apache Shiro + Spring-Session
     
 # 所需的环境和正确打开项目的姿势
     见根目录下'开发环境搭建及导入项目的方式.doc'
     导入前 视情况修改maven仓库地址(build.gradle)和数据库地址(/src/main/resources/db.properties)
+    运行项目前请确保有一个Redis实例在运行，并且正确配置(src/main/resources/redis.properties)
     
 # 配置文件说明
     '/src/main/resources/'路径下面的 

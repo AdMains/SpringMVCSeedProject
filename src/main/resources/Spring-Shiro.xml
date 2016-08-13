@@ -12,6 +12,11 @@
         <property name="rememberMeManager" ref="rememberMeManager"/>
         <!--<property name="sessionManager" ref="sessionManager"/>-->
         <!--<property name="cacheManager" ref="cacheManager"/>-->
+
+        <!--可选项 默认使用ServletContainerSessionManager，直接使用容器的HttpSession，可以通过配置sessionManager，使用DefaultWebSessionManager来替代-->
+        <property name="sessionManager" ref="sessionManager"/>
+        <!-- 可选项 最好使用,SessionDao,中 doReadSession 读取过于频繁了-->
+        <property name="cacheManager" ref="shiroEhcacheManager"/>
     </bean>
 
     <!-- 項目自定义的Realm -->
@@ -38,24 +43,67 @@
     <!--session管理器-->
     <bean id="sessionManager"
           class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="sessionDAO" ref="sessionDAO"/>
+        <!-- 设置全局会话超时时间，默认30分钟(1800000) -->
+        <property name="globalSessionTimeout" value="1800000"/>
+        <!-- 是否在会话过期后会调用SessionDAO的delete方法删除会话 默认true-->
+        <property name="deleteInvalidSessions" value="false"/>
+        <!-- 是否开启会话验证器任务 默认true -->
+        <property name="sessionValidationSchedulerEnabled" value="false"/>
+        <!-- 会话验证器调度时间 -->
+        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="sessionDAO" ref="cachingShiroSessionDao"/>
+        <!-- 默认JSESSIONID，同tomcat/jetty在cookie中缓存标识相同，修改用于防止访问404页面时，容器生成的标识把shiro的覆盖掉 -->
+        <property name="sessionIdCookie">
+            <bean class="org.apache.shiro.web.servlet.SimpleCookie">
+                <constructor-arg name="name" value="SHRIOSESSIONID"/>
+            </bean>
+        </property>
+        <property name="sessionListeners">
+            <list>
+                <ref bean="sessionListener"/>
+            </list>
+        </property>
     </bean>
+
+    <!-- 自定义Session工厂方法 返回会标识是否修改主要字段的自定义Session-->
+    <bean id="sessionFactory" class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.ShiroSessionFactory"/>
 
     <!--缓存管理器-->
-    <!--<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <property name="cacheManager" ref="ehCacheManager"/> &lt;!&ndash;Spring-EhCache.xml&ndash;&gt;
-        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    <!-- 用户授权信息Cache, 采用EhCache，本地缓存最长时间应比中央缓存时间短一些，以确保Session中doReadSession方法调用时更新中央缓存过期时间 -->
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
     </bean>
 
-    <bean id="ehCacheManager" class="net.sf.ehcache.CacheManager"/>-->
+    <!-- AOP式方法级权限检查 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 
-    <!-- 会话验证调度器 -->
-    <!--<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
-        &lt;!&ndash; 间隔多少时间检查，不配置是60分钟 &ndash;&gt;
-        <property name="interval" value="${session.validate.timespan}"/>
-        <property name="sessionManager" ref="sessionManager"/>
-    </bean>-->
+    <bean id="lifecycleBeanPostProcessor"
+          class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
+    <bean id="sessionListener" class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Listener.ShiroSessionListener" >
+        <property name="sessionDao" ref="cachingShiroSessionDao" />
+        <property name="shiroSessionService" ref="shiroSessionService" />
+    </bean>
+
+    <bean id="cachingShiroSessionDao" class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.CachingShiroSessionDao">
+        <property name="sessionRepository" ref="shiroSessionRepository"/>
+    </bean>
+
+    <bean id="shiroSessionRepository" class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.impl.ShiroSessionRepositoryImpl">
+        <property name="redisTemplate" ref="redisTemplate"/>
+    </bean>
+
+    <bean id="shiroSessionService" class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionService">
+        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="sessionDao" ref="cachingShiroSessionDao"/>
+    </bean>
 
     <!-- Shiro Filter -->
     <bean id="shiroFilter"

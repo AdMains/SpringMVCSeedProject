@@ -22,4 +22,5 @@
     <import resource="Spring-JPA.xml"/>
     <import resource="Spring-EhCache.xml"/>
     <import resource="Spring-Shiro.xml"/>
+    <import resource="Spring-Redis.xml"/>
 </beans>
