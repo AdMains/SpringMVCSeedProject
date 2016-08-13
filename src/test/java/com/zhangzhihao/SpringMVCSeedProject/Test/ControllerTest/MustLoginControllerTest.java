@@ -4,14 +4,8 @@ package com.zhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 import com.zhangzhihao.SpringMVCSeedProject.Controller.MustLoginController;
 import com.zhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class MustLoginControllerTest extends BaseTest {
 
@@ -26,11 +20,11 @@ public class MustLoginControllerTest extends BaseTest {
                 .build();
     }
 
-    @Test
-    public void testLoginSuccess() throws Exception {
+   /* @Test
+    public void mustLoginPage() throws Exception {
         mockMvc.perform(get("/MustLogin"))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(view().name("/MustLogin/MustLogin"));
-    }
+    }*/
 }

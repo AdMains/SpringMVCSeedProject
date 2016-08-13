@@ -18,7 +18,7 @@ import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
 /**
  * 直接操作Session属性，不会被保存
- * 封装Session属性相关操作 Session属性发生改变时保存到Redis中并通知其它节点清空本地EhCache缓存
+ * 封装Session属性相关操作 Session属性发生改变时保存到Redis中并通知其它节点更新并清空本地EhCache缓存
  */
 @SuppressWarnings("unused")
 @Slf4j
@@ -63,7 +63,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setExpired(@NotNull final boolean expired) {
+    public void setExpired( final boolean expired) {
         ShiroSession session = this.getSession();
         session.setExpired(expired);
         this.sessionDao.update(session);
@@ -71,7 +71,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setTimeout(@NotNull final long timeout) {
+    public void setTimeout(final long timeout) {
         ShiroSession session = this.getSession();
         session.setTimeout(timeout);
         this.sessionDao.update(session);
@@ -129,7 +129,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
      * 在线会话的简单实现
      * 后续可以通过 keys统计数量，在通过SCAN 增量迭代取Session
      */
-    @SuppressWarnings("unchecked")
+    /*@SuppressWarnings("unchecked")
     public List<Map<String, Object>> getActiveSessions() {
         //List<Map<String, Object>> sessions = Lists.newLinkedList();
         List<Map<String, Object>> sessions = new LinkedList<>();
@@ -154,9 +154,12 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
 //            sessions.add(map);
 //        }
         return sessions;
-    }
+    }*/
 
 
+    /**
+     * 删除redis中的session同时删除ehCache中的session
+     */
     public void flushRedis() {
         Collection<Session> activeSession = sessionDao.getActiveSessions();
         if (activeSession != null) {

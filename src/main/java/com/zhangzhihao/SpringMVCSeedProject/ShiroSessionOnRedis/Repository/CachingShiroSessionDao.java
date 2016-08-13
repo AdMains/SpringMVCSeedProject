@@ -17,6 +17,10 @@ import java.util.Date;
 
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
+/**
+ * 管理EhCache中Session缓存的Dao
+ * 最开始通过继承AbstractSessionDAO实现，发现doReadSession方法调用过于频繁，所以改为通过继承CachingSessionDAO来实现。
+ */
 @Slf4j
 public class CachingShiroSessionDao extends CachingSessionDAO {
 
@@ -43,7 +47,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
     }
 
     /**
-     * 根据会话ID获取会话
+     * 根据session ID获取session 并redis中重置过期时间
      *
      * @param sessionId 会话ID
      * @return ShiroSession
@@ -55,7 +59,6 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         try {
             session = sessionRepository.getSession(sessionId);
             if (session != null) {
-                //log.info("sessionId {} ttl {}: ", sessionId, jedisCluster.ttl(key));
                 // 重置Redis中缓存过期时间
                 sessionRepository.refreshSession(sessionId);
                 log.info("sessionId {} name {} 被读取", sessionId, session.getClass().getName());
@@ -84,7 +87,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
     /**
      * 如DefaultSessionManager在创建完session后会调用该方法；
      * 如保存到关系数据库/文件系统/NoSQL数据库；即可以实现会话的持久化；
-     * 返回会话ID；主要此处返回的ID.equals(session.getId())；
+     * 返回session ID；主要此处返回的ID.equals(session.getId())；
      */
     @Override
     protected Serializable doCreate(@NotNull final Session session) {
@@ -92,17 +95,11 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         Serializable sessionId = this.generateSessionId(session);
         assignSessionId(session, sessionId);
         try {
-            // session由Redis缓存失效决定，这里只是简单标识
-//            session.setTimeout(seconds);
-
-//            jedisCluster.setex(keySerializer.serialize((prefix + sessionId)), seconds
-//                    , valueSerializer.serialize(session));
-
             sessionRepository.saveSession(session);
             log.info("sessionId {} name {} 被创建", sessionId, session.getClass().getName());
         } catch (Exception e) {
             LogToDB(e);
-            log.warn("创建Session失败", e);
+            log.error("创建Session失败", e);
         }
         return sessionId;
     }
@@ -132,18 +129,16 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
                 ss.setLastAccessTime(new Date());
 
                 sessionRepository.updateSession(session);
-//                jedisCluster.setex(keySerializer.serialize((prefix + session.getId())), seconds
-//                        , valueSerializer.serialize(ss));
 
                 //发送广播
-//                jedisUtil.publish("shiro.session.uncache", session.getId());
+                //jedisUtil.publish("shiro.session.uncache", session.getId());
                 log.debug("sessionId {} name {} 被更新", session.getId(), session.getClass().getName());
             } else {
-                log.debug("sessionId {} name {} 更新失败", session.getId(), session.getClass().getName());
+                log.error("sessionId {} name {} 更新失败", session.getId(), session.getClass().getName());
             }
         } catch (Exception e) {
             LogToDB(e);
-            log.warn("更新Session失败", e);
+            log.error("更新Session失败", e);
         }
     }
 
@@ -154,14 +149,12 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
     public void doDelete(@NotNull final Session session) {
         log.debug("begin doDelete {} ", session);
         try {
-
             sessionRepository.deleteSession(session.getId());
-
             this.unCache(session.getId());
             log.debug("shiro session id {} 被删除", session.getId());
         } catch (Exception e) {
             LogToDB(e);
-            log.warn("删除Session失败", e);
+            log.error("删除Session失败", e);
         }
     }
 
@@ -175,6 +168,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
             log.debug("删除本地 cache中缓存的Session id {} 的缓存失效", sessionId);
         } catch (Exception e) {
             LogToDB(e);
+            log.error("删除本地 cache中缓存的Session 失败", e);
         }
     }
 
@@ -185,6 +179,5 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
     public Collection<Session> getEhCacheActiveSessions() {
         return super.getActiveSessions();
     }
-
 
 }

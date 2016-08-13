@@ -6,6 +6,7 @@ import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 import java.io.Serializable;
 
 
+@SuppressWarnings("WeakerAccess")
 public class ShiroSessionMessage extends DefaultMessage {
 
     private JdkSerializationRedisSerializer redisSerializer = new JdkSerializationRedisSerializer();
@@ -20,6 +21,7 @@ public class ShiroSessionMessage extends DefaultMessage {
     }
 
 
+    @SuppressWarnings("unused")
     public static class MessageBody implements Serializable {
         public final Serializable sessionId;
         public final String nodeId;

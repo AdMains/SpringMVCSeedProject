@@ -14,7 +14,10 @@ import java.util.concurrent.TimeUnit;
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
 
-@SuppressWarnings("unused")
+/**
+ * 管理Redis中的Session
+ */
+@SuppressWarnings({"unused", "WeakerAccess"})
 @Slf4j
 public class ShiroSessionRepository {
 
@@ -49,7 +52,7 @@ public class ShiroSessionRepository {
                             , TimeUnit.SECONDS);
         } catch (Exception e) {
             LogToDB(e);
-            log.error("save session error");
+            log.error("save session to redis error");
         }
     }
 
@@ -77,7 +80,8 @@ public class ShiroSessionRepository {
      * 刷新session
      */
     public void refreshSession(@NotNull final Serializable sessionId) {
-        getRedisTemplate().expire(buildRedisSessionKey(sessionId)
+        getRedisTemplate().expire(
+                buildRedisSessionKey(sessionId)
                 , redisShiroSessionTimeout
                 , TimeUnit.SECONDS
         );
@@ -111,6 +115,9 @@ public class ShiroSessionRepository {
         return session;
     }
 
+    /**
+     * 通过sessionId获取sessionKey
+     */
     private String buildRedisSessionKey(@NotNull final Serializable sessionId) {
         return redisShiroSessionPrefix + sessionId;
     }

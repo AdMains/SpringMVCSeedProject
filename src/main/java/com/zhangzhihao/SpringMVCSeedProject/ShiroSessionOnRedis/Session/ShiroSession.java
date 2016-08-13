@@ -18,6 +18,7 @@ import java.util.Map;
  *
  * @see org.apache.shiro.subject.support.DefaultSubjectContext
  */
+@SuppressWarnings("WeakerAccess")
 public class ShiroSession extends SimpleSession implements Serializable {
 
     // 除lastAccessTime以外其他字段发生改变时为true
@@ -75,25 +76,20 @@ public class ShiroSession extends SimpleSession implements Serializable {
         if (getLastAccessTime() != null) {
             long last = getLastAccessTime().getTime();
             long now = lastAccessTime.getTime();
-            //如果3s内访问 则不更新session,否则需要更新远端过期时间
-            if ((last - now) / 1000 >= 3) {
+            //如果10s内访问 则不更新session,否则需要更新远端过期时间
+            if ((last - now) / 1000 >= 10) {
                 //发送通知
-                //TODO
+                //设置为已改变，更新到redis
+                this.setChanged(true);
             }
         }
         super.setLastAccessTime(lastAccessTime);
     }
 
-    /**
-     * 防止过于频繁的保存
-     */
+
     @Override
     public void setAttribute(@NotNull final Object key,
                              @NotNull final Object value) {
-        Object obj = this.getAttribute(key);
-        if (obj != null && obj.equals(value)) {
-            return;
-        }
         super.setAttribute(key, value);
         this.setChanged(true);
     }

@@ -3,7 +3,9 @@ package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 
-
+/**
+ *  Listener of messages published in Redis.
+ */
 public abstract class ShiroSessionMessageListener implements MessageListener {
 
     @Override
