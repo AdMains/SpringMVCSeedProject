@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
@@ -46,7 +47,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
     }
 
 
-    public void setId(Serializable id) {
+    public void setId(@NotNull final Serializable id) {
         ShiroSession session = this.getSession();
         session.setId(id);
         this.sessionDao.update(session);
@@ -54,7 +55,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setStopTimestamp(Date stopTimestamp) {
+    public void setStopTimestamp(@NotNull final Date stopTimestamp) {
         ShiroSession session = this.getSession();
         session.setStopTimestamp(stopTimestamp);
         this.sessionDao.update(session);
@@ -62,7 +63,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setExpired(boolean expired) {
+    public void setExpired(@NotNull final boolean expired) {
         ShiroSession session = this.getSession();
         session.setExpired(expired);
         this.sessionDao.update(session);
@@ -70,7 +71,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setTimeout(long timeout) {
+    public void setTimeout(@NotNull final long timeout) {
         ShiroSession session = this.getSession();
         session.setTimeout(timeout);
         this.sessionDao.update(session);
@@ -78,7 +79,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setHost(String host) {
+    public void setHost(@NotNull final String host) {
         ShiroSession session = this.getSession();
         session.setHost(host);
         this.sessionDao.update(session);
@@ -86,7 +87,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setAttributes(Map<Object, Object> attributes) {
+    public void setAttributes(@NotNull final Map<Object, Object> attributes) {
         ShiroSession session = this.getSession();
         session.setAttributes(attributes);
         this.sessionDao.update(session);
@@ -98,7 +99,8 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         return this.getSession().getAttributes();
     }
 
-    public void setAttribute(Object key, Object value) {
+    public void setAttribute(@NotNull final Object key,
+                             @NotNull final Object value) {
         ShiroSession session = this.getSession();
         session.setAttribute(key, value);
         this.sessionDao.update(session);
@@ -106,7 +108,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public Object getAttribute(Object key) {
+    public Object getAttribute(@NotNull final Object key) {
         return this.getSession().getAttribute(key);
     }
 
@@ -114,7 +116,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         return this.getSession().getAttributeKeys();
     }
 
-    public Object removeAttribute(Object key) {
+    public Object removeAttribute(@NotNull final Object key) {
         ShiroSession session = this.getSession();
         Object res = session.removeAttribute(key);
         this.sessionDao.update(session);
@@ -209,7 +211,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
     }
 
     @Override
-    public void onMessage(ShiroSessionMessage message) {
+    public void onMessage(@NotNull final ShiroSessionMessage message) {
         log.debug("channel {} , message {} ", message.getChannel(), message.msgBody);
         sessionDao.unCache(message.msgBody.sessionId);
     }

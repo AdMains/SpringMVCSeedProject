@@ -1,6 +1,7 @@
 package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session;
 
 import org.apache.shiro.session.mgt.SimpleSession;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,43 +35,43 @@ public class ShiroSession extends SimpleSession implements Serializable {
 
 
     @Override
-    public void setId(Serializable id) {
+    public void setId(@NotNull final Serializable id) {
         super.setId(id);
         this.setChanged(true);
     }
 
     @Override
-    public void setStopTimestamp(Date stopTimestamp) {
+    public void setStopTimestamp(@NotNull final Date stopTimestamp) {
         super.setStopTimestamp(stopTimestamp);
         this.setChanged(true);
     }
 
     @Override
-    public void setExpired(boolean expired) {
+    public void setExpired(final boolean expired) {
         super.setExpired(expired);
         this.setChanged(true);
     }
 
     @Override
-    public void setTimeout(long timeout) {
+    public void setTimeout(final long timeout) {
         super.setTimeout(timeout);
         this.setChanged(true);
     }
 
     @Override
-    public void setHost(String host) {
+    public void setHost(@NotNull final String host) {
         super.setHost(host);
         this.setChanged(true);
     }
 
     @Override
-    public void setAttributes(Map<Object, Object> attributes) {
+    public void setAttributes(@NotNull final Map<Object, Object> attributes) {
         super.setAttributes(attributes);
         this.setChanged(true);
     }
 
     @Override
-    public void setLastAccessTime(Date lastAccessTime) {
+    public void setLastAccessTime(@NotNull final Date lastAccessTime) {
         if (getLastAccessTime() != null) {
             long last = getLastAccessTime().getTime();
             long now = lastAccessTime.getTime();
@@ -87,7 +88,8 @@ public class ShiroSession extends SimpleSession implements Serializable {
      * 防止过于频繁的保存
      */
     @Override
-    public void setAttribute(Object key, Object value) {
+    public void setAttribute(@NotNull final Object key,
+                             @NotNull final Object value) {
         Object obj = this.getAttribute(key);
         if (obj != null && obj.equals(value)) {
             return;
@@ -97,7 +99,7 @@ public class ShiroSession extends SimpleSession implements Serializable {
     }
 
     @Override
-    public Object removeAttribute(Object key) {
+    public Object removeAttribute(@NotNull final Object key) {
         this.setChanged(true);
         return super.removeAttribute(key);
     }
@@ -125,7 +127,7 @@ public class ShiroSession extends SimpleSession implements Serializable {
         return isChanged;
     }
 
-    public void setChanged(boolean isChanged) {
+    public void setChanged(final boolean isChanged) {
         this.isChanged = isChanged;
     }
 }

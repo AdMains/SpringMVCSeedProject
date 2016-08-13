@@ -9,6 +9,7 @@ import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -27,7 +28,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      * session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY) == null 代表没有登录，登录后Shiro会放入该值
      */
     @Override
-    public Session readSession(Serializable sessionId) throws UnknownSessionException {
+    public Session readSession(@NotNull final Serializable sessionId) throws UnknownSessionException {
         Session session = getCachedSession(sessionId);
         if (session == null || session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY) == null) {
             session = this.doReadSession(sessionId);
@@ -48,12 +49,12 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      * @return ShiroSession
      */
     @Override
-    protected Session doReadSession(Serializable sessionId) {
+    protected Session doReadSession(@NotNull final Serializable sessionId) {
         log.debug("begin doReadSession {} ", sessionId);
         Session session = null;
         try {
             session = sessionRepository.getSession(sessionId);
-            if (session!=null) {
+            if (session != null) {
                 //log.info("sessionId {} ttl {}: ", sessionId, jedisCluster.ttl(key));
                 // 重置Redis中缓存过期时间
                 sessionRepository.refreshSession(sessionId);
@@ -69,7 +70,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
     /**
      * 从Redis中读取，但不重置Redis中缓存过期时间
      */
-    public Session doReadSessionWithoutExpire(Serializable sessionId) {
+    public Session doReadSessionWithoutExpire(@NotNull final Serializable sessionId) {
         Session session = null;
         try {
             session = sessionRepository.getSession(sessionId);
@@ -86,7 +87,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      * 返回会话ID；主要此处返回的ID.equals(session.getId())；
      */
     @Override
-    protected Serializable doCreate(Session session) {
+    protected Serializable doCreate(@NotNull final Session session) {
         // 创建一个Id并设置给Session
         Serializable sessionId = this.generateSessionId(session);
         assignSessionId(session, sessionId);
@@ -110,7 +111,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      * 更新会话；如更新会话最后访问时间/停止会话/设置超时时间/设置移除属性等会调用
      */
     @Override
-    protected void doUpdate(Session session) {
+    protected void doUpdate(@NotNull final Session session) {
         //如果会话过期/停止 没必要再更新了
         try {
             if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
@@ -150,7 +151,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
      * 删除会话；当会话过期/会话停止（如用户退出时）会调用
      */
     @Override
-    public void doDelete(Session session) {
+    public void doDelete(@NotNull final Session session) {
         log.debug("begin doDelete {} ", session);
         try {
 
@@ -167,7 +168,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
     /**
      * 删除cache中缓存的Session
      */
-    public void unCache(Serializable sessionId) {
+    public void unCache(@NotNull final Serializable sessionId) {
         try {
             Session session = super.getCachedSession(sessionId);
             super.uncache(session);
