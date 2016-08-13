@@ -69,23 +69,16 @@ public abstract class AbstractSession extends SimpleSession implements Serializa
 
     @Override
     public void setLastAccessTime(Date lastAccessTime) {
-
-
         if(getLastAccessTime()!=null ){
             long last = getLastAccessTime().getTime();
             long now = lastAccessTime.getTime();
-
             //如果3s内访问 则不更新session,否则需要更新远端过期时间
             if( (last - now) / 1000 >= 3 ){
                 //发送通知
                 //TODO
             }
-
-
         }
         super.setLastAccessTime(lastAccessTime);
-
-
     }
 
     /**
@@ -123,26 +116,6 @@ public abstract class AbstractSession extends SimpleSession implements Serializa
     protected void expire() {
         this.stop();
         this.setExpired(true);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    protected boolean onEquals(SimpleSession ss) {
-        return super.onEquals(ss);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 
 

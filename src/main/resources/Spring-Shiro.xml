@@ -92,7 +92,7 @@
           p:sessionRepository-ref="shiroSessionRepository"/>
 
     <bean id="shiroSessionRepository"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.impl.ShiroSessionRepositoryImpl"
+          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionRepository"
           p:redisTemplate-ref="redisTemplate"/>
 
     <bean id="shiroSessionService"

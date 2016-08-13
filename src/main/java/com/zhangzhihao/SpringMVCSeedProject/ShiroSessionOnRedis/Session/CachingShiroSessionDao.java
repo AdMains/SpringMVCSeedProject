@@ -11,9 +11,10 @@ import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+
+import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
 @Slf4j
 public class CachingShiroSessionDao extends CachingSessionDAO {
@@ -51,17 +52,15 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         log.debug("begin doReadSession {} ", sessionId);
         Session session = null;
         try {
-
-
             session = sessionRepository.getSession(sessionId);
             if (session!=null) {
-//                log.info("sessionId {} ttl {}: ", sessionId, jedisCluster.ttl(key));
+                //log.info("sessionId {} ttl {}: ", sessionId, jedisCluster.ttl(key));
                 // 重置Redis中缓存过期时间
                 sessionRepository.refreshSession(sessionId);
-
                 log.info("sessionId {} name {} 被读取", sessionId, session.getClass().getName());
             }
         } catch (Exception e) {
+            LogToDB(e);
             log.warn("读取Session失败", e);
         }
         return session;
@@ -72,6 +71,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         try {
             session = sessionRepository.getSession(sessionId);
         } catch (Exception e) {
+            LogToDB(e);
             log.warn("读取Session失败", e);
         }
         return session;
@@ -97,6 +97,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
             sessionRepository.saveSession(session);
             log.info("sessionId {} name {} 被创建", sessionId, session.getClass().getName());
         } catch (Exception e) {
+            LogToDB(e);
             log.warn("创建Session失败", e);
         }
         return sessionId;
@@ -113,6 +114,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
                 return;
             }
         } catch (Exception e) {
+            LogToDB(e);
             log.error("ValidatingSession error");
         }
         try {
@@ -136,6 +138,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
                 log.debug("sessionId {} name {} 更新失败", session.getId(), session.getClass().getName());
             }
         } catch (Exception e) {
+            LogToDB(e);
             log.warn("更新Session失败", e);
         }
     }
@@ -153,6 +156,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
             this.unCache(session.getId());
             log.debug("shiro session id {} 被删除", session.getId());
         } catch (Exception e) {
+            LogToDB(e);
             log.warn("删除Session失败", e);
         }
     }
@@ -166,19 +170,10 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
             super.uncache(session);
             log.debug("删除本地 cache中缓存的Session id {} 的缓存失效", sessionId);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogToDB(e);
         }
     }
 
-    /**
-     * 获取当前所有活跃用户，如果用户量多此方法影响性能
-     */
-    @Override
-    public Collection<Session> getActiveSessions() {
-
-        //return Lists.newArrayList();
-        return new ArrayList<>();
-    }
 
     /**
      * 返回本机Ehcache中Session

@@ -12,6 +12,7 @@ public abstract class ShiroSessionMessageListener implements MessageListener {
         onMessage(new ShiroSessionMessage(message.getChannel(),message.getBody()));
 
     }
+
     public abstract void onMessage(ShiroSessionMessage message) ;
 
 }
