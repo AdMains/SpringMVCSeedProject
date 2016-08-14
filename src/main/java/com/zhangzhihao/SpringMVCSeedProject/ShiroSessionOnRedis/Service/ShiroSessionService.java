@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
@@ -17,12 +19,12 @@ import java.util.*;
 import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
 
 /**
- * 直接操作Session属性，不会被保存
- * 封装Session属性相关操作 Session属性发生改变时保存到Redis中并通知其它节点更新并清空本地EhCache缓存
+ * 直接操作Session属性
+ * 封装Session属性相关操作 Session属性发生改变时保存到Redis中并通知清除本地EhCache缓存
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 @Slf4j
-public class ShiroSessionService extends ShiroSessionMessageListener {
+public class ShiroSessionService implements MessageListener {
 
     @Setter
     private CachingShiroSessionDao sessionDao;
@@ -33,6 +35,9 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
     @Setter
     private String unCacheChannel = "shiro.session.uncache";
 
+    /**
+     * 发送缓存失效的消息
+     */
     public void sendUnCacheSessionMessage(Serializable sessionId) {
         String nodeId = ManagementFactory.getRuntimeMXBean().getName();
         ShiroSessionMessage.MessageBody messageBody = new ShiroSessionMessage.MessageBody(sessionId, nodeId);
@@ -63,7 +68,7 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         sendUnCacheSessionMessage(session.getId());
     }
 
-    public void setExpired( final boolean expired) {
+    public void setExpired(final boolean expired) {
         ShiroSession session = this.getSession();
         session.setExpired(expired);
         this.sessionDao.update(session);
@@ -159,7 +164,9 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
 
     /**
      * 删除redis中的session同时删除ehCache中的session
+     * @see ShiroSessionService#flushAll()
      */
+    @Deprecated
     public void flushRedis() {
         Collection<Session> activeSession = sessionDao.getActiveSessions();
         if (activeSession != null) {
@@ -173,6 +180,9 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         }
     }
 
+    /**
+     * 只清除EhCache中的session缓存
+     */
     public void flushEhCache() {
         //Set<Session> sessions = Sets.newHashSet();
         Set<Session> sessions = new HashSet<>();
@@ -200,6 +210,9 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         log.info("flushEhCache Project EhCacheActiveSessions {} ", sessionDao.getEhCacheActiveSessions().size());
     }
 
+    /**
+     * 同时清除Redis和EhCache中的session
+     */
     public void flushAll() {
         Collection<Session> activeSession = sessionDao.getActiveSessions();
         if (activeSession != null) {
@@ -213,9 +226,14 @@ public class ShiroSessionService extends ShiroSessionMessageListener {
         }
     }
 
+    /**
+     * 收到缓存过期消息时清除EhCache中的Session缓存
+     */
     @Override
-    public void onMessage(@NotNull final ShiroSessionMessage message) {
-        log.debug("channel {} , message {} ", message.getChannel(), message.msgBody);
-        sessionDao.unCache(message.msgBody.sessionId);
+    public void onMessage(final @NotNull Message message, byte[] bytes) {
+        ShiroSessionMessage shiroSessionMessage =
+                new ShiroSessionMessage(message.getChannel(), message.getBody());
+        log.debug("channel {} , message {} ", shiroSessionMessage.getChannel(), shiroSessionMessage.msgBody);
+        sessionDao.unCache(shiroSessionMessage.msgBody.sessionId);
     }
 }

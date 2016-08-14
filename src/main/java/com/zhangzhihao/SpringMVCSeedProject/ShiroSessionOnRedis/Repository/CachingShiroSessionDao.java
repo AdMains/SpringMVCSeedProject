@@ -142,6 +142,12 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         }
     }
 
+
+    @Override
+    public void update(Session session) throws UnknownSessionException {
+        this.doUpdate(session);
+    }
+
     /**
      * 删除会话；当会话过期/会话停止（如用户退出时）会调用
      */
@@ -165,7 +171,7 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
         try {
             Session session = super.getCachedSession(sessionId);
             super.uncache(session);
-            log.debug("删除本地 cache中缓存的Session id {} 的缓存失效", sessionId);
+            log.debug("本地 cache中缓存的Session id {} 失效", sessionId);
         } catch (Exception e) {
             LogToDB(e);
             log.error("删除本地 cache中缓存的Session 失败", e);

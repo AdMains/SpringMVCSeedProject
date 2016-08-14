@@ -1,27 +1,34 @@
 package com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service;
 
+import lombok.AllArgsConstructor;
+import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.DefaultMessage;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 import java.io.Serializable;
 
+import static org.junit.Assert.assertNotNull;
+
 
 @SuppressWarnings("WeakerAccess")
 public class ShiroSessionMessage extends DefaultMessage {
 
-    private JdkSerializationRedisSerializer redisSerializer = new JdkSerializationRedisSerializer();
+    @Autowired
+    private JdkSerializationRedisSerializer redisSerializer;
 
     public final MessageBody msgBody;
 
     public ShiroSessionMessage(byte[] channel, byte[] body) {
         super(channel, body);
-
+        assertNotNull(redisSerializer);
         msgBody = (MessageBody) redisSerializer.deserialize(body);
-
     }
 
 
     @SuppressWarnings("unused")
+    @ToString
+    @AllArgsConstructor
     public static class MessageBody implements Serializable {
         public final Serializable sessionId;
         public final String nodeId;
@@ -31,22 +38,5 @@ public class ShiroSessionMessage extends DefaultMessage {
             this.sessionId = sessionId;
             this.nodeId = nodeId;
         }
-
-        public MessageBody(Serializable sessionId, String nodeId, String msg) {
-            this.sessionId = sessionId;
-            this.nodeId = nodeId;
-            this.msg = msg;
-        }
-
-        @Override
-        public String toString() {
-            return "MessageBody{" +
-                    "sessionId='" + sessionId + '\'' +
-                    ", nodeId='" + nodeId + '\'' +
-                    ", msg='" + msg + '\'' +
-                    '}';
-        }
     }
-
-
 }
