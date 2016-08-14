@@ -15,12 +15,12 @@
 
     <!--
         timeToIdleSeconds 当缓存闲置n秒后销毁 为了保障会调用ShiroSessionDao的doReadSession方法，所以不配置改属性
-        timeToLiveSeconds 当缓存存活n秒后销毁 必须必Redis中过期时间短
+        timeToLiveSeconds 当缓存存活n秒后销毁 必须比Redis中过期时间短
     -->
     <defaultCache
             maxElementsInMemory="10000"
             eternal="false"
-            timeToIdleSeconds="600"
+            timeToLiveSeconds="60"
             overflowToDisk="false"
             diskPersistent="false"
             diskExpiryThreadIntervalSeconds="10"
