@@ -12,8 +12,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static com.zhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
-
 @ControllerAdvice
 public class HandlerExceptionController {
 
@@ -27,10 +25,11 @@ public class HandlerExceptionController {
     }
 
     @ExceptionHandler({Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handlerExceptionMethod(Exception ex) {
 
         //将错误信息记录到数据库
-        LogToDB(ex);
+        //LogToDB(ex); //不需要重复记录了
 
         ModelAndView modelAndView = new ModelAndView("../../500");
         modelAndView.addObject("MSG", ex.toString());
