@@ -75,9 +75,7 @@ public class LogControllerTest extends BaseTest {
     public void getLogByPageTest() throws Exception {
         String contentAsString = mockMvc
                 .perform(
-                        get("/Log/getLogByPage")
-                                .param("pageNumber", "2")
-                                .param("pageSize", "10")
+                        get("/Log/getLogByPage/pageNumber/" + 2 + "/pageSize/" + 10)
                 )
                 .andDo(print())
                 .andExpect(status().is(200))
