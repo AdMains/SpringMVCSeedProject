@@ -11,7 +11,7 @@
 <!-- 让移动设备click事件没有延迟-->
 <script src="${pageContext.request.contextPath}/assets/js/fastclick.min.js"></script>
 <!-- 滚动条插件-->
-<script src="${pageContext.request.contextPath}/assets/js/jquery.slimscroll.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/jquery.slimscroll.min.js"></script>
 <!-- 单出对话框-->
 <script src="${pageContext.request.contextPath}/assets/js/jquery.blockUI.js"></script>
 <!--类Material Design 的圆形波浪（涟漪）点击特效插件-->
