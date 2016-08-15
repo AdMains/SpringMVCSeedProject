@@ -130,8 +130,6 @@ public class CachingShiroSessionDao extends CachingSessionDAO {
 
                 sessionRepository.updateSession(session);
 
-                //发送广播
-                //jedisUtil.publish("shiro.session.uncache", session.getId());
                 log.debug("sessionId {} name {} 被更新", session.getId(), session.getClass().getName());
             } else {
                 log.error("sessionId {} name {} 更新失败", session.getId(), session.getClass().getName());
