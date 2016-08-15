@@ -9,7 +9,7 @@
 <!-- 检测浏览器和操作系统 -->
 <script src="${pageContext.request.contextPath}/assets/js/detect.js"></script>
 <!-- 让移动设备click事件没有延迟-->
-<script src="${pageContext.request.contextPath}/assets/js/fastclick.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/fastclick.min.js"></script>
 <!-- 滚动条插件-->
 <script src="${pageContext.request.contextPath}/assets/js/jquery.slimscroll.js"></script>
 <!-- 单出对话框-->
