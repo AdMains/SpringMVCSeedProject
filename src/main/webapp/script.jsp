@@ -15,7 +15,7 @@
 <!-- 单出对话框-->
 <script src="${pageContext.request.contextPath}/assets/js/jquery.blockUI.js"></script>
 <!--类Material Design 的圆形波浪（涟漪）点击特效插件-->
-<script src="${pageContext.request.contextPath}/assets/js/waves.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/waves.min.js"></script>
 <!--动画特效插件-->
 <script src="${pageContext.request.contextPath}/assets/js/wow.min.js"></script>
 <!--滚动条插件-->
@@ -27,7 +27,7 @@
 <script src="${pageContext.request.contextPath}/assets/js/jquery.app.js"></script>
 
 <!-- moment js -->
-<script src="${pageContext.request.contextPath}/assets/plugins/moment/moment.js"></script>
+<script src="${pageContext.request.contextPath}/assets/plugins/moment/moment.min.js"></script>
 
 <!-- counters -->
 <script src="${pageContext.request.contextPath}/assets/plugins/waypoints/jquery.waypoints.js"></script>
