@@ -18,7 +18,7 @@
     </bean>
 
     <!-- 項目自定义的Realm -->
-    <bean id="shiroRealm" class="com.zhangzhihao.SpringMVCSeedProject.Repository.ShiroRealm"/>
+    <bean id="shiroRealm" class="com.github.izhangzhihao.SpringMVCSeedProject.Repository.ShiroRealm"/>
 
     <!--cookie-->
     <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
@@ -66,7 +66,7 @@
 
     <!-- 自定义Session工厂方法 返回会标识是否修改主要字段的自定义Session-->
     <bean id="sessionFactory"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.ShiroSessionFactory"/>
+          class="com.github.izhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Session.ShiroSessionFactory"/>
 
     <!--缓存管理器-->
     <!-- 用户授权信息Cache, 采用EhCache，本地缓存最长时间应比中央缓存时间短一些，以确保Session中doReadSession方法调用时更新中央缓存过期时间 -->
@@ -83,20 +83,20 @@
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
     <bean id="sessionListener"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Listener.ShiroSessionListener"
+          class="com.github.izhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Listener.ShiroSessionListener"
           p:sessionDao-ref="cachingShiroSessionDao"
           p:shiroSessionService-ref="shiroSessionService"/>
 
     <bean id="cachingShiroSessionDao"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.CachingShiroSessionDao"
+          class="com.github.izhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.CachingShiroSessionDao"
           p:sessionRepository-ref="shiroSessionRepository"/>
 
     <bean id="shiroSessionRepository"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.ShiroSessionRepository"
+          class="com.github.izhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Repository.ShiroSessionRepository"
           p:redisTemplate-ref="redisTemplate"/>
 
     <bean id="shiroSessionService"
-          class="com.zhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionService"
+          class="com.github.izhangzhihao.SpringMVCSeedProject.ShiroSessionOnRedis.Service.ShiroSessionService"
           p:redisTemplate-ref="redisTemplate"
           p:sessionDao-ref="cachingShiroSessionDao"/>
 
