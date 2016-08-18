@@ -21,11 +21,6 @@ matrix:
 before_install:
 - chmod +x gradlew
 
-install:
-  # Update Gradle Wrapper instead of letting Travis execute './gradlew assemble' by default
-- ./gradlew wrapper --gradle-distribution-url=https://services.gradle.org/distributions-snapshots/gradle-3.1-20160725000019+0000-bin.zip
-- /bin/true
-
 script:
 - java -version
 - ./gradlew -version
