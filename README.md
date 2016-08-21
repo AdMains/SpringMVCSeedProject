@@ -1,4 +1,4 @@
-# SpringMVCSeedProject [![Build Status](http://210.31.198.175:8080/jenkins/job/SpringMVCSeedProject/badge/icon)](https://github.com/izhangzhihao/SpringMVCSeedProject)
+# SpringMVCSeedProject [![Build Status](http://210.31.198.175:8080/jenkins/job/SpringMVCSeedProject/badge/icon)](https://github.com/izhangzhihao/SpringMVCSeedProject)  [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
     Seed Project For SpringMVC
 
