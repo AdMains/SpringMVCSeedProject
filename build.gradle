@@ -21,11 +21,9 @@ def JacksonVersion = "2.8.1"
 repositories {
     mavenLocal()
     //内网nexus私服地址
-    maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
-    //外网nexus私服地址
-    //maven { url "http://210.31.198.175:8080/nexus/content/repositories/central/" }
-    jcenter();
-    maven { url "http://maven.oschina.net/content/groups/public/" }
+    //maven { url "http://10.16.155.241:8080/nexus/content/repositories/central/" }
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+    jcenter()
     mavenCentral()
     maven { url "http://repo.spring.io/release" }
     maven { url "https://repo.spring.io/libs-snapshot" }
@@ -55,14 +53,18 @@ dependencies {
             "redis.clients:jedis:2.9.0",
             "org.apache.commons:commons-pool2:2.4.2",
 
+            //springfox
+            "io.springfox:springfox-swagger2:2.5.0",
+            "io.springfox:springfox-swagger-ui:2.5.0",
+
             // MySQL
             "mysql:mysql-connector-java:6.0.2",
 
             //servlet
-            "javax.servlet:javax.servlet-api:3.1.0",
+            //"javax.servlet:javax.servlet-api:3.1.0",
 
             //el
-            "javax.el:javax.el-api:3.0.1-b04",
+            //"javax.el:javax.el-api:3.0.1-b04",
 
             //apache
             "commons-fileupload:commons-fileupload:1.3.2",
@@ -76,9 +78,6 @@ dependencies {
             "com.fasterxml.jackson.core:jackson-databind:${JacksonVersion}",
             "com.fasterxml.jackson.core:jackson-annotations:${JacksonVersion}",
 
-            //MyBatis
-            //"org.mybatis:mybatis:3.4.0",
-            //"org.mybatis:mybatis-spring:1.3.0",
 
             //Hibernate
             "org.hibernate:hibernate-core:${HibernateVersion}",
@@ -92,7 +91,6 @@ dependencies {
             "org.hibernate:hibernate-c3p0:${HibernateVersion}",
 
             //ehcache
-            //"net.sf.ehcache:ehcache-core:2.6.11",旧版
             "org.ehcache:ehcache:3.1.0",
             "org.hibernate:hibernate-ehcache:${HibernateVersion}",
 
