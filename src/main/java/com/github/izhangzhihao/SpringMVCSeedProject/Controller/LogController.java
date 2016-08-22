@@ -1,15 +1,20 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Controller;
 
-import com.github.izhangzhihao.SpringMVCSeedProject.Service.LogService;
-import com.github.izhangzhihao.SpringMVCSeedProject.Utils.LogUtils;
-import com.github.izhangzhihao.SpringMVCSeedProject.Utils.PageResults;
+
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.Log;
+import com.github.izhangzhihao.SpringMVCSeedProject.Service.LogService;
+import com.github.izhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Controller
 @RequestMapping("/Log")
@@ -40,18 +45,15 @@ public class LogController {
      */
     @RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Long> getLogInfo() {
+    @Cacheable(value = "getLogInfo", keyGenerator = "customKeyGenerator")
+    public Map<String, Long> getLogInfo() throws Exception {
         Map<String, Long> map = new HashMap<>();
-        long LogUtilsCount = 0L;//Controller出了异常
-        long LogAspectCount = 0L;//自定义类异常
-        long totalCount = 0L;
-        try {
-            LogUtilsCount = logService.getExceptionCountByCallerFilename("LogUtils.java");//Controller出了异常
-            LogAspectCount = logService.getExceptionCountByCallerFilename("LogAspect.java");//自定义类异常
-            totalCount = logService.getExceptionCount();
-        } catch (Exception e) {
-            LogUtils.LogToDB(e);
-        }
+        long LogUtilsCount =
+                logService.getExceptionCountByCallerFilename("LogUtils.java");//Controller出了异常
+        long LogAspectCount =
+                logService.getExceptionCountByCallerFilename("LogAspect.java");//自定义类异常
+        long totalCount =
+                logService.getExceptionCount();
         Long otherCount = totalCount - LogAspectCount - LogUtilsCount;
         map.put("totalCount", totalCount);
         map.put("LogUtilsCount", LogUtilsCount);
@@ -69,6 +71,7 @@ public class LogController {
      */
     @RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
     @ResponseBody
+    @Cacheable(value = "getLogByPage", keyGenerator = "customKeyGenerator")
     public PageResults<Log> getLogByPage(@PathVariable int pageNumber,
                                          @PathVariable int pageSize) throws Exception {
        /* try {

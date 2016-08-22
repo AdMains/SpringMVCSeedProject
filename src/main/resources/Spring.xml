@@ -20,7 +20,8 @@
     <aop:aspectj-autoproxy/>
 
     <import resource="Spring-JPA.xml"/>
-    <import resource="Spring-EhCache.xml"/>
+    <!--<import resource="Spring-EhCache.xml"/>--> <!--Spring缓存至EhCache-->
+    <import resource="Spring-RedisCache.xml"/>  <!--Spring缓存至Redis-->
     <import resource="Spring-Shiro.xml"/>
     <import resource="Spring-Redis.xml"/>
 </beans>

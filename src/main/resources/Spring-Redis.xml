@@ -44,10 +44,9 @@
     <bean id="stringSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
     <bean id="redisSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
 
-    <!-- <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
-         <property name="connectionFactory" ref="jedisConnectionFactory"/>
+     <!--<bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+         <property name="connectionFactory" ref="connectionFactory"/>
      </bean>-->
-    <!-- the default ConnectionFactory -->
 
 
     <redis:listener-container connection-factory="connectionFactory">
