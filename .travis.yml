@@ -9,7 +9,7 @@ group: edge
 
 os:
   - linux
-  - osx
+  # - osx
 
 jdk:
   - oraclejdk8
