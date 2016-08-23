@@ -18,6 +18,15 @@
 # 配置文件说明
     '/src/main/resources/'路径下面的 
     MyBatis.xml generatorConfig.xml Hibernate.cfg.xml logback.xml 均未使用，只是作为配置文件模板，以备以后查询
+    
+# 相关博客
+
+1. [使用Lombok注解](https://izhangzhihao.github.io/2016/06/29/使用Lombok注解/)
+
+2. [Swagger&SpringFox快速上手](https://izhangzhihao.github.io/2016/08/21/Swagger&SpringFox快速上手/)
+
+3. [Redis OR EhCache 作为Spring的缓存](https://izhangzhihao.github.io/2016/08/22/Redis-OR-EhCache-作为Spring的缓存/)
+
 
 # 不想写XML？试试SpringMVCWithJavaConfig [![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCWithJavaConfig.svg?branch=master)](https://github.com/izhangzhihao/SpringMVCWithJavaConfig)
     没有Spring.xml,没有SpringMVC.xml,连web.xml也没有，通过类型安全的JavaConfig配置SpringMVC应用
