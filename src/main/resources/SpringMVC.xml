@@ -29,7 +29,10 @@
     <!--直达相应页面，不经过SpringMVC映射-->
     <!--<mvc:view-controller path="test" view-name="list"/>-->
 
-    <!--静态资源映射-->
+    <!--静态资源映射 设置Cache-Control头，缓存时间为365天-->
+    <mvc:resources mapping="/assets/**" location="/assets/">
+        <mvc:cache-control max-age="31536000" cache-public="true"/>
+    </mvc:resources>
     <!--<mvc:resources mapping="/Scripts/**" location="/WEB-INF/js/" />-->
 
     <!--上传文件需要注册 还有其他配置-->
