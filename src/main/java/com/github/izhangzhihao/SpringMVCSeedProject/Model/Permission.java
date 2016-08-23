@@ -26,6 +26,7 @@ public class Permission implements Serializable {
     @NotNull
     private String name;
     private String description;
+    @NotNull
     private String permission;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,14 +38,4 @@ public class Permission implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "permissionList")
     private List<Role> roleList;
-
-    public Permission(String name, String description, String permission, Permission parent, List<Permission> childrenList, List<Role> roleList) {
-        this.name = name;
-        this.description = description;
-        this.permission = permission;
-        this.parent = parent;
-        this.childrenList = childrenList;
-        this.roleList = roleList;
-    }
-
 }

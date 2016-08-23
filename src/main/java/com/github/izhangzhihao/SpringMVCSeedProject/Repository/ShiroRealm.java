@@ -1,11 +1,10 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Repository;
 
 
-import com.github.izhangzhihao.SpringMVCSeedProject.Service.UserService;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.Permission;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.Role;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
-import org.apache.commons.lang3.StringUtils;
+import com.github.izhangzhihao.SpringMVCSeedProject.Service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -18,10 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.LogUtils.LogToDB;
-
 /**
- * Realm是专用于安全框架的DAO
+ * Realm是专用于安全框架的Repository
  */
 public class ShiroRealm extends AuthorizingRealm {
 
@@ -42,22 +39,19 @@ public class ShiroRealm extends AuthorizingRealm {
         //获取当前登录的用户名
         String userName = (String) super.getAvailablePrincipal(principals);
 
-        List<String> roles = new ArrayList<String>();
-        List<String> permissions = new ArrayList<String>();
-        User user = null;
-        try {
-            user = userService.getById(userName);
-        } catch (Exception e) {
-            LogToDB(e);
-        }
+        List<String> roles = new ArrayList<>();
+        List<String> permissions = new ArrayList<>();
+        User user = userService.getById(userName);
         if (user != null) {
-            if (user.getRoleList() != null && user.getRoleList().size() > 0) {
-                for (Role role : user.getRoleList()) {
+            List<Role> userRoleList = user.getRoleList();
+            if (userRoleList != null && userRoleList.size() > 0) {
+                for (Role role : userRoleList) {
                     roles.add(role.getName());
-                    if (role.getPermissionList() != null && role.getPermissionList().size() > 0) {
+                    List<Permission> rolePermissionList = role.getPermissionList();
+                    if (rolePermissionList != null && rolePermissionList.size() > 0) {
                         permissions.addAll(
-                                role.getPermissionList().stream()
-                                        .filter(permission -> !StringUtils.isEmpty(permission.getPermission()))
+                                rolePermissionList.stream()
+                                        //.filter(permission -> !StringUtils.isEmpty(permission.getPermission()))// permission 不可为空
                                         .map(Permission::getPermission)
                                         .collect(Collectors.toList()
                                         )
@@ -78,7 +72,7 @@ public class ShiroRealm extends AuthorizingRealm {
     /**
      * 登录认证
      * <p/>
-     * For most datasources, this means just 'pulling' authentication data for an associated subject/user and nothing
+     * For most dataSources, this means just 'pulling' authentication data for an associated subject/user and nothing
      * more and letting Shiro do the rest.  But in some systems, this method could actually perform EIS specific
      * log-in logic in addition to just retrieving data - it is up to the Realm implementation.
      * <p/>
@@ -93,13 +87,7 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authToken;
-        User user = null;
-        try {
-            user = userService.getById(token.getUsername());
-        } catch (Exception e) {
-            LogToDB(e);
-            return null;
-        }
+        User user = userService.getById(token.getUsername());
         if (user != null) {
             return new SimpleAuthenticationInfo(
                     user.getUserName(), user.getPassWord(), user.toString()
