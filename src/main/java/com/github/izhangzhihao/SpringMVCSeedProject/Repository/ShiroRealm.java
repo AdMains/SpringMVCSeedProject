@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.ListUtils.isNullOrEmpty;
+
+
 /**
  * Realm是专用于安全框架的Repository
  */
@@ -39,16 +42,19 @@ public class ShiroRealm extends AuthorizingRealm {
         //获取当前登录的用户名
         String userName = (String) super.getAvailablePrincipal(principals);
 
+        //保存角色
         List<String> roles = new ArrayList<>();
+        //保存权限
         List<String> permissions = new ArrayList<>();
+        //拿到当前登陆的用户
         User user = userService.getById(userName);
         if (user != null) {
             List<Role> userRoleList = user.getRoleList();
-            if (userRoleList != null && userRoleList.size() > 0) {
+            if (isNullOrEmpty(userRoleList)) {
                 for (Role role : userRoleList) {
                     roles.add(role.getName());
                     List<Permission> rolePermissionList = role.getPermissionList();
-                    if (rolePermissionList != null && rolePermissionList.size() > 0) {
+                    if (isNullOrEmpty(rolePermissionList)) {
                         permissions.addAll(
                                 rolePermissionList.stream()
                                         //.filter(permission -> !StringUtils.isEmpty(permission.getPermission()))// permission 不可为空
