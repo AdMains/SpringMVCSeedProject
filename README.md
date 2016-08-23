@@ -7,6 +7,9 @@
 # 主要的后端架构：
     Spring + Spring MVC + JPA  + Hibernate + Apache Shiro + Spring-Session
     
+# 架构图：
+![default](https://cloud.githubusercontent.com/assets/12044174/17878264/3bece7a0-691c-11e6-973b-d60cd3ec91d1.png)
+
 # 所需的环境和正确打开项目的姿势
     见根目录下'开发环境搭建及导入项目的方式.doc'
     导入前 视情况修改maven仓库地址(build.gradle)和数据库地址(/src/main/resources/db.properties)
