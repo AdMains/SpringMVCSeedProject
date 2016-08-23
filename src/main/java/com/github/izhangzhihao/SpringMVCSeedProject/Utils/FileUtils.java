@@ -145,10 +145,9 @@ public class FileUtils {
                                         @NotNull final String filePath)
             throws Exception {
          /*创建输出流，写入数据，合并分块*/
-        OutputStream outputStream = new FileOutputStream(filePath);
         byte[] buffer = new byte[1024];
-        int len = 0;
-        try {
+        int len;
+        try (OutputStream outputStream = new FileOutputStream(filePath)) {
             while ((len = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, len);
                 outputStream.flush();
@@ -157,7 +156,6 @@ public class FileUtils {
             LogToDB(e);
             throw e;
         } finally {
-            outputStream.close();
             inputStream.close();
         }
     }
