@@ -8,16 +8,6 @@
                             http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.springframework.org/schema/tx
                             http://www.springframework.org/schema/tx/spring-tx.xsd">
-    <!-- 配置数据源 -->
-    <!-- 导入资源文件 -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:db.properties</value>
-            </list>
-        </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-    </bean>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
           p:user="${jdbc.userName}"
@@ -96,4 +86,44 @@
                       id="txPointcut"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
     </aop:config>-->
+
+
+    <!-- 配置数据源 -->
+    <!-- 导入资源文件 -->
+
+    <!-- 开发环境配置文件 -->
+    <beans profile="development">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:development/db.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        </bean>
+    </beans>
+
+    <!-- 生产环境配置文件 -->
+    <beans profile="production">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:production/db.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        </bean>
+    </beans>
+
+    <!-- 测试环境配置文件 -->
+    <beans profile="test">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:test/db.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        </bean>
+    </beans>
 </beans>

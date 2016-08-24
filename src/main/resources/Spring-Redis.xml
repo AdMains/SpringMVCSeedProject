@@ -10,15 +10,6 @@
 		http://www.springframework.org/schema/redis/spring-redis.xsd ">
 
     <description>Redis配置</description>
-    <!-- 导入资源文件 -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:redis.properties</value>
-            </list>
-        </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true" />
-    </bean>
 
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig"
           p:maxIdle="${redis.maxIdle}"
@@ -54,4 +45,41 @@
         <redis:listener ref="shiroSessionService" topic="shiro.session.uncache" serializer="redisSerializer"/>
     </redis:listener-container>
 
+    <!-- 导入资源文件 -->
+
+    <!-- 开发环境配置文件 -->
+    <beans profile="development">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:development/redis.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true" />
+        </bean>
+    </beans>
+
+    <!-- 生产环境配置文件 -->
+    <beans profile="production">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:production/redis.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true" />
+        </bean>
+    </beans>
+
+    <!-- 测试环境配置文件 -->
+    <beans profile="test">
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:test/redis.properties</value>
+                </list>
+            </property>
+            <property name="ignoreUnresolvablePlaceholders" value="true" />
+        </bean>
+    </beans>
 </beans>
