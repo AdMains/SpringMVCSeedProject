@@ -4,6 +4,7 @@ import com.github.izhangzhihao.SpringMVCSeedProject.Annotation.AuthorityType;
 import com.github.izhangzhihao.SpringMVCSeedProject.Model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
@@ -23,6 +24,7 @@ import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.get
         DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class
 })
+@ActiveProfiles("development")
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
     protected MockMvc mockMvc;
 
