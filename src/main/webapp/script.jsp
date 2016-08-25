@@ -30,7 +30,7 @@
 <script src="${pageContext.request.contextPath}/assets/plugins/moment/moment.min.js"></script>
 
 <!-- counters -->
-<script src="${pageContext.request.contextPath}/assets/plugins/waypoints/jquery.waypoints.js"></script>
+<script src="${pageContext.request.contextPath}/assets/plugins/waypoints/jquery.waypoints.min.js"></script>
 <script src="${pageContext.request.contextPath}/assets/plugins/counterup/jquery.counterup.min.js"></script>
 
 <!-- sweet alert -->
