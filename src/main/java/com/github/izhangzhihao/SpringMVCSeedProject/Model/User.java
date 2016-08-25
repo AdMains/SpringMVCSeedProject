@@ -49,7 +49,6 @@ public class User implements Serializable {
     private BankCard bankCard;
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "userList", fetch = FetchType.LAZY)
-    @JsonIgnore
     @Setter
     private List<Role> roleList;
 
