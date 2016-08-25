@@ -13,7 +13,7 @@
 <!-- 滚动条插件-->
 <script src="${pageContext.request.contextPath}/assets/js/jquery.slimscroll.min.js"></script>
 <!-- 单出对话框-->
-<script src="${pageContext.request.contextPath}/assets/js/jquery.blockUI.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/jquery.blockUI.min.js"></script>
 <!--类Material Design 的圆形波浪（涟漪）点击特效插件-->
 <script src="${pageContext.request.contextPath}/assets/js/waves.min.js"></script>
 <!--动画特效插件-->
