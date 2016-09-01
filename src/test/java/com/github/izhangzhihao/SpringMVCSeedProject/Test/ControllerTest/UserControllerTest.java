@@ -32,7 +32,7 @@ public class UserControllerTest extends BaseTest {
 
     @Test
     public void getUserExistTest() throws Exception {
-        mockMvc.perform(get("/User/getUser/admin"))
+        mockMvc.perform(get("/User/User/admin"))
                 .andDo(print())
                 //.andExpect(status().is(200))
                 .andExpect(status().isOk());
@@ -40,7 +40,7 @@ public class UserControllerTest extends BaseTest {
 
     @Test
     public void getUserNotExistTest() throws Exception {
-        mockMvc.perform(get("/User/getUser/" + getRandomUUID()))
+        mockMvc.perform(get("/User/User/" + getRandomUUID()))
                 .andDo(print())
                 //.andExpect(status().is(404))
                 .andExpect(status().isNotFound());
@@ -49,7 +49,7 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void createUserExistTest() throws Exception {
         mockMvc.perform(
-                post("/User/createUser/userName/" + "admin" + "/passWord/" + getRandomUUID())
+                post("/User/User/userName/" + "admin" + "/passWord/" + getRandomUUID())
         )
                 .andDo(print())
                 //.andExpect(status().is(409))
@@ -59,7 +59,7 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void createUserNotExistTest() throws Exception {
         mockMvc.perform(
-                post("/User/createUser/userName/" + getRandomUUID() + "/passWord/" + getRandomUUID())
+                post("/User/User/userName/" + getRandomUUID() + "/passWord/" + getRandomUUID())
         )
                 .andDo(print())
                 //.andExpect(status().is(201))
@@ -70,11 +70,11 @@ public class UserControllerTest extends BaseTest {
     public void updateUserExistTest() throws Exception {
         String userName = getRandomUUID();
         mockMvc.perform(
-                post("/User/createUser/userName/" + userName + "/passWord/" + getRandomUUID())
+                post("/User/User/userName/" + userName + "/passWord/" + getRandomUUID())
         );
 
         mockMvc.perform(
-                put("/User/updateUser/userName/" + userName + "/passWord/" + getRandomUUID())
+                put("/User/User/userName/" + userName + "/passWord/" + getRandomUUID())
         )
                 .andDo(print())
                 //.andExpect(status().is(200))
@@ -84,7 +84,7 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void updateUserNotExistTest() throws Exception {
         mockMvc.perform(
-                put("/User/updateUser/userName/" + getRandomUUID() + "/passWord/" + getRandomUUID())
+                put("/User/User/userName/" + getRandomUUID() + "/passWord/" + getRandomUUID())
         )
                 .andDo(print())
                 //.andExpect(status().is(404))
@@ -95,11 +95,11 @@ public class UserControllerTest extends BaseTest {
     public void deleteUserExistTest() throws Exception {
         String userName = getRandomUUID();
         mockMvc.perform(
-                post("/User/createUser/userName/" + userName + "/passWord/" + getRandomUUID())
+                post("/User/User/userName/" + userName + "/passWord/" + getRandomUUID())
         );
 
         mockMvc.perform(
-                delete("/User/deleteUser/" + userName)
+                delete("/User/User/" + userName)
         )
                 .andDo(print())
                 //.andExpect(status().is(200))
@@ -109,7 +109,7 @@ public class UserControllerTest extends BaseTest {
     @Test
     public void deleteUserNotExistTest() throws Exception {
         mockMvc.perform(
-                delete("/User/deleteUser/" + getRandomUUID())
+                delete("/User/User/" + getRandomUUID())
         )
                 .andDo(print())
                 //.andExpect(status().is(404))

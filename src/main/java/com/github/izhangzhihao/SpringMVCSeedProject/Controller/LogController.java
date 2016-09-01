@@ -7,7 +7,10 @@ import com.github.izhangzhihao.SpringMVCSeedProject.Utils.PageResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +44,8 @@ public class LogController {
      *
      * @return json数据
      */
-    //@RequestMapping(value = "/getLogInfo", method = RequestMethod.GET)
-    @GetMapping("/getLogInfo")
+    //@RequestMapping(value = "/LogInfo", method = RequestMethod.GET)
+    @GetMapping("/LogInfo")
     @ResponseBody
     @Cacheable(value = "getLogInfo", keyGenerator = "customKeyGenerator")
     public Map<String, Long> getLogInfo() {
@@ -68,8 +71,8 @@ public class LogController {
      * @param pageSize   每页大小
      * @return json数据
      */
-    //@RequestMapping(value = "/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
-    @GetMapping("/getLogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}")
+    //@RequestMapping(value = "/LogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}", method = RequestMethod.GET)
+    @GetMapping("/LogByPage/pageNumber/{pageNumber}/pageSize/{pageSize}")
     @ResponseBody
     @Cacheable(value = "getLogByPage", keyGenerator = "customKeyGenerator")
     public PageResults<Log> getLogByPage(@PathVariable int pageNumber,

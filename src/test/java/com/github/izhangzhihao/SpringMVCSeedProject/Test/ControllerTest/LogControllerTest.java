@@ -44,7 +44,7 @@ public class LogControllerTest extends BaseTest {
     @Test
     public void getLogInfoTest() throws Exception {
         String contentAsString = mockMvc
-                .perform(get("/Log/getLogInfo"))
+                .perform(get("/Log/LogInfo"))
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andReturn()
@@ -69,7 +69,7 @@ public class LogControllerTest extends BaseTest {
     public void getLogByPageTest() throws Exception {
         String contentAsString = mockMvc
                 .perform(
-                        get("/Log/getLogByPage/pageNumber/" + 2 + "/pageSize/" + 10)
+                        get("/Log/LogByPage/pageNumber/" + 2 + "/pageSize/" + 10)
                 )
                 .andDo(print())
                 .andExpect(status().is(200))
