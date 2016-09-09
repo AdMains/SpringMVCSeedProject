@@ -1,7 +1,7 @@
 # SpringMVCSeedProject [![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 |Jenkins|Travis-ci|
 |:--:|:--:|
-|[![Build Status](http://210.31.198.175:8080/jenkins/job/SpringMVCSeedProject/badge/icon)](https://github.com/izhangzhihao/SpringMVCSeedProject)|[![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject.svg?branch=master)](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject)|
+|[![Build Status](http://210.31.198.175/jenkins/job/SpringMVCSeedProject/badge/icon)](https://github.com/izhangzhihao/SpringMVCSeedProject)|[![Build Status](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject.svg?branch=master)](https://travis-ci.org/izhangzhihao/SpringMVCSeedProject)|
     Seed Project For SpringMVC
 
 # 主要的后端架构：
