@@ -130,22 +130,6 @@ dependencies {
     )
 }
 
-task changeProfileToTest() {
-    doFirst
-            {
-                println "changeProfileToTest"
-                System.setProperty("spring.profiles.active", "test")
-            }
-}
-
-task changeProfileToProduction() {
-    doFirst
-            {
-                println "changeProfileToProduction"
-                System.setProperty("spring.profiles.active", "production")
-            }
-}
-
 task copyJars(type: Copy) {
     from configurations.runtime
     into "lib" //复制到lib目录
