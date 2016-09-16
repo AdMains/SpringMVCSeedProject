@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <%--<link rel="shortcut icon" href="/assets/images/favicon_1.ico">--%>
+    <link rel="shortcut icon" href="assets/images/show.png">
 
     <title>404</title>
 

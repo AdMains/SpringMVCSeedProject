@@ -4,12 +4,11 @@
 <head>
     <meta charset="utf-8">
 
-    <%--<link rel="shortcut icon" href="./assets/images/favicon_1.ico">--%>
+    <link rel="shortcut icon" href="assets/images/show.png">
 
     <title>500</title>
 
     <%@ include file="/head.jsp" %>
-
 
 </head>
 <body>
@@ -19,7 +18,7 @@
     <div class="ex-page-content text-center">
         <h1>500</h1>
         <h2 class="font-light">Internal Server Error.</h2><br>
-        <p>出了一个错误！这真是令人尴尬！ <a href="#">联系不存在的支持人员</a></p>
+        <p>出了一个错误！这真是令人尴尬！ <a >错误代码500</a></p>
 
         <a class="btn btn-purple waves-effect waves-light" href="/"><i class="fa fa-angle-left"></i>返回首页</a>
         <script type="text/javascript">
@@ -32,6 +31,7 @@
 
 
 </div>
+
 
 <%@ include file="/script.jsp" %>
 
