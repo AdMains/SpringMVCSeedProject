@@ -1,4 +1,4 @@
-group "zhangzhihao"
+group "com.github.izhangzhihao"
 version "1.0-SNAPSHOT"
 
 apply plugin: "java"
