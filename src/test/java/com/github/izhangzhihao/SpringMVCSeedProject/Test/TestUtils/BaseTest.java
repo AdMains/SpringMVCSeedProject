@@ -27,7 +27,7 @@ import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.get
         DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class
 })
-@ActiveProfiles("development")
+@ActiveProfiles("test")
 public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
