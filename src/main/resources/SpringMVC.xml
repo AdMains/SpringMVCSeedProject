@@ -48,8 +48,6 @@
         <bean class="AuthorityByRole"/>
     </mvc:interceptors>-->
 
-    <!--直接访问“/” 时会跳转的目录-->
-    <mvc:view-controller path="/" view-name="forward:/Account/Login"/>
 
     <mvc:annotation-driven>
         <mvc:message-converters register-defaults="false">
