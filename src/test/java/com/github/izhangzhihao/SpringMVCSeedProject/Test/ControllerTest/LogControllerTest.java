@@ -2,8 +2,12 @@ package com.github.izhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.izhangzhihao.SpringMVCSeedProject.Controller.LogController;
 import com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Map;
 
@@ -14,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class LogControllerTest extends BaseTest {
-    /*@Autowired
+    @Autowired
     private LogController logController;
 
     @Before
@@ -23,7 +27,7 @@ public class LogControllerTest extends BaseTest {
                 .standaloneSetup(logController)
                 .setViewResolvers(viewResolver)
                 .build();
-    }*/
+    }
 
 
     /**
@@ -35,7 +39,7 @@ public class LogControllerTest extends BaseTest {
                 .andDo(print())
                 .andExpect(status().is(200))
                 .andExpect(view().name("Log/Log"))
-                .andExpect(forwardedUrl("Log/Log"));
+                .andExpect(forwardedUrl("/WEB-INF/views/Log/Log.jsp"));
     }
 
     /**

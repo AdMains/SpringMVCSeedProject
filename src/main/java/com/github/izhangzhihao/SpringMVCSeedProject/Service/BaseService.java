@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * BaseService作为所有Service的基类，需要使用的话，需要先编写一个继承自此类的类
  *
@@ -26,6 +28,7 @@ class BaseService<T> {
 
     BaseService() {
         modelClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        checkNotNull(modelClass,"modelClass 不可为空！");
     }
 
     /**

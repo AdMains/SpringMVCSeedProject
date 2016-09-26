@@ -1,7 +1,11 @@
 package com.github.izhangzhihao.SpringMVCSeedProject.Test.ControllerTest;
 
+import com.github.izhangzhihao.SpringMVCSeedProject.Controller.UserController;
 import com.github.izhangzhihao.SpringMVCSeedProject.Test.TestUtils.BaseTest;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.getRandomUUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -11,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserControllerTest extends BaseTest {
 
-    /*@Autowired
+    @Autowired
     private UserController userController;
 
     @Before
@@ -20,7 +24,7 @@ public class UserControllerTest extends BaseTest {
                 .standaloneSetup(userController)
                 .setViewResolvers(viewResolver)
                 .build();
-    }*/
+    }
 
     @Test
     public void getAllUsersTest() throws Exception {
