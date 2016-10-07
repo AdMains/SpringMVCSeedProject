@@ -50,7 +50,7 @@ public class ShiroRealm extends AuthorizingRealm {
         User user = userService.getById(userName);
         if (user != null) {
             List<Role> userRoleList = user.getRoleList();
-            if (isNullOrEmpty(userRoleList)) {
+            if (!isNullOrEmpty(userRoleList)) {
                 for (Role role : userRoleList) {
                     roles.add(role.getName());
                     List<Permission> rolePermissionList = role.getPermissionList();
