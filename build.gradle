@@ -127,6 +127,9 @@ dependencies {
     testCompile(
             //jUnit
             "junit:junit:4.12",
+
+            //Mockito
+            "org.mockito:mockito-core:2.2.1",
     )
 }
 
@@ -229,9 +232,11 @@ tasks.withType(Test) {
         afterSuite { desc, result ->
             if (!desc.parent) { // will match the outermost suite
                 def output = "结果: ${result.resultType} (${result.testCount} 个测试, ${result.successfulTestCount} 个成功, ${result.failedTestCount} 个失败, ${result.skippedTestCount} 个跳过)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+                //def startItem = '|  ', endItem = '  |'
+                //def repeatLength = startItem.length() + output.length() + endItem.length()
+                //println('\n' + ('——' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('——' * repeatLength))
+                def repeatLength = output.length()
+                println('\n' + ('——' * repeatLength) + '\n' + output + '\n' + ('——' * repeatLength))
             }
         }
     }

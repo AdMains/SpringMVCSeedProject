@@ -8,7 +8,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
@@ -26,7 +25,7 @@ import static com.github.izhangzhihao.SpringMVCSeedProject.Utils.StringUtils.get
         DirtiesContextTestExecutionListener.class
 })
 @ActiveProfiles("test")
-public class BaseTest extends AbstractTransactionalJUnit4SpringContextTests {
+public class BaseTest extends AbstractShiroTest {
 
     @Autowired
     protected MockHttpSession mockHttpSession;
