@@ -147,16 +147,6 @@ class BaseService<T> {
         return baseRepository.getAll(modelClass);
     }
 
-    /**
-     * 获得数量 利用Count(*)实现
-     *
-     * @param modelClass 类型，比如User.class
-     * @return 数量
-     */
-    @Transactional(readOnly = true)
-    public int getCount(Class<T> modelClass) {
-        return baseRepository.getCount(modelClass);
-    }
 
     /**
      * 分页查询
