@@ -19,6 +19,13 @@
     '/src/main/resources/'路径下面的 
     MyBatis.xml generatorConfig.xml Hibernate.cfg.xml logback.xml 均未使用，只是作为配置文件模板，以备以后查询
     
+
+# 初始化数据库
+```sql
+INSERT INTO SpringMVCSeedProject.user (userName, passWord, role, authorityType) VALUES ('admin', '9cf3e758a497c6274bd066d0b2168432f8a34aad95f63a65677a9a56acec94a7', 'ADMIN', null);
+```
+然后就可以用账号admin密码admin登陆了
+    
 # 相关博客
 
 1. [使用Lombok注解](https://izhangzhihao.github.io/2016/06/29/使用Lombok注解/)
