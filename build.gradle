@@ -11,11 +11,11 @@ apply plugin: "idea"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-def SpringVersion = "4.3.3.RELEASE"
-def SpringBootVersion = "1.4.1.RELEASE"
-def HibernateVersion = "5.2.3.Final"
+def SpringVersion = "4.3.7.RELEASE"
+def SpringBootVersion = "1.5.2.RELEASE"
+def HibernateVersion = "5.2.9.Final"
 def ShiroVersion = "1.3.2"
-def JacksonVersion = "2.8.4"
+def JacksonVersion = "2.9.0.pr1"
 
 
 repositories {
@@ -32,36 +32,32 @@ repositories {
 dependencies {
     compile(
             // spring framework
-            "org.springframework:spring-context:${SpringVersion}",
             "org.springframework:spring-context-support:${SpringVersion}",//启用ehcache缓存
-            "org.springframework:spring-web:${SpringVersion}",
             "org.springframework:spring-webmvc:${SpringVersion}",
             "org.springframework:spring-test:${SpringVersion}",
-            "org.springframework:spring-beans:${SpringVersion}",
             "org.springframework:spring-expression:${SpringVersion}",
-            "org.springframework:spring-aop:${SpringVersion}",
             "org.springframework:spring-aspects:${SpringVersion}",
             "org.springframework:spring-core:${SpringVersion}",
             "org.springframework:spring-instrument:${SpringVersion}",
             "org.springframework:spring-orm:${SpringVersion}",
 
             //Spring-Session
-            "org.springframework.session:spring-session:1.2.2.RELEASE",
-            "org.springframework.data:spring-data-redis:1.7.4.RELEASE",
+            "org.springframework.session:spring-session:1.3.0.RELEASE",
+            "org.springframework.data:spring-data-redis:1.8.1.RELEASE",
 
             //jedis
             "redis.clients:jedis:2.9.0",
             "org.apache.commons:commons-pool2:2.4.2",
 
             //springfox
-            "io.springfox:springfox-swagger2:2.6.0",
-            "io.springfox:springfox-swagger-ui:2.6.0",
+            "io.springfox:springfox-swagger2:2.6.1",
+            "io.springfox:springfox-swagger-ui:2.6.1",
 
             // MySQL
-            "mysql:mysql-connector-java:6.0.4",
+            "mysql:mysql-connector-java:6.0.6",
 
             //servlet
-            //"javax.servlet:javax.servlet-api:3.1.0",
+            "javax.servlet:javax.servlet-api:4.0.0-b03",
 
             //el
             //"javax.el:javax.el-api:3.0.1-b04",
@@ -80,31 +76,25 @@ dependencies {
 
             //Hibernate
             "org.hibernate:hibernate-core:${HibernateVersion}",
-            "org.hibernate:hibernate-validator:5.3.0.Final",
+            "org.hibernate:hibernate-validator:5.4.1.Final",
 
             //C3P0
             "com.mchange:c3p0:0.9.5.2",
             "org.hibernate:hibernate-c3p0:${HibernateVersion}",
 
             //ehcache
-            "org.ehcache:ehcache:3.1.3",
+            "org.ehcache:ehcache:3.3.0",
             "org.hibernate:hibernate-ehcache:${HibernateVersion}",
-
-            //jUnit
-            "junit:junit:4.12",
-
-            //Mockito
-            //"org.mockito:mockito-core:2.0.99-beta",
 
             //@NotNull
             "org.jetbrains:annotations:15.0",
 
             //slf4j
-            //"org.slf4j:slf4j-log4j12:1.7.21",
-            //"org.slf4j:slf4j-jdk14:1.7.21",
-            "org.slf4j:jcl-over-slf4j:1.7.21",//jcl-over-slf4j 把 Commons-Logging 桥接到 Slf4J，然后 Logback。
-            "ch.qos.logback:logback-core:1.1.7",
-            "ch.qos.logback:logback-classic:1.1.7",
+            //"org.slf4j:slf4j-log4j12:1.7.25",
+            //"org.slf4j:slf4j-jdk14:1.7.25",
+            "org.slf4j:jcl-over-slf4j:1.7.25",//jcl-over-slf4j 把 Commons-Logging 桥接到 Slf4J，然后 Logback。
+            "ch.qos.logback:logback-core:1.2.2",
+            "ch.qos.logback:logback-classic:1.2.2",
 
             //shiro
             "org.apache.shiro:shiro-core:${ShiroVersion}",
@@ -116,12 +106,7 @@ dependencies {
             "org.codehaus.groovy:groovy:2.4.7",
 
             //Lombok
-            "org.projectlombok:lombok:1.16.10",
-
-            //Jetty
-            "org.eclipse.jetty:jetty-webapp:9.3.10.v20160621",
-            "org.eclipse.jetty.http2:http2-server:9.3.10.v20160621",
-            "org.eclipse.jetty:jetty-jsp:9.2.17.v20160517",
+            "org.projectlombok:lombok:1.16.14",
 
     )
     testCompile(
@@ -129,7 +114,7 @@ dependencies {
             "junit:junit:4.12",
 
             //Mockito
-            "org.mockito:mockito-core:2.2.1",
+            "org.mockito:mockito-core:2.7.17",
     )
 }
 
